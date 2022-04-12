@@ -14,7 +14,7 @@ import {
   SearchBar,
   validateData,
 } from "@yext/answers-react-components";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { Divider } from "../components/Divider";
 import classNames from "classnames";
@@ -74,6 +74,7 @@ export const SearchScreen = (): JSX.Element => {
   });
 
   const [filters, setFilters] = useState<AutocompleteResult[]>([]);
+  const [activeSearch, setActiveSearch] = useState(false);
 
   const answersActions = useAnswersActions();
   const query = useAnswersState((state) => state.query.input);
@@ -85,6 +86,7 @@ export const SearchScreen = (): JSX.Element => {
    * 2. search bar styling
    *
    * I can't move the search bar because I can't determine when it's being focused on. Maybe I can still use document.activeElement with an id on the SearchBar?
+   * I can't control the functionality of the X button
    */
   const renderEntityPreviews = (
     autocompleteLoading: boolean,
@@ -119,6 +121,10 @@ export const SearchScreen = (): JSX.Element => {
 
     fetchFilters();
   }, [query]);
+
+  useLayoutEffect(() => {
+    console.log(document.activeElement?.id || "no active element");
+  }, [document.activeElement]);
 
   const renderFilterAutocomplete = (results: AutocompleteResult[]) => (
     <div>
@@ -207,28 +213,36 @@ export const SearchScreen = (): JSX.Element => {
   };
 
   return (
-    <div
-      style={{ maxHeight: `${height - 112}px` }}
-      className="overflow-y-scroll"
-    >
-      <SearchBar
-        customCssClasses={{
-          container: `h-12 mb-6 w-full px-4  mt-2 h-full overflow-y-scroll `,
-          inputContainer:
-            "inline-flex items-center justify-between w-full rounded-3xl border border-black",
-          logoContainer: "w-7 mx-2.5 my-2 ",
-          inputDropdownContainer: "relative bg-white w-full overflow-hidden ",
-          inputDropdownContainer___active: "",
-          optionContainer: "fixed top-[-2000px]",
-        }}
-        cssCompositionMethod="assign"
-        placeholder="Search beer, wine, liqour "
-        visualAutocompleteConfig={{
-          entityPreviewSearcher,
-          renderEntityPreviews,
-          entityPreviewsDebouncingTime: 200,
-        }}
-      />
+    <div>
+      <div className="w-full flex justify-center">
+        <div className={classNames("w-full py-4 px-4 max-w-sm")}>
+          <img className="w-full" src="src/img/cocktails.png"></img>
+        </div>
+      </div>
+      <div
+        style={{ maxHeight: `${height - 327}px` }}
+        className="overflow-y-scroll z-10 "
+        onFocus={() => setActiveSearch(true)}
+      >
+        <SearchBar
+          customCssClasses={{
+            container: `h-12 mb-6 w-full px-4  mt-2 h-full overflow-y-scroll`,
+            inputContainer:
+              "inline-flex items-center justify-between w-full rounded-3xl border border-black",
+            logoContainer: "w-7 mx-2.5 my-2 ",
+            inputDropdownContainer: "relative bg-white w-full overflow-hidden ",
+            inputDropdownContainer___active: "",
+            optionContainer: "fixed top-[-2000px]",
+          }}
+          cssCompositionMethod="assign"
+          placeholder="Search beer, wine, liqour "
+          visualAutocompleteConfig={{
+            entityPreviewSearcher,
+            renderEntityPreviews,
+            entityPreviewsDebouncingTime: 200,
+          }}
+        />
+      </div>
     </div>
   );
 };
