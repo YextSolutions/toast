@@ -21,6 +21,7 @@ module.exports = {
         "toast-dark-orange": "#F85E00",
         "toast-red": "#A41632",
         "toast-blue": "#17AABE",
+        "toast-gray": "#c4c4c442",
       },
       borderRadius: {
         cta: "1rem",

@@ -1,5 +1,6 @@
 import {
   AutocompleteResult,
+  HighlightedValue,
   provideAnswersHeadless,
   Result,
   useAnswersActions,
@@ -9,12 +10,16 @@ import {
 import {
   FocusedItemData,
   isString,
+  isStringOrHighlightedValue,
   SearchBar,
   validateData,
 } from "@yext/answers-react-components";
-import { answersSandboxEndpoints } from "../main";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import useWindowDimensions from "../hooks/useWindowDimensions";
+import { Divider } from "../components/Divider";
+import classNames from "classnames";
+import { FaStar, FaStarHalf } from "react-icons/fa";
+import { answersSandboxEndpoints } from "../config";
 
 const searchParamFields = [
   {
@@ -52,13 +57,11 @@ type Image = {
   thumbnails?: Thumbnail[];
 };
 
-type PhotoGallery = {
-  photoGallery: Image[];
-};
 interface Beverage {
   id: string;
   name: string;
   photoGallery: Image[];
+  c_priceRange: string;
 }
 
 export const SearchScreen = (): JSX.Element => {
@@ -70,22 +73,18 @@ export const SearchScreen = (): JSX.Element => {
     endpoints: answersSandboxEndpoints,
   });
 
-  const filtersRef = useRef<HTMLDivElement>(null);
-  const beveragesRef = useRef<HTMLDivElement>(null);
-
-  const { height } = useWindowDimensions();
-
   const [filters, setFilters] = useState<AutocompleteResult[]>([]);
 
   const answersActions = useAnswersActions();
   const query = useAnswersState((state) => state.query.input);
 
+  const { height, width } = useWindowDimensions();
+
   /*
-   * 1. timing
-   * 2. height / divider color
-   * 3. beverage name (highlighted)
-   * 4. beverage photo
-   * 5. price
+   * 1. container styling
+   * 2. search bar styling
+   *
+   * I can't move the search bar because I can't determine when it's being focused on. Maybe I can still use document.activeElement with an id on the SearchBar?
    */
   const renderEntityPreviews = (
     autocompleteLoading: boolean,
@@ -122,19 +121,21 @@ export const SearchScreen = (): JSX.Element => {
   }, [query]);
 
   const renderFilterAutocomplete = (results: AutocompleteResult[]) => (
-    <div ref={filtersRef}>
+    <div>
       {results.slice(0, 3).map((filter, i) => {
-        const filterText = highlightText(
-          filter.value,
-          filter.matchedSubstrings
-        );
+        const filterText = filter.matchedSubstrings
+          ? highlightText({
+              value: filter.value,
+              matchedSubstrings: filter.matchedSubstrings,
+            })
+          : filter.value;
         return (
-          <div>
+          <div id={`filter_${i}`}>
             <div
               className="py-1.5 px-3.5"
               dangerouslySetInnerHTML={{ __html: filterText }}
             />
-            <div className="h-px bg-primary-light mx-2" />
+            <Divider />
           </div>
         );
       })}
@@ -143,57 +144,84 @@ export const SearchScreen = (): JSX.Element => {
 
   const renderBeveragesAutocomplete = (verticalResults: Result[]) =>
     verticalResults
-      .slice(0, Math.round(height / 112) - 3 || 0)
-      .map((verticalResult) => {
+      // .slice(0, Math.round(height / 112) - 3 || 0)
+      .map((verticalResult, i) => {
         const beverageData = dataForRender(verticalResult);
-        const highlightedText = highlightText(
-          beverageData.name ?? ""
-          // verticalResult.highlightedFields?.name?.matchedSubstrings as  { length: number; offset: number }[]
-        );
+        const beverageImg = verticalResult.rawData.photoGallery?.[0].image.url;
+        let beverageTitle: HighlightedValue | string;
+        if (
+          verticalResult.highlightedFields?.name &&
+          isStringOrHighlightedValue(verticalResult.highlightedFields?.name)
+        ) {
+          beverageTitle = verticalResult.highlightedFields?.name;
+        } else {
+          beverageTitle = verticalResult.name ?? "";
+        }
         return (
-          <div ref={beveragesRef}>
-            <div className="h-28 flex py-1">
-              <img src={"src/img/temp.png"} />
-              <div
-                // className=""
-                dangerouslySetInnerHTML={{ __html: highlightedText }}
-              />
+          <div id={`bev_${i}`}>
+            <div
+              className={classNames("flex py-1 items-center", {
+                "max-h-28": beverageImg,
+              })}
+            >
+              <div className="w-16">
+                <img src={beverageImg} />
+              </div>
+              <div className="ml-6 text-sm w-80">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      typeof beverageTitle === "string"
+                        ? beverageTitle
+                        : highlightText(beverageTitle),
+                  }}
+                />
+                <div className="font-bold">
+                  {beverageData.c_priceRange?.split(" ")[0]}
+                </div>
+                <div className="flex text-toast-orange">
+                  <FaStar size={16} />
+                  <FaStar size={16} />
+                  <FaStar size={16} />
+                  <FaStar size={16} />
+                  <FaStarHalf size={16} />
+                </div>
+              </div>
             </div>
-            <div className="h-px bg-primary-light mx-2" />
+            <Divider />
           </div>
         );
       });
 
-  const highlightText = (
-    text: string,
-    matchedSubstrings?: { length: number; offset: number }[]
-  ) => {
-    if (!matchedSubstrings) {
-      return text;
-    }
-
-    const highlightedSection = text.slice(
-      matchedSubstrings[0].offset,
-      matchedSubstrings[0].offset + matchedSubstrings[0].length
+  const highlightText = (highlightedValue: HighlightedValue) => {
+    const highlightedSection = highlightedValue.value.slice(
+      highlightedValue.matchedSubstrings[0].offset,
+      highlightedValue.matchedSubstrings[0].offset +
+        highlightedValue.matchedSubstrings[0].length
     );
 
-    return text.replace(
+    return highlightedValue.value.replace(
       highlightedSection,
-      `<span class="text-toast-dark-orange">${highlightedSection}</span>`
+      `<span class="text-toast-dark-orange font-bold">${highlightedSection}</span>`
     );
   };
 
   return (
-    <div className="flex flex-col items-center h-screen">
-      {/* <div className="w-full py-4 px-4">
-        <img className="w-full" src="src/img/cocktails.png"></img>
-      </div> */}
+    <div
+      style={{ maxHeight: `${height - 112}px` }}
+      className="overflow-y-scroll"
+    >
       <SearchBar
         customCssClasses={{
-          container: "w-full px-4 border-black mt-2",
-          inputDropdownContainer: "border-black",
+          container: `h-12 mb-6 w-full px-4  mt-2 h-full overflow-y-scroll `,
+          inputContainer:
+            "inline-flex items-center justify-between w-full rounded-3xl border border-black",
+          logoContainer: "w-7 mx-2.5 my-2 ",
+          inputDropdownContainer: "relative bg-white w-full overflow-hidden ",
+          inputDropdownContainer___active: "",
           optionContainer: "fixed top-[-2000px]",
         }}
+        cssCompositionMethod="assign"
         placeholder="Search beer, wine, liqour "
         visualAutocompleteConfig={{
           entityPreviewSearcher,
@@ -205,14 +233,45 @@ export const SearchScreen = (): JSX.Element => {
   );
 };
 
-function dataForRender(result: Result): Partial<Beverage> {
+const dataForRender = (result: Result): Partial<Beverage> => {
   const data = {
     id: result.id,
     name: result.name,
+    photoGallery: result.rawData.photoGallery,
+    c_priceRange: result.rawData.c_priceRange,
   };
 
   return validateData(data, {
     id: isString,
     name: isString,
+    photoGallery: isPhotoGallery,
+    c_priceRange: isString,
   });
+};
+
+const isPhotoGallery = (data: any): data is [] => {
+  // if (!Array.isArray(data) || data === null) {
+  //   return false;
+  // }
+
+  return true;
+};
+
+const isImage = (data: any): data is Image => {
+  debugger;
+  if (typeof data !== "object" || data === null) {
+    return false;
+  }
+  const expectedKeys = ["url"];
+  return expectedKeys.every((key) => {
+    return key in data;
+  });
+};
+
+export function isArray(data: unknown): data is [] {
+  if (!Array.isArray(data) || data === null) {
+    return false;
+  }
+
+  return true;
 }
