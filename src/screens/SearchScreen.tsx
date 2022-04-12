@@ -1,6 +1,5 @@
 import {
   AutocompleteResult,
-  FilterSearchResponse,
   provideAnswersHeadless,
   Result,
   useAnswersActions,
@@ -9,17 +8,13 @@ import {
 } from "@yext/answers-headless-react";
 import {
   FocusedItemData,
+  isString,
   SearchBar,
-  VerticalResults,
-  StandardCard,
+  validateData,
 } from "@yext/answers-react-components";
-import { renderAutocompleteResult } from "@yext/answers-react-components/lib/components/utils/renderAutocompleteResult";
 import { answersSandboxEndpoints } from "../main";
-import { useEffect, useState } from "react";
-
-const renderEntityPreviews = {
-  autocompleteLoading: true,
-};
+import { useEffect, useRef, useState } from "react";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 
 const searchParamFields = [
   {
@@ -44,6 +39,28 @@ const searchParamFields = [
   },
 ];
 
+type Thumbnail = {
+  height: number;
+  width: number;
+  url: string;
+};
+
+type Image = {
+  height?: number;
+  width?: number;
+  url: string;
+  thumbnails?: Thumbnail[];
+};
+
+type PhotoGallery = {
+  photoGallery: Image[];
+};
+interface Beverage {
+  id: string;
+  name: string;
+  photoGallery: Image[];
+}
+
 export const SearchScreen = (): JSX.Element => {
   const entityPreviewSearcher = provideAnswersHeadless({
     headlessId: "entity-preview-searcher",
@@ -53,20 +70,23 @@ export const SearchScreen = (): JSX.Element => {
     endpoints: answersSandboxEndpoints,
   });
 
+  const filtersRef = useRef<HTMLDivElement>(null);
+  const beveragesRef = useRef<HTMLDivElement>(null);
+
+  const { height } = useWindowDimensions();
+
   const [filters, setFilters] = useState<AutocompleteResult[]>([]);
 
   const answersActions = useAnswersActions();
   const query = useAnswersState((state) => state.query.input);
 
   /*
-  Comments: 
-
-  How do I turn off autocomplete for main provider
-  why verticalResultsArray empty
-  I thought vertical query would now be called on every keystroke
-
-  I am displacing the normal autocomplete off the page
-  */
+   * 1. timing
+   * 2. height / divider color
+   * 3. beverage name (highlighted)
+   * 4. beverage photo
+   * 5. price
+   */
   const renderEntityPreviews = (
     autocompleteLoading: boolean,
     verticalResultsArray: VerticalResultsData[],
@@ -76,23 +96,13 @@ export const SearchScreen = (): JSX.Element => {
       itemData?: FocusedItemData
     ) => void
   ) => {
+    const verticalResults = verticalResultsArray.flatMap(
+      (verticalResult) => verticalResult.results
+    );
     return (
       <div className="bg-white">
-        {filters.slice(0, 3).map((filter) => {
-          const filterText = highlightText(
-            filter.value,
-            filter.matchedSubstrings
-          );
-          return (
-            <div>
-              <div
-                className="py-1.5 px-3.5"
-                dangerouslySetInnerHTML={{ __html: filterText }}
-              ></div>
-              <div className="h-px bg-primary-light mx-2" />
-            </div>
-          );
-        })}
+        {renderFilterAutocomplete(filters)}
+        {renderBeveragesAutocomplete(verticalResults)}
       </div>
     );
   };
@@ -110,6 +120,49 @@ export const SearchScreen = (): JSX.Element => {
 
     fetchFilters();
   }, [query]);
+
+  const renderFilterAutocomplete = (results: AutocompleteResult[]) => (
+    <div ref={filtersRef}>
+      {results.slice(0, 3).map((filter, i) => {
+        const filterText = highlightText(
+          filter.value,
+          filter.matchedSubstrings
+        );
+        return (
+          <div>
+            <div
+              className="py-1.5 px-3.5"
+              dangerouslySetInnerHTML={{ __html: filterText }}
+            />
+            <div className="h-px bg-primary-light mx-2" />
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  const renderBeveragesAutocomplete = (verticalResults: Result[]) =>
+    verticalResults
+      .slice(0, Math.round(height / 112) - 3 || 0)
+      .map((verticalResult) => {
+        const beverageData = dataForRender(verticalResult);
+        const highlightedText = highlightText(
+          beverageData.name ?? ""
+          // verticalResult.highlightedFields?.name?.matchedSubstrings as  { length: number; offset: number }[]
+        );
+        return (
+          <div ref={beveragesRef}>
+            <div className="h-28 flex py-1">
+              <img src={"src/img/temp.png"} />
+              <div
+                // className=""
+                dangerouslySetInnerHTML={{ __html: highlightedText }}
+              />
+            </div>
+            <div className="h-px bg-primary-light mx-2" />
+          </div>
+        );
+      });
 
   const highlightText = (
     text: string,
@@ -131,19 +184,19 @@ export const SearchScreen = (): JSX.Element => {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="w-full py-4 px-4">
+    <div className="flex flex-col items-center h-screen">
+      {/* <div className="w-full py-4 px-4">
         <img className="w-full" src="src/img/cocktails.png"></img>
-      </div>
+      </div> */}
       <SearchBar
         customCssClasses={{
-          container: "w-full px-4 border-black",
+          container: "w-full px-4 border-black mt-2",
           inputDropdownContainer: "border-black",
           optionContainer: "fixed top-[-2000px]",
         }}
         placeholder="Search beer, wine, liqour "
         visualAutocompleteConfig={{
-          // entityPreviewSearcher,
+          entityPreviewSearcher,
           renderEntityPreviews,
           entityPreviewsDebouncingTime: 200,
         }}
@@ -151,3 +204,15 @@ export const SearchScreen = (): JSX.Element => {
     </div>
   );
 };
+
+function dataForRender(result: Result): Partial<Beverage> {
+  const data = {
+    id: result.id,
+    name: result.name,
+  };
+
+  return validateData(data, {
+    id: isString,
+    name: isString,
+  });
+}
