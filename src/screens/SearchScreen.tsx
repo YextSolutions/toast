@@ -20,6 +20,13 @@ import { Divider } from "../components/Divider";
 import classNames from "classnames";
 import { FaStar, FaStarHalf } from "react-icons/fa";
 import { answersSandboxEndpoints } from "../config";
+import { CategoryGrid } from "../components/CategoryGrid";
+import {
+  beerBottles,
+  orangeCocktail,
+  shaker,
+  wineGlasses,
+} from "../assets/imageAssets";
 
 const searchParamFields = [
   {
@@ -71,6 +78,7 @@ export const SearchScreen = (): JSX.Element => {
     experienceKey: "beverages",
     locale: "en",
     endpoints: answersSandboxEndpoints,
+    // verticalKey: "beverages",
   });
 
   const [filters, setFilters] = useState<AutocompleteResult[]>([]);
@@ -82,8 +90,9 @@ export const SearchScreen = (): JSX.Element => {
   const { height, width } = useWindowDimensions();
 
   /*
-   * 1. container styling
-   * 2. search bar styling
+   * 1. move search container on focus
+   * 2. animate movement
+   * 3  cancel search bar on close button click / click outside
    *
    * I can't move the search bar because I can't determine when it's being focused on. Maybe I can still use document.activeElement with an id on the SearchBar?
    * I can't control the functionality of the X button
@@ -214,15 +223,16 @@ export const SearchScreen = (): JSX.Element => {
 
   return (
     <div>
-      <div className="w-full flex justify-center">
+      {/* <div className="w-full flex justify-center">
         <div className={classNames("w-full py-4 px-4 max-w-sm")}>
           <img className="w-full" src="src/img/cocktails.png"></img>
         </div>
-      </div>
+      </div> */}
       <div
-        style={{ maxHeight: `${height - 327}px` }}
+        style={{ maxHeight: `${height - 112}px` }}
         className="overflow-y-scroll z-10 "
         onFocus={() => setActiveSearch(true)}
+        onBlur={() => setActiveSearch(false)}
       >
         <SearchBar
           customCssClasses={{
@@ -243,6 +253,17 @@ export const SearchScreen = (): JSX.Element => {
           }}
         />
       </div>
+      {!activeSearch && (
+        <CategoryGrid
+          title="BROWSE CATEGORIES"
+          options={[
+            { name: "BEER", img: beerBottles },
+            { name: "WINE", img: wineGlasses },
+            { name: "LIQOUR", img: orangeCocktail },
+            { name: "OTHER", img: shaker },
+          ]}
+        />
+      )}
     </div>
   );
 };
