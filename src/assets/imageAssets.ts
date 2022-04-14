@@ -21,6 +21,7 @@ import tequila from "../assets/img/tequila.png";
 import vodka from "../assets/img/vodka.png";
 import whiskey from "../assets/img/whiskey.png";
 import stout from "../assets/img/stout.png";
+import mezcal from "../assets/img/mezcal.png";
 
 const ImageAssets = {
   beerBottles,
@@ -46,6 +47,7 @@ const ImageAssets = {
   vodka,
   whiskey,
   stout,
+  mezcal,
 };
 
 export default ImageAssets;

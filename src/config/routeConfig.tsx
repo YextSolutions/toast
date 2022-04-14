@@ -60,5 +60,41 @@ export const routeConfig: RouteData[] = [
       />
     ),
   },
+  {
+    path: "/beer",
+    page: (
+      <SearchScreen
+        categoryGrid={{
+          title: "BEER",
+          options: [
+            { name: "LAGER", img: ImageAssets.lager },
+            { name: "IPA", img: ImageAssets.ipa },
+            { name: "HARD SELTZER", img: ImageAssets.hardSeltzer },
+            { name: "CIDER", img: ImageAssets.cider },
+            { name: "STOUT", img: ImageAssets.stout },
+            { name: "HARD KOMBUCHA", img: ImageAssets.hardKombucha },
+          ],
+        }}
+      />
+    ),
+  },
+  {
+    path: "/liquor",
+    page: (
+      <SearchScreen
+        categoryGrid={{
+          title: "LIQUOR",
+          options: [
+            { name: "VODKA", img: ImageAssets.vodka },
+            { name: "TEQUILA", img: ImageAssets.whiteWine },
+            { name: "WHISKEY", img: ImageAssets.whiskey },
+            { name: "RUM", img: ImageAssets.rum },
+            { name: "MEZCAL", img: ImageAssets.mezcal },
+            { name: "OTHER LIQUOR", img: ImageAssets.otherLiquor },
+          ],
+        }}
+      />
+    ),
+  },
   { path: "/:alcoholType/*", page: <BeverageResultsScreen /> },
 ];
