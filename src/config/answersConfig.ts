@@ -13,3 +13,6 @@ export const answersSandboxEndpoints = {
   filterSearch:
     "https://liveapi-sandbox.yext.com/v2/accounts/me/answers/filtersearch",
 };
+
+export const answersApiKey = "220cb8d6ae04d12ee7564f9421ec0a9e";
+export const answersExperienceKey = "beverages";

@@ -9,6 +9,9 @@ module.exports = {
       fontFamily: {
         primary: ["Sora"],
       },
+      fontSize: {
+        xxs: "0.625rem",
+      },
       colors: {
         primary: "#2563eb",
         "primary-light": "#dbeafe",
