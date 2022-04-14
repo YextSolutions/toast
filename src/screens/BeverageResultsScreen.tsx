@@ -18,12 +18,14 @@ export const BeverageResultsScreen = () => {
   useEffect(() => {
     const alcoholType = urlParams.alcoholType;
     const category = urlParams.category;
-    const subCategory = urlParams.subcategory;
+    const subCategory = urlParams.subCategory;
     const query = searchParams.get("query");
 
     answersActions.setQuery(query ?? "");
 
     const selectedFilters: SelectableFilter[] = [];
+
+    console.log(`${alcoholType} ${category} ${subCategory}`);
 
     alcoholType &&
       selectedFilters.push({

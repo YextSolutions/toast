@@ -49,12 +49,32 @@ export const routeConfig: RouteData[] = [
         categoryGrid={{
           title: "WINE",
           options: [
-            { name: "RED WINE", img: ImageAssets.redWine },
-            { name: "WHITE WINE", img: ImageAssets.whiteWine },
-            { name: "ROSÉ WINE", img: ImageAssets.rose },
-            { name: "SPARKLING WINE", img: ImageAssets.sparklingWine },
-            { name: "SPECIALITY WINE", img: ImageAssets.specialityWine },
-            { name: "ALL WINE", img: ImageAssets.allWine },
+            {
+              name: "RED WINE",
+              img: ImageAssets.redWine,
+              linkPath: "/wine/red-wine",
+            },
+            {
+              name: "WHITE WINE",
+              img: ImageAssets.whiteWine,
+              linkPath: "/wine/white-wine",
+            },
+            { name: "ROSÉ WINE", img: ImageAssets.rose, linkPath: "/rose" },
+            {
+              name: "SPARKLING WINE",
+              img: ImageAssets.sparklingWine,
+              linkPath: "/wine/sparkling-wine",
+            },
+            {
+              name: "SPECIALITY WINE",
+              img: ImageAssets.specialityWine,
+              linkPath: "/wine/speciality-wine",
+            },
+            {
+              name: "ALL WINE",
+              img: ImageAssets.allWine,
+              linkPath: "/wine",
+            },
           ],
         }}
       />
@@ -67,12 +87,28 @@ export const routeConfig: RouteData[] = [
         categoryGrid={{
           title: "BEER",
           options: [
-            { name: "LAGER", img: ImageAssets.lager },
-            { name: "IPA", img: ImageAssets.ipa },
-            { name: "HARD SELTZER", img: ImageAssets.hardSeltzer },
-            { name: "CIDER", img: ImageAssets.cider },
-            { name: "STOUT", img: ImageAssets.stout },
-            { name: "HARD KOMBUCHA", img: ImageAssets.hardKombucha },
+            { name: "LAGER", img: ImageAssets.lager, linkPath: "/beer/lager" },
+            { name: "IPA", img: ImageAssets.ipa, linkPath: "/beer/ale/ipa" },
+            {
+              name: "HARD SELTZER",
+              img: ImageAssets.hardSeltzer,
+              linkPath: "/beer/specialty-beer-alternatives/hard-seltzer",
+            },
+            {
+              name: "CIDER",
+              img: ImageAssets.cider,
+              linkPath: "/beer/specialty-beer-alternatives/hard-seltzer",
+            },
+            {
+              name: "STOUT",
+              img: ImageAssets.stout,
+              linkPath: "/beer/ale/stout",
+            },
+            {
+              name: "ALL BEERS",
+              img: ImageAssets.hardKombucha,
+              linkPath: "/beer",
+            },
           ],
         }}
       />
@@ -85,16 +121,41 @@ export const routeConfig: RouteData[] = [
         categoryGrid={{
           title: "LIQUOR",
           options: [
-            { name: "VODKA", img: ImageAssets.vodka },
-            { name: "TEQUILA", img: ImageAssets.whiteWine },
-            { name: "WHISKEY", img: ImageAssets.whiskey },
-            { name: "RUM", img: ImageAssets.rum },
-            { name: "MEZCAL", img: ImageAssets.mezcal },
-            { name: "OTHER LIQUOR", img: ImageAssets.otherLiquor },
+            {
+              name: "VODKA",
+              img: ImageAssets.vodka,
+              linkPath: "/liquor/vodka",
+            },
+            {
+              name: "TEQUILA",
+              img: ImageAssets.whiteWine,
+              linkPath: "/liquor/tequila",
+            },
+            {
+              name: "WHISKEY",
+              img: ImageAssets.whiskey,
+              linkPath: "/liquor/whiskey",
+            },
+            { name: "RUM", img: ImageAssets.rum, linkPath: "/liquor/rum" },
+            {
+              name: "MEZCAL",
+              img: ImageAssets.mezcal,
+              linkPath: "/liquor/mezcal",
+            },
+            {
+              name: "ALL LIQUOR",
+              img: ImageAssets.otherLiquor,
+              linkPath: "/liquor",
+            },
           ],
         }}
       />
     ),
   },
   { path: "/:alcoholType/*", page: <BeverageResultsScreen /> },
+  { path: "/:alcoholType/:category/*", page: <BeverageResultsScreen /> },
+  {
+    path: "/:alcoholType/:category/:subCategory/*",
+    page: <BeverageResultsScreen />,
+  },
 ];
