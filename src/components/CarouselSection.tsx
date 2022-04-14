@@ -1,20 +1,18 @@
 import {
-  AnswersHeadlessContext,
   AnswersHeadlessProvider,
   useAnswersActions,
   useAnswersState,
 } from "@yext/answers-headless-react";
-import { StandardSection } from "@yext/answers-react-components";
 import { useEffect, useState } from "react";
 import { titos } from "../assets/imageAssets";
 import {
   answersApiKey,
   answersExperienceKey,
   answersSandboxEndpoints,
-} from "../config";
-import { Beverage, dataForRender } from "../screens/HomeSearchScreen";
+} from "../config/answersConfig";
+import { Beverage, dataForRender } from "../utils/typeUtils";
 
-interface CarouselSectionProps {
+export interface CarouselSectionProps {
   sectionName: string;
   beverageTag: BeverageTag;
   limit?: number;
@@ -31,8 +29,6 @@ const Carousel = ({
   beverageTag,
   limit,
 }: CarouselSectionProps) => {
-  const [data, setData] = useState<Partial<Beverage>[]>([]);
-
   const answersActions = useAnswersActions();
   const verticalResults = useAnswersState((state) => state.vertical.results);
 
@@ -40,12 +36,6 @@ const Carousel = ({
     answersActions.setContext({ staticResults: "TRENDING" });
     answersActions.executeVerticalQuery();
   }, []);
-
-  useEffect(() => {
-    verticalResults &&
-      setData(verticalResults?.map((result) => dataForRender(result)));
-  }),
-    [verticalResults];
 
   return (
     <div className="px-4">
@@ -56,22 +46,26 @@ const Carousel = ({
       </div>
 
       <div className="overflow-x-auto flex">
-        {data.map((beverage) => (
-          <div className="flex flex-col">
-            <div className="border border-toast-dark-orange bg-toast-light-orange mx-1">
-              <div className="w-52 h-40 flex justify-center items-center">
-                {/* TODO: replace with actual image */}
-                <img className="" src={titos} />
+        {verticalResults &&
+          verticalResults.map((result) => {
+            const beverage = dataForRender(result);
+            return (
+              <div className="flex flex-col">
+                <div className="border border-toast-dark-orange bg-toast-light-orange mx-1">
+                  <div className="w-52 h-40 flex justify-center items-center">
+                    {/* TODO: replace with actual image */}
+                    <img className="" src={titos} />
+                  </div>
+                </div>
+                <div className="mt-2 mb-6">
+                  <div className="font-semibold text-xxs">{beverage.name}</div>
+                  <div className="text-xxs">
+                    {beverage.c_priceRange?.split(" ")[0]}
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="mt-2 mb-6">
-              <div className="font-semibold text-xxs">{beverage.name}</div>
-              <div className="text-xxs">
-                {beverage.c_priceRange?.split(" ")[0]}
-              </div>
-            </div>
-          </div>
-        ))}
+            );
+          })}
       </div>
       <button className="flex justify-center items-center bg-toast-blue w-full h-10">
         <div className="text-white font-bold text-xs">VIEW ALL</div>

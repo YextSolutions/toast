@@ -1,4 +1,4 @@
-interface CategoryGridProps {
+export interface CategoryGridProps {
   title: string;
   options: {
     img: string;

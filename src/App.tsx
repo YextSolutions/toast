@@ -1,14 +1,40 @@
 import "./App.css";
-import { SearchScreen } from "./screens/HomeSearchScreen";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { SearchScreen } from "./screens/SearchScreen";
 import { Header } from "./components/Header";
 import { DeliveryBanner } from "./components/DeliveryBanner";
+import {
+  beerBottles,
+  orangeCocktail,
+  shaker,
+  wineGlasses,
+} from "./assets/imageAssets";
 
 function App() {
   return (
     <div className="font-primary">
       <Header />
       <DeliveryBanner />
-      <SearchScreen />
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <SearchScreen
+                categoryGrid={{
+                  title: "BROWSE CATEGORIES",
+                  options: [
+                    { name: "BEER", img: beerBottles },
+                    { name: "WINE", img: wineGlasses },
+                    { name: "LIQOUR", img: orangeCocktail },
+                    { name: "OTHER", img: shaker },
+                  ],
+                }}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

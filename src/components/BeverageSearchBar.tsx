@@ -20,9 +20,9 @@ import {
   answersApiKey,
   answersExperienceKey,
   answersSandboxEndpoints,
-} from "../config";
-import { dataForRender } from "../screens/HomeSearchScreen";
+} from "../config/answersConfig";
 import { StarRating } from "./StarRating";
+import { dataForRender } from "../utils/typeUtils";
 
 const searchParamFields = [
   {

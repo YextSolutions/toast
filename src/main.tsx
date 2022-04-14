@@ -7,7 +7,7 @@ import {
   answersApiKey,
   answersExperienceKey,
   answersSandboxEndpoints,
-} from "./config";
+} from "./config/answersConfig";
 
 ReactDOM.render(
   <React.StrictMode>
