@@ -1,3 +1,4 @@
+import { v4 as uuid } from "uuid";
 import { Result } from "@yext/answers-headless-react";
 import { isString, validateData } from "@yext/answers-react-components";
 import { CategoryGrid, CategoryGridProps } from "../components/CategoryGrid";
@@ -41,27 +42,16 @@ export const SearchScreen = ({
             options={categoryGrid.options}
           />
         )}
-        <div className="mt-11">
-          <CarouselSection
-            sectionName="TRENDING"
-            limit={8}
-            beverageTag={BeverageTag.Trending}
-          />
-        </div>
-        <div className="mt-11">
-          <CarouselSection
-            sectionName="BEST SELLERS"
-            limit={8}
-            beverageTag={BeverageTag.Trending}
-          />
-        </div>
-        <div className="mt-11">
-          <CarouselSection
-            sectionName="GIFT GUIDE"
-            limit={8}
-            beverageTag={BeverageTag.Trending}
-          />
-        </div>
+        {carouselSections &&
+          carouselSections.map((section, i) => (
+            <div key={`carousel_${uuid()}`} className="mt-11">
+              <CarouselSection
+                sectionName={section.sectionName}
+                limit={8}
+                beverageTag={section.beverageTag}
+              />
+            </div>
+          ))}
       </div>
     </div>
   );

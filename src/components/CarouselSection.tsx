@@ -1,3 +1,4 @@
+import { v4 as uuid } from "uuid";
 import {
   AnswersHeadlessProvider,
   useAnswersActions,
@@ -13,6 +14,7 @@ import {
 import { Beverage, dataForRender } from "../utils/typeUtils";
 
 export interface CarouselSectionProps {
+  id?: string;
   sectionName: string;
   beverageTag: BeverageTag;
   limit?: number;
@@ -50,7 +52,7 @@ const Carousel = ({
           verticalResults.map((result) => {
             const beverage = dataForRender(result);
             return (
-              <div className="flex flex-col">
+              <div key={`item_${uuid()}`} className="flex flex-col">
                 <div className="border border-toast-dark-orange bg-toast-light-orange mx-1">
                   <div className="w-52 h-40 flex justify-center items-center">
                     {/* TODO: replace with actual image */}

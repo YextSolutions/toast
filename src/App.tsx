@@ -9,12 +9,14 @@ import {
   shaker,
   wineGlasses,
 } from "./assets/imageAssets";
+import { BeverageTag } from "./components/CarouselSection";
 
 function App() {
   return (
     <div className="font-primary">
       <Header />
       <DeliveryBanner />
+      {/* TODO: add to config files */}
       <BrowserRouter>
         <Routes>
           <Route
@@ -30,6 +32,23 @@ function App() {
                     { name: "OTHER", img: shaker },
                   ],
                 }}
+                carouselSections={[
+                  {
+                    sectionName: "TRENDING",
+                    limit: 8,
+                    beverageTag: BeverageTag.Trending,
+                  },
+                  {
+                    sectionName: "BEST SELLERS",
+                    limit: 8,
+                    beverageTag: BeverageTag.BestSeller,
+                  },
+                  {
+                    sectionName: "GIFT GUIDE",
+                    limit: 8,
+                    beverageTag: BeverageTag.Gift,
+                  },
+                ]}
               />
             }
           />
