@@ -1,12 +1,18 @@
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useH } from "react-router-dom";
 import { SearchScreen } from "./screens/SearchScreen";
 import { Header } from "./components/Header";
 import { DeliveryBanner } from "./components/DeliveryBanner";
 import {
+  allWine,
   beerBottles,
   orangeCocktail,
+  redWine,
+  rose,
   shaker,
+  sparklingWine,
+  specialityWine,
+  whiteWine,
   wineGlasses,
 } from "./assets/imageAssets";
 import { BeverageTag } from "./components/CarouselSection";
@@ -26,10 +32,14 @@ function App() {
                 categoryGrid={{
                   title: "BROWSE CATEGORIES",
                   options: [
-                    { name: "BEER", img: beerBottles },
-                    { name: "WINE", img: wineGlasses },
-                    { name: "LIQOUR", img: orangeCocktail },
-                    { name: "OTHER", img: shaker },
+                    { name: "BEER", img: beerBottles, linkPath: "/beer" },
+                    { name: "WINE", img: wineGlasses, linkPath: "/wine" },
+                    {
+                      name: "LIQOUR",
+                      img: orangeCocktail,
+                      linkPath: "/liquor",
+                    },
+                    { name: "OTHER", img: shaker, linkPath: "/other" },
                   ],
                 }}
                 carouselSections={[
@@ -49,6 +59,24 @@ function App() {
                     beverageTag: BeverageTag.Gift,
                   },
                 ]}
+              />
+            }
+          />
+          <Route
+            path="/wine"
+            element={
+              <SearchScreen
+                categoryGrid={{
+                  title: "WINE",
+                  options: [
+                    { name: "RED WINE", img: redWine },
+                    { name: "WHITE WINE", img: whiteWine },
+                    { name: "ROSÉ WINE", img: rose },
+                    { name: "SPARKLING WINE", img: sparklingWine },
+                    { name: "SPECIALITY WINE", img: specialityWine },
+                    { name: "ALL WINE", img: allWine },
+                  ],
+                }}
               />
             }
           />

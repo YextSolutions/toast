@@ -26,6 +26,7 @@ export enum BeverageTag {
   Gift = "GIFT",
 }
 
+// TODO: add spinner for carousels or use less cards
 const Carousel = ({
   sectionName,
   beverageTag,
