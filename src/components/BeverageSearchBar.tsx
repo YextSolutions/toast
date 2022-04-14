@@ -98,7 +98,7 @@ export const BeverageSearchBar = () => {
   };
 
   const renderBeveragesAutocomplete = (verticalResults: Result[]) =>
-    verticalResults.map((verticalResult, i) => {
+    verticalResults.map((verticalResult) => {
       const beverageData = dataForRender(verticalResult);
       const beverageImg = verticalResult.rawData.photoGallery?.[0].image.url;
       let beverageTitle: HighlightedValue | string;
@@ -111,7 +111,7 @@ export const BeverageSearchBar = () => {
         beverageTitle = verticalResult.name ?? "";
       }
       return (
-        <div id={`bev_${i}`}>
+        <div>
           <div
             className={classNames("flex py-1 items-center", {
               "max-h-28": beverageImg,

@@ -5,7 +5,7 @@ import {
   useAnswersState,
 } from "@yext/answers-headless-react";
 import { useEffect, useState } from "react";
-import { titos } from "../assets/imageAssets";
+import ImageAssets from "../assets/imageAssets";
 import {
   answersApiKey,
   answersExperienceKey,
@@ -57,7 +57,7 @@ const Carousel = ({
                 <div className="border border-toast-dark-orange bg-toast-light-orange mx-1">
                   <div className="w-52 h-40 flex justify-center items-center">
                     {/* TODO: replace with actual image */}
-                    <img className="" src={titos} />
+                    <img className="" src={ImageAssets.titos} />
                   </div>
                 </div>
                 <div className="mt-2 mb-6">

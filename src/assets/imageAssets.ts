@@ -10,8 +10,19 @@ import rose from "../assets/img/rose.png";
 import sparklingWine from "../assets/img/sparkling_wine.png";
 import specialityWine from "../assets/img/speciality_wine.png";
 import whiteWine from "../assets/img/white_wine.png";
+import cider from "../assets/img/cider.png";
+import hardKombucha from "../assets/img/hard_kombucha.png";
+import hardSeltzer from "../assets/img/hard_seltzer.png";
+import ipa from "../assets/img/ipa.png";
+import lager from "../assets/img/lager.png";
+import otherLiquor from "../assets/img/other_liquor.png";
+import rum from "../assets/img/rum.png";
+import tequila from "../assets/img/tequila.png";
+import vodka from "../assets/img/vodka.png";
+import whiskey from "../assets/img/whiskey.png";
+import stout from "../assets/img/stout.png";
 
-export {
+const ImageAssets = {
   beerBottles,
   cocktails,
   orangeCocktail,
@@ -24,4 +35,17 @@ export {
   sparklingWine,
   specialityWine,
   whiteWine,
+  cider,
+  hardKombucha,
+  hardSeltzer,
+  ipa,
+  lager,
+  otherLiquor,
+  rum,
+  tequila,
+  vodka,
+  whiskey,
+  stout,
 };
+
+export default ImageAssets;
