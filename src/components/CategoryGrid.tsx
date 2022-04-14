@@ -1,6 +1,3 @@
-/*
- * 1. Props: Title, Image + Name + onClick,
- */
 interface CategoryGridProps {
   title: string;
   options: {
@@ -35,33 +32,3 @@ export const CategoryGrid = ({
     </div>
   </div>
 );
-
-{
-  /* <div className="grid grid-cols-2 justify-items-center gap-2">
-        <div className="flex flex-col items-center mt-4">
-          <img
-            className="object-cover w-40 h-44"
-            src="src/img/beer_bottles.png"
-          />
-          <div className="text-toast-blue text-xs mt-1.5">BEER</div>
-        </div>
-        <div className="mt-4">
-          <img
-            className="object-cover w-40 h-44"
-            src="src/img/wine_glasses.png"
-          />
-          <span className="text-toast-blue text-sm">WINE</span>
-        </div>
-        <div className="mt-4">
-          <img
-            className="object-cover w-40 h-44"
-            src="src/img/orange_cocktail.png"
-          />
-          <span className="text-toast-blue text-sm">SPIRITS</span>
-        </div>
-        <div className="mt-4">
-          <img className="object-cover w-40 h-44" src="src/img/shaker.png" />
-          <span className="text-toast-blue text-sm">OTHER</span>
-        </div>
-      </div>  */
-}
