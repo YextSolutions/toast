@@ -5,6 +5,8 @@ import {
   validateData,
 } from "@yext/answers-react-components";
 import classNames from "classnames";
+import ImageAssets from "../assets/imageAssets";
+import { StarRating } from "./StarRating";
 
 type Thumbnail = {
   height: number;
@@ -22,7 +24,19 @@ type Image = {
 export interface Beverage {
   id: string;
   name: string;
-  photoGallery: Image[];
+  photoGallery?: {
+    image: {
+      url: string;
+      width: string;
+      height: string;
+      sourceUrl: string;
+      thumbnails: {
+        url: string;
+        width: string;
+        height: string;
+      }[];
+    };
+  }[];
   c_priceRange: string;
 }
 
@@ -41,11 +55,7 @@ export const dataForRender = (result: Result): Partial<Beverage> => {
   });
 };
 
-const isPhotoGallery = (data: any): data is [] => {
-  // if (!Array.isArray(data) || data === null) {
-  //   return false;
-  // }
-
+const isPhotoGallery = (data: any) => {
   return true;
 };
 
@@ -68,22 +78,41 @@ export function isArray(data: unknown): data is [] {
   return true;
 }
 
-interface BeverageCardProps extends CardProps {}
+interface BeverageCardProps extends CardProps {
+  autocomplete?: boolean;
+}
 
-export const BeverageCard = ({ result }: BeverageCardProps): JSX.Element => {
+export const BeverageCard = ({
+  result,
+  autocomplete,
+}: BeverageCardProps): JSX.Element => {
   const beverage = dataForRender(result);
 
   return (
     <div
-      className={classNames("flex py-1 items-center h-20 w-20", {
-        // "max-h-28": beverageImg,
-      })}
+      className={classNames(
+        { "h-72 m-2": !autocomplete },
+        {
+          "max-h-28": false,
+        },
+        { "flex py-1 items-center h-20 w-20": autocomplete }
+      )}
     >
-      <div>TEST</div>
-      {/* <div className="w-16">
-        <img src={beverageImg} />
+      <div
+        className={classNames("w-full h-40 flex justify-center items-center", {
+          "w-16": autocomplete,
+        })}
+      >
+        <img className="w-24" src={beverage.photoGallery?.[0].image.url} />
       </div>
-      <div className="ml-6 text-sm w-80">
+      <div className="overflow-hidden text-ellipsis h-10">
+        <p className="text-sm">{beverage.name}</p>
+      </div>
+      <div className="mb-1 text-xs">
+        <p>{beverage.c_priceRange?.split(" ")[0]}</p>
+      </div>
+      <StarRating />
+      {/* <div className="ml-6 text-sm w-80">
         <div
           dangerouslySetInnerHTML={{
             __html:
@@ -95,8 +124,7 @@ export const BeverageCard = ({ result }: BeverageCardProps): JSX.Element => {
         <div className="font-bold">
           {beverageData.c_priceRange?.split(" ")[0]}
         </div>
-        <StarRating />
-      </div> */}
+      </div>  */}
     </div>
   );
 };

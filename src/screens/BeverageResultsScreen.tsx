@@ -1,13 +1,11 @@
-import {
-  Matcher,
-  SelectableFilter,
-  useAnswersActions,
-} from "@yext/answers-headless-react";
+import { Matcher, SelectableFilter, useAnswersActions } from "@yext/answers-headless-react";
 import { VerticalResults } from "@yext/answers-react-components";
 import { useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageCard } from "../components/BeverageCard";
 import { BeverageSearchBar } from "../components/BeverageSearchBar";
+import { extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
 
 export const BeverageResultsScreen = () => {
   const urlParams = useParams();
@@ -16,16 +14,12 @@ export const BeverageResultsScreen = () => {
   const answersActions = useAnswersActions();
 
   useEffect(() => {
-    const alcoholType = urlParams.alcoholType;
-    const category = urlParams.category;
-    const subCategory = urlParams.subCategory;
+    const { alcoholType, category, subCategory } = extractBeverageInfoFromUrl(urlParams);
     const query = searchParams.get("query");
 
     answersActions.setQuery(query ?? "");
 
     const selectedFilters: SelectableFilter[] = [];
-
-    console.log(`${alcoholType} ${category} ${subCategory}`);
 
     alcoholType &&
       selectedFilters.push({
@@ -36,6 +30,7 @@ export const BeverageResultsScreen = () => {
       });
 
     category &&
+      alcoholType !== "all" &&
       selectedFilters.push({
         selected: true,
         fieldId: "c_category",
@@ -53,13 +48,16 @@ export const BeverageResultsScreen = () => {
 
     answersActions.setStaticFilters(selectedFilters);
     answersActions.executeVerticalQuery();
-  }, []);
+    answersActions.setStaticFilters([]);
+  }, [urlParams]);
 
   return (
     <>
       <BeverageSearchBar />
-      {/* <VerticalResults CardComponent={BeverageCard} /> */}
-      HELLO!!!!
+      <VerticalResults
+        customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3" }}
+        CardComponent={BeverageCard}
+      />
     </>
   );
 };

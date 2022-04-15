@@ -19,7 +19,7 @@ export const routeConfig: RouteData[] = [
               img: ImageAssets.orangeCocktail,
               linkPath: "/liquor",
             },
-            { name: "OTHER", img: ImageAssets.shaker, linkPath: "/other" },
+            { name: "OTHER", img: ImageAssets.shaker },
           ],
         }}
         carouselSections={[
@@ -59,7 +59,7 @@ export const routeConfig: RouteData[] = [
               img: ImageAssets.whiteWine,
               linkPath: "/wine/white-wine",
             },
-            { name: "ROSÉ WINE", img: ImageAssets.rose, linkPath: "/rose" },
+            { name: "ROSÉ WINE", img: ImageAssets.rose, linkPath: "/wine/rose" },
             {
               name: "SPARKLING WINE",
               img: ImageAssets.sparklingWine,
@@ -73,7 +73,7 @@ export const routeConfig: RouteData[] = [
             {
               name: "ALL WINE",
               img: ImageAssets.allWine,
-              linkPath: "/wine",
+              linkPath: "/wine/all",
             },
           ],
         }}
@@ -107,7 +107,7 @@ export const routeConfig: RouteData[] = [
             {
               name: "ALL BEERS",
               img: ImageAssets.hardKombucha,
-              linkPath: "/beer",
+              linkPath: "/beer/all",
             },
           ],
         }}
@@ -145,7 +145,7 @@ export const routeConfig: RouteData[] = [
             {
               name: "ALL LIQUOR",
               img: ImageAssets.otherLiquor,
-              linkPath: "/liquor",
+              linkPath: "/liquor/all",
             },
           ],
         }}
