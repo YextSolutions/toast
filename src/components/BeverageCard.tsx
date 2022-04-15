@@ -1,9 +1,5 @@
 import { Result } from "@yext/answers-headless-react";
-import {
-  CardProps,
-  isString,
-  validateData,
-} from "@yext/answers-react-components";
+import { CardProps, isString, validateData } from "@yext/answers-react-components";
 import classNames from "classnames";
 import ImageAssets from "../assets/imageAssets";
 import { StarRating } from "./StarRating";
@@ -24,6 +20,9 @@ type Image = {
 export interface Beverage {
   id: string;
   name: string;
+  c_alcoholType: string;
+  c_category: string;
+  c_subCategory: string;
   photoGallery?: {
     image: {
       url: string;
@@ -41,17 +40,25 @@ export interface Beverage {
 }
 
 // TODO: either pass as prop to other components or add to util folder
-export const dataForRender = (result: Result): Partial<Beverage> => {
+export const dataForRender = (result: Result | undefined): Partial<Beverage> => {
+  if (!result) return {};
+
   const data = {
     name: result.rawData.name,
     photoGallery: result.rawData.photoGallery,
     c_priceRange: result.rawData.c_priceRange,
+    c_alcoholType: result.rawData.c_alcoholType,
+    c_category: result.rawData.c_category,
+    c_subCategory: result.rawData.c_subCategory,
   };
 
   return validateData(data, {
     name: isString,
     photoGallery: isPhotoGallery,
     c_priceRange: isString,
+    c_alcoholType: isString,
+    c_category: isString,
+    c_subCategory: isString,
   });
 };
 
@@ -82,10 +89,7 @@ interface BeverageCardProps extends CardProps {
   autocomplete?: boolean;
 }
 
-export const BeverageCard = ({
-  result,
-  autocomplete,
-}: BeverageCardProps): JSX.Element => {
+export const BeverageCard = ({ result, autocomplete }: BeverageCardProps): JSX.Element => {
   const beverage = dataForRender(result);
 
   return (

@@ -16,7 +16,7 @@ const BeverageBreadcrumbs = (): JSX.Element => {
     if (!label) return <></>;
     label = label
       .toLowerCase()
-      .replace("-", " ")
+      .replaceAll("-", " ")
       .split(" ")
       .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
       .join(" ");
@@ -59,7 +59,7 @@ const BeverageBreadcrumbs = (): JSX.Element => {
           renderPageLink(
             beverageInfo.category,
             beverageInfo.subCategory
-              ? `/${beverageInfo.alcoholType}/${beverageInfo.category?.replace(" ", "-")}`
+              ? `/${beverageInfo.alcoholType}/${beverageInfo.category?.replaceAll(" ", "-")}`
               : undefined
           )}
         {renderPageLink(beverageInfo.subCategory)}

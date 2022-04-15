@@ -2,7 +2,6 @@ import { Matcher, SelectableFilter, useAnswersActions } from "@yext/answers-head
 import { VerticalResults } from "@yext/answers-react-components";
 import { useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageCard } from "../components/BeverageCard";
 import { BeverageSearchBar } from "../components/BeverageSearchBar";
 import { extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
@@ -34,7 +33,7 @@ export const BeverageResultsScreen = () => {
       selectedFilters.push({
         selected: true,
         fieldId: "c_category",
-        value: category,
+        value: category.replaceAll("-", " "),
         matcher: Matcher.Equals,
       });
 
@@ -42,7 +41,7 @@ export const BeverageResultsScreen = () => {
       selectedFilters.push({
         selected: true,
         fieldId: "c_subCategory",
-        value: subCategory,
+        value: subCategory.replaceAll("-", " "),
         matcher: Matcher.Equals,
       });
 

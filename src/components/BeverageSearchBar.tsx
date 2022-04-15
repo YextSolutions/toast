@@ -22,9 +22,9 @@ import {
   answersSandboxEndpoints,
 } from "../config/answersConfig";
 import { StarRating } from "./StarRating";
-import { dataForRender } from "../utils/typeUtils";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import BeverageBreadcrumbs from "./BeverageBreadcrumbs";
+import { dataForRender } from "./BeverageCard";
 
 const searchParamFields = [
   {
@@ -47,8 +47,6 @@ export const BeverageSearchBar = () => {
     locale: "en",
     endpoints: answersSandboxEndpoints,
   });
-  const urlParams = useParams();
-
   const { height, width } = useWindowDimensions();
   const [activeSearch, setActiveSearch] = useState(false);
   const [autocompleteFilters, setAutocompleteFilters] = useState<AutocompleteResult[]>([]);
@@ -105,7 +103,7 @@ export const BeverageSearchBar = () => {
   const renderBeveragesAutocomplete = (verticalResults: Result[]) =>
     verticalResults.map((verticalResult) => {
       const beverageData = dataForRender(verticalResult);
-      const beverageImg = beverageData.photoGallery?.[0].url;
+      const beverageImg = beverageData.photoGallery?.[0].image.url;
       let beverageTitle: HighlightedValue | string;
       if (
         verticalResult.highlightedFields?.name &&
@@ -148,24 +146,57 @@ export const BeverageSearchBar = () => {
     console.log(document.activeElement?.id || "no active element");
   }, [document.activeElement]);
 
-  const renderFilterAutocomplete = (results: AutocompleteResult[]) => (
-    <div>
-      {results.slice(0, 3).map((filter, i) => {
-        const filterText = filter.matchedSubstrings
-          ? highlightText({
-              value: filter.value,
-              matchedSubstrings: filter.matchedSubstrings,
-            })
-          : filter.value;
-        return (
-          <div id={`filter_${i}`}>
-            <div className="py-1.5 px-3.5" dangerouslySetInnerHTML={{ __html: filterText }} />
-            <Divider />
-          </div>
-        );
-      })}
-    </div>
-  );
+  const renderFilterAutocomplete = (results: AutocompleteResult[]) => {
+    return (
+      <div>
+        {results.slice(0, 3).map((filter, i) => {
+          const filterText = filter.matchedSubstrings
+            ? highlightText({
+                value: filter.value,
+                matchedSubstrings: filter.matchedSubstrings,
+              })
+            : filter.value;
+
+          const relatedBeverage = dataForRender(filter.relatedItem);
+          const link = generateLink(
+            filter.value,
+            relatedBeverage.c_alcoholType,
+            relatedBeverage.c_category,
+            relatedBeverage.c_subCategory
+          );
+
+          return (
+            <>
+              <Link to={link}>
+                <div className="py-1.5 px-3.5" dangerouslySetInnerHTML={{ __html: filterText }} />
+                <Divider />
+              </Link>
+            </>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const generateLink = (
+    filterValue?: string,
+    alcoholType?: string,
+    category?: string,
+    subCategory?: string
+  ): string => {
+    if (!alcoholType) return "";
+
+    let link = `/${alcoholType.toLowerCase()}`;
+    if (category) {
+      link += `/${category.toLowerCase().replaceAll(" ", "-")}`;
+      if (subCategory && filterValue !== category) {
+        link += `/${subCategory.toLowerCase().replaceAll(" ", "-")}`;
+      }
+      return link;
+    } else {
+      return link + "/all";
+    }
+  };
 
   // TODO: see if there is an Answers React function for this
   const highlightText = (highlightedValue: HighlightedValue) => {
@@ -204,7 +235,7 @@ export const BeverageSearchBar = () => {
           visualAutocompleteConfig={{
             entityPreviewSearcher,
             renderEntityPreviews,
-            entityPreviewsDebouncingTime: 300,
+            entityPreviewsDebouncingTime: 200,
           }}
         />
       </div>
