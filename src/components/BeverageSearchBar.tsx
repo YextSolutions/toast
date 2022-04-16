@@ -215,8 +215,8 @@ export const BeverageSearchBar = () => {
   const handleSubmit = (searchEventData: { verticalKey?: string; query?: string }) => {
     const { query } = searchEventData;
 
-    navigate("/search");
-    setSearchParams({ query: query ?? "" });
+    navigate(`/search?query=${query}`);
+
     changeHandler(false);
   };
 

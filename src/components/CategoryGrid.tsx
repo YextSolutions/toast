@@ -25,7 +25,7 @@ export const CategoryGrid = ({ title, options }: CategoryGridProps): JSX.Element
         <span className="text-toast-dark-orange text-base font-extrabold">{title}</span>
       </div>
       <div className="grid grid-cols-2 justify-items-center gap-2">
-        {options.map((option, i) => {
+        {options.map((option) => {
           return (
             <button onClick={() => handleTileClick(option.linkPath)}>
               <div key={`tile_${uuid()}`} className="flex flex-col items-center mt-4">

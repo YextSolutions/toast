@@ -1,3 +1,4 @@
+import { v4 as uuid } from "uuid";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 export interface RouteData {
@@ -14,7 +15,7 @@ export const PageRouter = ({ routes }: PageRouterProps) => {
     <BrowserRouter>
       <Routes>
         {routes.map((route) => (
-          <Route path={route.path} element={route.page} />
+          <Route key={uuid()} path={route.path} element={route.page} />
         ))}
       </Routes>
     </BrowserRouter>

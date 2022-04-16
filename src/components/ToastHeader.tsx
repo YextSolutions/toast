@@ -4,7 +4,7 @@ import { FaShoppingBasket } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { SearchCtx } from "../App";
 
-export const Header = (): JSX.Element => {
+export const ToastHeader = (): JSX.Element => {
   const { active, setActive } = useContext(SearchCtx);
 
   const changeHandler = (change: boolean) => setActive(change);
@@ -25,7 +25,7 @@ export const Header = (): JSX.Element => {
           )}
         </div>
         <div className="w-1/3 flex justify-center">
-          <Link className="text-3xl text-toast-red font-semibold" to="/beer">
+          <Link className="text-3xl text-toast-red font-semibold" to="/">
             TOAST
           </Link>
         </div>

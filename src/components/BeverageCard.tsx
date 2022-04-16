@@ -1,7 +1,6 @@
 import { Result } from "@yext/answers-headless-react";
 import { CardProps, isString, validateData } from "@yext/answers-react-components";
 import classNames from "classnames";
-import ImageAssets from "../assets/imageAssets";
 import { StarRating } from "./StarRating";
 
 type Thumbnail = {
