@@ -22,7 +22,7 @@ import {
   answersSandboxEndpoints,
 } from "../config/answersConfig";
 import { StarRating } from "./StarRating";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { dataForRender } from "./BeverageCard";
 import { SearchCtx } from "../App";
 
@@ -49,6 +49,9 @@ export const BeverageSearchBar = () => {
   });
   const { setActive } = useContext(SearchCtx);
   const changeHandler = (change: boolean) => setActive(change);
+
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { height } = useWindowDimensions();
   const [autocompleteFilters, setAutocompleteFilters] = useState<AutocompleteResult[]>([]);
@@ -209,6 +212,14 @@ export const BeverageSearchBar = () => {
     );
   };
 
+  const handleSubmit = (searchEventData: { verticalKey?: string; query?: string }) => {
+    const { query } = searchEventData;
+
+    navigate("/search");
+    setSearchParams({ query: query ?? "" });
+    changeHandler(false);
+  };
+
   return (
     // TODO: replace with Tailwind theme function
     <div
@@ -226,6 +237,7 @@ export const BeverageSearchBar = () => {
           optionContainer: "fixed top-[-2000px]",
         }}
         cssCompositionMethod="assign"
+        onSearch={handleSubmit}
         placeholder="Search beer, wine, liqour "
         visualAutocompleteConfig={{
           entityPreviewSearcher,

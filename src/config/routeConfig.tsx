@@ -43,6 +43,10 @@ export const routeConfig: RouteData[] = [
     ),
   },
   {
+    path: "/search",
+    page: <BeverageResultsScreen />,
+  },
+  {
     path: "/wine",
     page: (
       <SearchScreen
