@@ -1,9 +1,13 @@
 import { Matcher, SelectableFilter, useAnswersActions } from "@yext/answers-headless-react";
 import { VerticalResults } from "@yext/answers-react-components";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import { SearchCtx } from "../App";
+import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageCard } from "../components/BeverageCard";
 import { BeverageSearchBar } from "../components/BeverageSearchBar";
+import { DeliveryBanner } from "../components/DeliveryBanner";
+import { Header } from "../components/Header";
 import { extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
 
 export const BeverageResultsScreen = () => {
@@ -11,6 +15,8 @@ export const BeverageResultsScreen = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const answersActions = useAnswersActions();
+
+  const { active, setActive } = useContext(SearchCtx);
 
   useEffect(() => {
     const { alcoholType, category, subCategory } = extractBeverageInfoFromUrl(urlParams);
@@ -52,11 +58,19 @@ export const BeverageResultsScreen = () => {
 
   return (
     <>
-      <BeverageSearchBar />
-      <VerticalResults
-        customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3" }}
-        CardComponent={BeverageCard}
-      />
+      <Header />
+      <DeliveryBanner />
+      {active ? (
+        <BeverageSearchBar />
+      ) : (
+        <>
+          <BeverageBreadcrumbs />
+          <VerticalResults
+            customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3" }}
+            CardComponent={BeverageCard}
+          />
+        </>
+      )}
     </>
   );
 };

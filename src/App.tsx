@@ -1,9 +1,7 @@
 import "./App.css";
-import { Header } from "./components/Header";
-import { DeliveryBanner } from "./components/DeliveryBanner";
 import { PageRouter } from "./PageRouter";
 import { routeConfig } from "./config/routeConfig";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useMemo, useState } from "react";
 
 interface SearchContext {
   active: boolean;
@@ -24,8 +22,6 @@ function App() {
   return (
     <SearchCtx.Provider value={value}>
       <div className="font-primary">
-        <Header />
-        <DeliveryBanner />
         <PageRouter routes={routeConfig} />
       </div>
     </SearchCtx.Provider>

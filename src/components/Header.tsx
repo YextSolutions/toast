@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { FaShoppingBasket } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { SearchCtx } from "../App";
 
 export const Header = (): JSX.Element => {
@@ -24,7 +25,9 @@ export const Header = (): JSX.Element => {
           )}
         </div>
         <div className="w-1/3 flex justify-center">
-          <span className="text-3xl text-toast-red font-semibold">TOAST</span>
+          <Link className="text-3xl text-toast-red font-semibold" to="/beer">
+            TOAST
+          </Link>
         </div>
         <div className="w-1/3 flex justify-end mr-6 text-toast-dark-orange items-center">
           <button className="h-8 w-8 mr-4" onClick={() => changeHandler(true)}>
