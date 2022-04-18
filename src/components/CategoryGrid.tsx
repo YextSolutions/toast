@@ -10,10 +10,7 @@ export interface CategoryGridProps {
   }[];
 }
 
-export const CategoryGrid = ({
-  title,
-  options,
-}: CategoryGridProps): JSX.Element => {
+export const CategoryGrid = ({ title, options }: CategoryGridProps): JSX.Element => {
   const navigate = useNavigate();
 
   const handleTileClick = (linkPath?: string) => {
@@ -23,24 +20,17 @@ export const CategoryGrid = ({
   };
 
   return (
-    <div className="px-4">
+    <div className="mt-2 px-4">
       <div>
-        <span className="text-toast-dark-orange text-base font-extrabold">
-          {title}
-        </span>
+        <span className="text-toast-dark-orange text-base font-extrabold">{title}</span>
       </div>
       <div className="grid grid-cols-2 justify-items-center gap-2">
-        {options.map((option, i) => {
+        {options.map((option) => {
           return (
             <button onClick={() => handleTileClick(option.linkPath)}>
-              <div
-                key={`tile_${uuid()}`}
-                className="flex flex-col items-center mt-4"
-              >
+              <div key={`tile_${uuid()}`} className="flex flex-col items-center mt-4">
                 <img className="object-cover w-40 h-44" src={option.img} />
-                <div className="text-toast-blue text-xs mt-1.5 hover:underline">
-                  {option.name}
-                </div>
+                <div className="text-toast-blue text-xs mt-1.5 hover:underline">{option.name}</div>
               </div>
             </button>
           );

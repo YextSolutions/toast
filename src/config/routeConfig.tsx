@@ -43,6 +43,10 @@ export const routeConfig: RouteData[] = [
     ),
   },
   {
+    path: "/search",
+    page: <BeverageResultsScreen />,
+  },
+  {
     path: "/wine",
     page: (
       <SearchScreen
@@ -97,7 +101,7 @@ export const routeConfig: RouteData[] = [
             {
               name: "CIDER",
               img: ImageAssets.cider,
-              linkPath: "/beer/specialty-beer-alternatives/hard-seltzer",
+              linkPath: "/beer/cider",
             },
             {
               name: "STOUT",

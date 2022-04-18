@@ -12,7 +12,7 @@ import {
   useAnswersState,
   VerticalResults as VerticalResultsData,
 } from "@yext/answers-headless-react";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { Divider } from "./Divider";
 import classNames from "classnames";
@@ -22,9 +22,9 @@ import {
   answersSandboxEndpoints,
 } from "../config/answersConfig";
 import { StarRating } from "./StarRating";
-import { Link, useParams } from "react-router-dom";
-import BeverageBreadcrumbs from "./BeverageBreadcrumbs";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { dataForRender } from "./BeverageCard";
+import { SearchCtx } from "../App";
 
 const searchParamFields = [
   {
@@ -47,8 +47,13 @@ export const BeverageSearchBar = () => {
     locale: "en",
     endpoints: answersSandboxEndpoints,
   });
-  const { height, width } = useWindowDimensions();
-  const [activeSearch, setActiveSearch] = useState(false);
+  const { setActive } = useContext(SearchCtx);
+  const changeHandler = (change: boolean) => setActive(change);
+
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const { height } = useWindowDimensions();
   const [autocompleteFilters, setAutocompleteFilters] = useState<AutocompleteResult[]>([]);
 
   const query = useAnswersState((state) => state.query.input);
@@ -115,9 +120,9 @@ export const BeverageSearchBar = () => {
       }
       //TODO: Replace with VerticalResults component or provide feedback that I can't with the current component
       return (
-        <div>
+        <>
           <div
-            className={classNames("flex py-1 items-center", {
+            className={classNames("flex py-1 items-center hover:bg-toast-gray", {
               "max-h-28": beverageImg,
             })}
           >
@@ -138,13 +143,9 @@ export const BeverageSearchBar = () => {
             </div>
           </div>
           <Divider />
-        </div>
+        </>
       );
     });
-
-  useLayoutEffect(() => {
-    console.log(document.activeElement?.id || "no active element");
-  }, [document.activeElement]);
 
   const renderFilterAutocomplete = (results: AutocompleteResult[]) => {
     return (
@@ -166,12 +167,12 @@ export const BeverageSearchBar = () => {
           );
 
           return (
-            <>
-              <Link to={link}>
+            <div className="hover:bg-toast-gray">
+              <Link to={link} onClick={() => changeHandler(false)}>
                 <div className="py-1.5 px-3.5" dangerouslySetInnerHTML={{ __html: filterText }} />
                 <Divider />
               </Link>
-            </>
+            </div>
           );
         })}
       </div>
@@ -211,34 +212,39 @@ export const BeverageSearchBar = () => {
     );
   };
 
+  const handleSubmit = (searchEventData: { verticalKey?: string; query?: string }) => {
+    const { query } = searchEventData;
+
+    navigate(`/search?query=${query}`);
+
+    changeHandler(false);
+  };
+
   return (
-    <>
-      <BeverageBreadcrumbs />
-      <div
-        style={{ maxHeight: `${height - 112}px` }}
-        className="overflow-y-scroll z-10 "
-        onFocus={() => setActiveSearch(true)}
-        onBlur={() => setActiveSearch(false)}
-      >
-        <SearchBar
-          customCssClasses={{
-            container: `h-12 mb-6 w-full px-4  mt-2 h-full overflow-y-scroll`,
-            inputContainer:
-              "inline-flex items-center justify-between w-full rounded-3xl border border-black",
-            logoContainer: "w-7 mx-2.5 my-2 ",
-            inputDropdownContainer: "relative bg-white w-full overflow-hidden ",
-            inputDropdownContainer___active: "",
-            optionContainer: "fixed top-[-2000px]",
-          }}
-          cssCompositionMethod="assign"
-          placeholder="Search beer, wine, liqour "
-          visualAutocompleteConfig={{
-            entityPreviewSearcher,
-            renderEntityPreviews,
-            entityPreviewsDebouncingTime: 200,
-          }}
-        />
-      </div>
-    </>
+    // TODO: replace with Tailwind theme function
+    <div
+      className="absolute top-16 w-full h-full bg-white overflow-y-scroll"
+      style={{ maxHeight: `${height - 64}px` }}
+    >
+      <SearchBar
+        customCssClasses={{
+          container: `h-12 mb-6 w-full px-4  py-2 h-full overflow-y-scroll`,
+          inputContainer:
+            "inline-flex items-center justify-between w-full rounded-3xl border border-black",
+          logoContainer: "w-7 mx-2.5 my-2 ",
+          inputDropdownContainer: "relative bg-white w-full overflow-hidden ",
+          inputDropdownContainer___active: "",
+          optionContainer: "fixed top-[-2000px]",
+        }}
+        cssCompositionMethod="assign"
+        onSearch={handleSubmit}
+        placeholder="Search beer, wine, liqour "
+        visualAutocompleteConfig={{
+          entityPreviewSearcher,
+          renderEntityPreviews,
+          entityPreviewsDebouncingTime: 200,
+        }}
+      />
+    </div>
   );
 };

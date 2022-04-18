@@ -22,6 +22,11 @@ import vodka from "../assets/img/vodka.png";
 import whiskey from "../assets/img/whiskey.png";
 import stout from "../assets/img/stout.png";
 import mezcal from "../assets/img/mezcal.png";
+import beerToast from "../assets/img/beer_toast.png";
+import cocktailToast from "../assets/img/cocktail_toast.png";
+import toast from "../assets/img/toast.png";
+import wineToast from "../assets/img/wine_toast.png";
+import wineParty from "../assets/img/wine_party.png";
 
 const ImageAssets = {
   beerBottles,
@@ -48,6 +53,11 @@ const ImageAssets = {
   whiskey,
   stout,
   mezcal,
+  beerToast,
+  cocktailToast,
+  toast,
+  wineToast,
+  wineParty,
 };
 
 export default ImageAssets;

@@ -1,7 +1,4 @@
-import {
-  AnswersHeadlessProvider,
-  useAnswersActions,
-} from "@yext/answers-headless-react";
+import { AnswersHeadlessProvider, useAnswersActions } from "@yext/answers-headless-react";
 import { useEffect } from "react";
 import {
   answersApiKey,
@@ -25,11 +22,7 @@ export enum BeverageTag {
 }
 
 // TODO: add spinner for carousels or use less cards
-const Carousel = ({
-  sectionName,
-  beverageTag,
-  limit,
-}: CarouselSectionProps) => {
+const Carousel = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => {
   const answersActions = useAnswersActions();
 
   useEffect(() => {
@@ -40,9 +33,7 @@ const Carousel = ({
   return (
     <div className="px-4">
       <div>
-        <div className="text-toast-dark-orange text-base font-extrabold">
-          {sectionName}
-        </div>
+        <div className="text-toast-dark-orange text-base font-extrabold">{sectionName}</div>
       </div>
       <VerticalResults
         customCssClasses={{ results: "overflow-x-auto flex" }}
@@ -56,13 +47,10 @@ const Carousel = ({
   );
 };
 
-export const CarouselSection = ({
-  sectionName,
-  beverageTag,
-  limit,
-}: CarouselSectionProps) => {
+export const CarouselSection = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => {
   return (
     <AnswersHeadlessProvider
+      // TODO: headless id in the form best-sellers-carousel
       headlessId={`${sectionName}-carousel`}
       apiKey={answersApiKey}
       experienceKey={answersExperienceKey}
@@ -70,11 +58,7 @@ export const CarouselSection = ({
       endpoints={answersSandboxEndpoints}
       verticalKey="beverages"
     >
-      <Carousel
-        sectionName={sectionName}
-        beverageTag={beverageTag}
-        limit={limit}
-      />
+      <Carousel sectionName={sectionName} beverageTag={beverageTag} limit={limit} />
     </AnswersHeadlessProvider>
   );
 };
