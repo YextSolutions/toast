@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, HashRouter } from "react-router-dom";
 
 export interface RouteData {
   path: string;
@@ -12,12 +12,12 @@ interface PageRouterProps {
 
 export const PageRouter = ({ routes }: PageRouterProps) => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         {routes.map((route) => (
           <Route key={uuid()} path={route.path} element={route.page} />
         ))}
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };

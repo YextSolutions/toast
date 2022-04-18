@@ -101,7 +101,7 @@ export const routeConfig: RouteData[] = [
             {
               name: "CIDER",
               img: ImageAssets.cider,
-              linkPath: "/beer/specialty-beer-alternatives/hard-seltzer",
+              linkPath: "/beer/cider",
             },
             {
               name: "STOUT",
