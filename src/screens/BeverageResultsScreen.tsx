@@ -29,7 +29,7 @@ export const BeverageResultsScreen = () => {
   const answersActions = useAnswersActions();
   const resultsCount = useAnswersState((state) => state.vertical.resultsCount);
 
-  const { active, beverageResultImages } = useContext(SearchCtx);
+  const { searchBarActive: active, beverageResultImages } = useContext(SearchCtx);
 
   useEffect(() => {
     const { alcoholType, category, subCategory } = extractBeverageInfoFromUrl(urlParams);

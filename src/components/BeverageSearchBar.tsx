@@ -47,7 +47,7 @@ export const BeverageSearchBar = () => {
     locale: "en",
     endpoints: answersSandboxEndpoints,
   });
-  const { setActive } = useContext(SearchCtx);
+  const { setSearchBarActive } = useContext(SearchCtx);
 
   const navigate = useNavigate();
 
@@ -210,7 +210,7 @@ export const BeverageSearchBar = () => {
 
   const searchHandler = (path: string) => {
     console.log(path);
-    setActive(false);
+    setSearchBarActive(false);
     navigate(path);
   };
 
