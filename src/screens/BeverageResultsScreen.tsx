@@ -36,8 +36,10 @@ export const BeverageResultsScreen = () => {
     const query = searchParams.get("query");
 
     if (query) {
-      answersActions.setQuery(query ?? "");
+      answersActions.setQuery(query);
       setSearchResultsTitle({ query: true, title: `Results for ${query}` });
+    } else {
+      answersActions.setQuery("");
     }
 
     const selectedFilters: SelectableFilter[] = [];
@@ -91,18 +93,18 @@ export const BeverageResultsScreen = () => {
   return (
     <>
       <ToastHeader />
-      <DeliveryBanner />
-      {beverageResultImages[page] && (
-        <div className="w-full flex justify-center">
-          <div className={" py-4 px-4 max-w-sm"}>
-            <img className="w-96 h-44" src={beverageResultImages[page]}></img>
-          </div>
-        </div>
-      )}
       {active ? (
         <BeverageSearchBar />
       ) : (
         <>
+          <DeliveryBanner />
+          {beverageResultImages[page] && (
+            <div className="w-full flex justify-center">
+              <div className={" py-4 px-4 max-w-sm"}>
+                <img className="w-96 h-44" src={beverageResultImages[page]}></img>
+              </div>
+            </div>
+          )}
           <BeverageBreadcrumbs />
           <div className="my-2 px-4">
             <span
@@ -114,7 +116,6 @@ export const BeverageResultsScreen = () => {
             </span>
             {`(${resultsCount} results)`}
           </div>
-          {/* TODO: add more promanent page title under image (either results for or highlighted category) */}
           <VerticalResults
             customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3" }}
             CardComponent={BeverageCard}
