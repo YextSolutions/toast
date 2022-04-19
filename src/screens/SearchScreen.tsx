@@ -23,20 +23,25 @@ export const SearchScreen = ({
     <div>
       <ToastHeader />
       <DeliveryBanner />
-      {active && <BeverageSearchBar />}
-      <div>
-        {categoryGrid && <CategoryGrid title={categoryGrid.title} options={categoryGrid.options} />}
-        {carouselSections &&
-          carouselSections.map((section, i) => (
-            <div key={`carousel_${uuid()}`} className="mt-11">
-              <CarouselSection
-                sectionName={section.sectionName}
-                limit={8}
-                beverageTag={section.beverageTag}
-              />
-            </div>
-          ))}
-      </div>
+      {active ? (
+        <BeverageSearchBar />
+      ) : (
+        <div>
+          {categoryGrid && (
+            <CategoryGrid title={categoryGrid.title} options={categoryGrid.options} />
+          )}
+          {carouselSections &&
+            carouselSections.map((section, i) => (
+              <div key={`carousel_${uuid()}`} className="mt-11">
+                <CarouselSection
+                  sectionName={section.sectionName}
+                  limit={8}
+                  beverageTag={section.beverageTag}
+                />
+              </div>
+            ))}
+        </div>
+      )}
     </div>
   );
 };
