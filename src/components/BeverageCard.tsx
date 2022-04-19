@@ -16,12 +16,26 @@ type Image = {
   thumbnails?: Thumbnail[];
 };
 
+// TODO: clean up interface and validation functions
 export interface Beverage {
   id: string;
   name: string;
   c_alcoholType: string;
   c_category: string;
   c_subCategory: string;
+  primaryPhoto: {
+    image: {
+      url: string;
+      width: string;
+      height: string;
+      sourceUrl: string;
+      thumbnails: {
+        url: string;
+        width: string;
+        height: string;
+      }[];
+    };
+  };
   photoGallery?: {
     image: {
       url: string;
@@ -44,6 +58,7 @@ export const dataForRender = (result: Result | undefined): Partial<Beverage> => 
 
   const data = {
     name: result.rawData.name,
+    primaryPhoto: result.rawData.primaryPhoto,
     photoGallery: result.rawData.photoGallery,
     c_priceRange: result.rawData.c_priceRange,
     c_alcoholType: result.rawData.c_alcoholType,
@@ -53,6 +68,7 @@ export const dataForRender = (result: Result | undefined): Partial<Beverage> => 
 
   return validateData(data, {
     name: isString,
+    primaryPhoto: isPhotoGallery,
     photoGallery: isPhotoGallery,
     c_priceRange: isString,
     c_alcoholType: isString,
@@ -66,7 +82,6 @@ const isPhotoGallery = (data: any) => {
 };
 
 const isImage = (data: any): data is Image => {
-  debugger;
   if (typeof data !== "object" || data === null) {
     return false;
   }
@@ -106,7 +121,10 @@ export const BeverageCard = ({ result, autocomplete }: BeverageCardProps): JSX.E
           "w-16": autocomplete,
         })}
       >
-        <img className="w-24" src={beverage.photoGallery?.[0].image.url} />
+        <img
+          className="w-24"
+          src={beverage.photoGallery?.[0].image.url || beverage.primaryPhoto?.image.url}
+        />
       </div>
       <div className="overflow-hidden text-ellipsis h-10">
         <p className="text-sm">{beverage.name}</p>

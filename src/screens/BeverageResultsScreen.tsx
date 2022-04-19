@@ -11,10 +11,10 @@ import { SearchCtx } from "../App";
 import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageCard } from "../components/BeverageCard";
 import { BeverageSearchBar } from "../components/BeverageSearchBar";
-import { DeliveryBanner } from "../components/DeliveryBanner";
 import { ToastHeader } from "../components/ToastHeader";
 import { extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
 import classNames from "classnames";
+import { FilterSection } from "../components/FilterSection";
 
 export const BeverageResultsScreen = () => {
   const [page, setPage] = useState("");
@@ -97,29 +97,31 @@ export const BeverageResultsScreen = () => {
         <BeverageSearchBar />
       ) : (
         <>
-          <DeliveryBanner />
-          {beverageResultImages[page] && (
-            <div className="w-full flex justify-center">
-              <div className={" py-4 px-4 max-w-sm"}>
-                <img className="w-96 h-44" src={beverageResultImages[page]}></img>
+          <div className="fixed top-28 bottom-16 overflow-auto w-full ">
+            {beverageResultImages[page] && (
+              <div className="flex justify-center">
+                <div className={" py-4 px-4 max-w-sm"}>
+                  <img className="w-96 h-44" src={beverageResultImages[page]}></img>
+                </div>
               </div>
+            )}
+            <BeverageBreadcrumbs />
+            <div className="my-2 px-4">
+              <span
+                className={classNames("mr-1.5 text-3xl font-bold", {
+                  "text-toast-dark-orange  ": !searchResultsTitle.query,
+                })}
+              >
+                {searchResultsTitle.title}
+              </span>
+              {`(${resultsCount} results)`}
             </div>
-          )}
-          <BeverageBreadcrumbs />
-          <div className="my-2 px-4">
-            <span
-              className={classNames("mr-1.5 text-3xl font-bold", {
-                "text-toast-dark-orange  ": !searchResultsTitle.query,
-              })}
-            >
-              {searchResultsTitle.title}
-            </span>
-            {`(${resultsCount} results)`}
+            <VerticalResults
+              customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3" }}
+              CardComponent={BeverageCard}
+            />
           </div>
-          <VerticalResults
-            customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3" }}
-            CardComponent={BeverageCard}
-          />
+          <FilterSection />
         </>
       )}
     </>

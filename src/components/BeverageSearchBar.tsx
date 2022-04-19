@@ -48,10 +48,8 @@ export const BeverageSearchBar = () => {
     endpoints: answersSandboxEndpoints,
   });
   const { setActive } = useContext(SearchCtx);
-  const changeHandler = (change: boolean) => setActive(change);
 
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
 
   const { height } = useWindowDimensions();
   const [autocompleteFilters, setAutocompleteFilters] = useState<AutocompleteResult[]>([]);
@@ -159,7 +157,7 @@ export const BeverageSearchBar = () => {
             : filter.value;
 
           const relatedBeverage = dataForRender(filter.relatedItem);
-          const link = generateLink(
+          const path = generatePath(
             filter.value,
             relatedBeverage.c_alcoholType,
             relatedBeverage.c_category,
@@ -167,11 +165,9 @@ export const BeverageSearchBar = () => {
           );
 
           return (
-            <div className="hover:bg-toast-gray">
-              <Link to={link} onClick={() => changeHandler(false)}>
-                <div className="py-1.5 px-3.5" dangerouslySetInnerHTML={{ __html: filterText }} />
-                <Divider />
-              </Link>
+            <div className="hover:bg-toast-gray" onClick={() => searchHandler(path)}>
+              <div className="py-1.5 px-3.5" dangerouslySetInnerHTML={{ __html: filterText }} />
+              <Divider />
             </div>
           );
         })}
@@ -179,7 +175,7 @@ export const BeverageSearchBar = () => {
     );
   };
 
-  const generateLink = (
+  const generatePath = (
     filterValue?: string,
     alcoholType?: string,
     category?: string,
@@ -212,12 +208,16 @@ export const BeverageSearchBar = () => {
     );
   };
 
+  const searchHandler = (path: string) => {
+    console.log(path);
+    setActive(false);
+    navigate(path);
+  };
+
   const handleSubmit = (searchEventData: { verticalKey?: string; query?: string }) => {
+    console.log("search button clicked");
     const { query } = searchEventData;
-
-    navigate(`/search?query=${query}`);
-
-    changeHandler(false);
+    searchHandler(`/search?query=${query}`);
   };
 
   return (

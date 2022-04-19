@@ -3,15 +3,18 @@ import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { FaShoppingBasket } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { SearchCtx } from "../App";
+import { DeliveryBanner } from "./DeliveryBanner";
 
 export const ToastHeader = (): JSX.Element => {
   const { active, setActive } = useContext(SearchCtx);
 
-  const changeHandler = (change: boolean) => setActive(change);
+  const changeHandler = (change: boolean) => {
+    setActive(change);
+  };
 
   return (
-    <>
-      <div className="w-full bg-toast-orange h-16 flex items-center">
+    <header className="fixed top-0 w-full z-20">
+      <div className=" w-full bg-toast-orange h-16 flex items-center">
         <div className="w-1/3 text-toast-dark-orange ml-6">
           {!active ? (
             <AiOutlineMenu size={30} />
@@ -25,7 +28,11 @@ export const ToastHeader = (): JSX.Element => {
           )}
         </div>
         <div className="w-1/3 flex justify-center">
-          <Link className="text-3xl text-toast-red font-semibold" to="/">
+          <Link
+            className="text-3xl text-toast-red font-semibold"
+            to="/"
+            onClick={() => changeHandler(false)}
+          >
             TOAST
           </Link>
         </div>
@@ -36,7 +43,8 @@ export const ToastHeader = (): JSX.Element => {
           <FaShoppingBasket size={30} />
         </div>
       </div>
-    </>
+      {!active && <DeliveryBanner />}
+    </header>
   );
 };
 

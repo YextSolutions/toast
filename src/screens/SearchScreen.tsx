@@ -22,11 +22,10 @@ export const SearchScreen = ({
   return (
     <div>
       <ToastHeader />
-      <DeliveryBanner />
       {active ? (
         <BeverageSearchBar />
       ) : (
-        <div>
+        <div className="absolute top-28 w-screen">
           {categoryGrid && (
             <CategoryGrid title={categoryGrid.title} options={categoryGrid.options} />
           )}
