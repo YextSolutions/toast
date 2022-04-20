@@ -116,7 +116,7 @@ export const BeverageResultsScreen = () => {
                 >
                   {searchResultsTitle.title}
                 </div>
-                <div className="text-sm">{`(${resultsCount} results)`}</div>
+                <div className="text-sm mt-1">{`(${resultsCount} results)`}</div>
               </div>
               <SortingDrawer />
             </div>

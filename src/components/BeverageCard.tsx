@@ -133,19 +133,6 @@ export const BeverageCard = ({ result, autocomplete }: BeverageCardProps): JSX.E
         <p>{beverage.c_priceRange?.split(" ")[0]}</p>
       </div>
       <StarRating />
-      {/* <div className="ml-6 text-sm w-80">
-        <div
-          dangerouslySetInnerHTML={{
-            __html:
-              typeof beverageTitle === "string"
-                ? beverageTitle
-                : highlightText(beverageTitle),
-          }}
-        />
-        <div className="font-bold">
-          {beverageData.c_priceRange?.split(" ")[0]}
-        </div>
-      </div>  */}
     </div>
   );
 };

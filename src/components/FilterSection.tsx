@@ -18,6 +18,7 @@ export const FilterSection = () => {
                 return null;
               } else if (f.fieldId === "c_usState" || f.fieldId === "c_originCountry") {
                 return <FilterTileGroup facet={f} />;
+              } else if (f.fieldId === "c_price") {
               }
             })
           }

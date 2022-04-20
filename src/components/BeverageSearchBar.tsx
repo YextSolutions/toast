@@ -2,6 +2,7 @@ import {
   FocusedItemData,
   isStringOrHighlightedValue,
   SearchBar,
+  renderHighlightedValue,
 } from "@yext/answers-react-components";
 import {
   AutocompleteResult,
@@ -22,7 +23,7 @@ import {
   answersSandboxEndpoints,
 } from "../config/answersConfig";
 import { StarRating } from "./StarRating";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { dataForRender } from "./BeverageCard";
 import { SearchCtx } from "../App";
 
@@ -106,7 +107,7 @@ export const BeverageSearchBar = () => {
   const renderBeveragesAutocomplete = (verticalResults: Result[]) =>
     verticalResults.map((verticalResult) => {
       const beverageData = dataForRender(verticalResult);
-      const beverageImg = beverageData.photoGallery?.[0].image.url;
+      const beverageImg = beverageData.primaryPhoto?.image.url;
       let beverageTitle: HighlightedValue | string;
       if (
         verticalResult.highlightedFields?.name &&
@@ -116,7 +117,6 @@ export const BeverageSearchBar = () => {
       } else {
         beverageTitle = verticalResult.name ?? "";
       }
-      //TODO: Replace with VerticalResults component or provide feedback that I can't with the current component
       return (
         <>
           <div
@@ -128,14 +128,10 @@ export const BeverageSearchBar = () => {
               <img src={beverageImg} />
             </div>
             <div className="ml-6 text-sm w-80">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html:
-                    typeof beverageTitle === "string"
-                      ? beverageTitle
-                      : highlightText(beverageTitle),
-                }}
-              />
+              {renderHighlightedValue(beverageTitle, {
+                nonHighlighted: "text-primary text-black text-base",
+                highlighted: "text-toast-dark-orange text-base",
+              })}
               <div className="font-bold">{beverageData.c_priceRange?.split(" ")[0]}</div>
               <StarRating />
             </div>
