@@ -1,6 +1,6 @@
 import { Filters } from "@yext/answers-react-components";
 import { DisplayableFacet, Matcher, NumberRangeValue } from "@yext/answers-headless-react";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { useFiltersContext } from "@yext/answers-react-components/lib/components/Filters";
 import { SearchCtx } from "../App";
@@ -18,6 +18,12 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
   const { selectFilter, applyFilters } = useFiltersContext();
 
   const { setFilterSectionActive } = useContext(SearchCtx);
+
+  const reorderFacetOptions = (facet: DisplayableFacet): DisplayableFacet => {
+    const selectedOptions = facet.options.filter((o) => o.selected);
+    const unselectedOptions = facet.options.filter((o) => !o.selected);
+    return { ...facet, options: [...selectedOptions, ...unselectedOptions] };
+  };
 
   const handleChange = (expand: boolean) => {
     outerContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
@@ -53,7 +59,7 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
         )}
       >
         <Filters.FilterGroup fieldId={facet.fieldId} defaultExpanded={false}>
-          {facet.options.map((o) => (
+          {reorderFacetOptions(facet).options.map((o) => (
             <div
               className={classNames(
                 "h-10 w-fit border border-toast-orange flex items-center mr-3 mb-3 hover:bg-toast-orange",
