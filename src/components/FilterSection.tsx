@@ -2,6 +2,7 @@ import { Filters } from "@yext/answers-react-components";
 import { useContext, useEffect, useState } from "react";
 import { SearchCtx } from "../App";
 import { FilterTileGroup } from "./FilterTileGroup";
+import { SortingDrawer } from "./SortingDrawer";
 
 export const FilterSection = () => {
   const { filterSectionActive, setFilterSectionActive } = useContext(SearchCtx);
@@ -9,6 +10,7 @@ export const FilterSection = () => {
   return filterSectionActive ? (
     <div className="top-16 right-0 left-0 bg-white h-full w-full absolute">
       <div className="mt-8">
+        <SortingDrawer label="SORT BY:" containerCss="px-8 mb-8" />
         <Filters.Facets className="" searchOnChange={true}>
           {(facets) =>
             facets.map((f, _i) => {

@@ -15,6 +15,7 @@ import { ToastHeader } from "../components/ToastHeader";
 import { extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
 import classNames from "classnames";
 import { FilterSection } from "../components/FilterSection";
+import { SortingDrawer } from "../components/SortingDrawer";
 
 export const BeverageResultsScreen = () => {
   const [page, setPage] = useState("");
@@ -106,15 +107,18 @@ export const BeverageResultsScreen = () => {
               </div>
             )}
             <BeverageBreadcrumbs />
-            <div className="my-2 px-4">
-              <span
-                className={classNames("mr-1.5 text-3xl font-bold", {
-                  "text-toast-dark-orange  ": !searchResultsTitle.query,
-                })}
-              >
-                {searchResultsTitle.title}
-              </span>
-              {`(${resultsCount} results)`}
+            <div className="flex justify-between items-center px-4">
+              <div className="my-2 ">
+                <div
+                  className={classNames("mr-1.5 text-3xl font-bold", {
+                    "text-toast-dark-orange  ": !searchResultsTitle.query,
+                  })}
+                >
+                  {searchResultsTitle.title}
+                </div>
+                <div className="text-sm">{`(${resultsCount} results)`}</div>
+              </div>
+              <SortingDrawer />
             </div>
             <VerticalResults
               customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3" }}
