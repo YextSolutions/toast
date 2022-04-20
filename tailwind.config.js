@@ -29,6 +29,9 @@ module.exports = {
       borderRadius: {
         cta: "1rem",
       },
+      transitionProperty: {
+        "max-h": "max-height",
+      },
     },
   },
   plugins: [

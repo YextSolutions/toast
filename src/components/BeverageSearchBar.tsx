@@ -209,13 +209,12 @@ export const BeverageSearchBar = () => {
   };
 
   const searchHandler = (path: string) => {
-    console.log(path);
+    answersActions.resetFacets();
     setSearchBarActive(false);
     navigate(path);
   };
 
   const handleSubmit = (searchEventData: { verticalKey?: string; query?: string }) => {
-    console.log("search button clicked");
     const { query } = searchEventData;
     searchHandler(`/search?query=${query}`);
   };
