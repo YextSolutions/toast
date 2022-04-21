@@ -32,6 +32,19 @@ module.exports = {
       transitionProperty: {
         "max-h": "max-height",
       },
+      animation: {
+        shaker: "shaker 0.4s infinite",
+      },
+      keyframes: {
+        shaker: {
+          "50%": {
+            transform: "rotate(20deg)",
+          },
+          "100%": {
+            transform: "rotate(-20deg)",
+          },
+        },
+      },
     },
   },
   plugins: [
