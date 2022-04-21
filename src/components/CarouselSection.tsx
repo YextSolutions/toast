@@ -17,7 +17,7 @@ export interface CarouselSectionProps {
 
 export enum BeverageTag {
   Trending = "TRENDING",
-  BestSeller = "BEST SELLER",
+  BestSeller = "BEST_SELLER",
   Gift = "GIFT",
 }
 
@@ -26,7 +26,8 @@ const Carousel = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => 
   const answersActions = useAnswersActions();
 
   useEffect(() => {
-    answersActions.setContext({ staticResults: "TRENDING" });
+    answersActions.setContext({ staticResults: beverageTag });
+    answersActions.setVerticalLimit(limit || 8);
     answersActions.executeVerticalQuery();
   }, []);
 
