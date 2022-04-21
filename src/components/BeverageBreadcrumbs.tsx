@@ -1,10 +1,13 @@
+import { useAnswersActions } from "@yext/answers-headless-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { BeverageInfo, extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
 
 const BeverageBreadcrumbs = (): JSX.Element => {
   const urlParams = useParams();
   const [beverageInfo, setBeverageInfo] = useState<BeverageInfo>();
+
+  const answersActions = useAnswersActions();
 
   useEffect(() => {
     const { alcoholType, category, subCategory } = extractBeverageInfoFromUrl(urlParams);
@@ -25,7 +28,14 @@ const BeverageBreadcrumbs = (): JSX.Element => {
       return (
         <span>
           {!first && <span className="mx-2">/</span>}
-          <Link className="text-toast-dark-orange hover:underline" to={to}>
+          <Link
+            className="text-toast-dark-orange hover:underline"
+            to={to}
+            onClick={() => {
+              answersActions.resetFacets();
+              answersActions.setSortBys([]);
+            }}
+          >
             {label}
           </Link>
         </span>

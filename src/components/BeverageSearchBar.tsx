@@ -2,6 +2,7 @@ import {
   FocusedItemData,
   isStringOrHighlightedValue,
   SearchBar,
+  renderHighlightedValue,
 } from "@yext/answers-react-components";
 import {
   AutocompleteResult,
@@ -22,7 +23,7 @@ import {
   answersSandboxEndpoints,
 } from "../config/answersConfig";
 import { StarRating } from "./StarRating";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { dataForRender } from "./BeverageCard";
 import { SearchCtx } from "../App";
 
@@ -47,11 +48,9 @@ export const BeverageSearchBar = () => {
     locale: "en",
     endpoints: answersSandboxEndpoints,
   });
-  const { setActive } = useContext(SearchCtx);
-  const changeHandler = (change: boolean) => setActive(change);
+  const { setSearchBarActive } = useContext(SearchCtx);
 
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
 
   const { height } = useWindowDimensions();
   const [autocompleteFilters, setAutocompleteFilters] = useState<AutocompleteResult[]>([]);
@@ -108,7 +107,7 @@ export const BeverageSearchBar = () => {
   const renderBeveragesAutocomplete = (verticalResults: Result[]) =>
     verticalResults.map((verticalResult) => {
       const beverageData = dataForRender(verticalResult);
-      const beverageImg = beverageData.photoGallery?.[0].image.url;
+      const beverageImg = beverageData.primaryPhoto?.image.url;
       let beverageTitle: HighlightedValue | string;
       if (
         verticalResult.highlightedFields?.name &&
@@ -118,7 +117,6 @@ export const BeverageSearchBar = () => {
       } else {
         beverageTitle = verticalResult.name ?? "";
       }
-      //TODO: Replace with VerticalResults component or provide feedback that I can't with the current component
       return (
         <>
           <div
@@ -130,14 +128,10 @@ export const BeverageSearchBar = () => {
               <img src={beverageImg} />
             </div>
             <div className="ml-6 text-sm w-80">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html:
-                    typeof beverageTitle === "string"
-                      ? beverageTitle
-                      : highlightText(beverageTitle),
-                }}
-              />
+              {renderHighlightedValue(beverageTitle, {
+                nonHighlighted: "text-primary text-black text-base",
+                highlighted: "text-toast-dark-orange text-base",
+              })}
               <div className="font-bold">{beverageData.c_priceRange?.split(" ")[0]}</div>
               <StarRating />
             </div>
@@ -151,15 +145,8 @@ export const BeverageSearchBar = () => {
     return (
       <div>
         {results.slice(0, 3).map((filter, i) => {
-          const filterText = filter.matchedSubstrings
-            ? highlightText({
-                value: filter.value,
-                matchedSubstrings: filter.matchedSubstrings,
-              })
-            : filter.value;
-
           const relatedBeverage = dataForRender(filter.relatedItem);
-          const link = generateLink(
+          const path = generatePath(
             filter.value,
             relatedBeverage.c_alcoholType,
             relatedBeverage.c_category,
@@ -167,11 +154,14 @@ export const BeverageSearchBar = () => {
           );
 
           return (
-            <div className="hover:bg-toast-gray">
-              <Link to={link} onClick={() => changeHandler(false)}>
-                <div className="py-1.5 px-3.5" dangerouslySetInnerHTML={{ __html: filterText }} />
-                <Divider />
-              </Link>
+            <div className="hover:bg-toast-gray" onClick={() => searchHandler(path)}>
+              <div className="py-1.5 px-3.5">
+                {renderHighlightedValue(filter, {
+                  nonHighlighted: "text-primary text-black text-base",
+                  highlighted: "text-toast-dark-orange text-base",
+                })}
+              </div>
+              <Divider />
             </div>
           );
         })}
@@ -179,7 +169,7 @@ export const BeverageSearchBar = () => {
     );
   };
 
-  const generateLink = (
+  const generatePath = (
     filterValue?: string,
     alcoholType?: string,
     category?: string,
@@ -199,25 +189,16 @@ export const BeverageSearchBar = () => {
     }
   };
 
-  // TODO: see if there is an Answers React function for this
-  const highlightText = (highlightedValue: HighlightedValue) => {
-    const highlightedSection = highlightedValue.value.slice(
-      highlightedValue.matchedSubstrings[0].offset,
-      highlightedValue.matchedSubstrings[0].offset + highlightedValue.matchedSubstrings[0].length
-    );
-
-    return highlightedValue.value.replace(
-      highlightedSection,
-      `<span class="text-toast-dark-orange font-bold">${highlightedSection}</span>`
-    );
+  const searchHandler = (path: string) => {
+    answersActions.resetFacets();
+    setSearchBarActive(false);
+    navigate(path);
   };
 
   const handleSubmit = (searchEventData: { verticalKey?: string; query?: string }) => {
     const { query } = searchEventData;
-
-    navigate(`/search?query=${query}`);
-
-    changeHandler(false);
+    answersActions.setSortBys([]);
+    searchHandler(`/search?query=${query}`);
   };
 
   return (

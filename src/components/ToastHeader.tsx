@@ -3,40 +3,67 @@ import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { FaShoppingBasket } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { SearchCtx } from "../App";
+import { ToastBanner } from "./ToastBanner";
+import classNames from "classnames";
+import { useAnswersActions } from "@yext/answers-headless-react";
 
 export const ToastHeader = (): JSX.Element => {
-  const { active, setActive } = useContext(SearchCtx);
+  const answersActions = useAnswersActions();
 
-  const changeHandler = (change: boolean) => setActive(change);
+  const { searchBarActive, setSearchBarActive, filterSectionActive } = useContext(SearchCtx);
+
+  const searchBarChangeHandler = (change: boolean) => {
+    setSearchBarActive(change);
+  };
+
+  const clearSearchState = () => {
+    searchBarChangeHandler(false);
+    answersActions.setQuery("");
+    answersActions.setSortBys([]);
+    answersActions.resetFacets();
+  };
 
   return (
-    <>
-      <div className="w-full bg-toast-orange h-16 flex items-center">
-        <div className="w-1/3 text-toast-dark-orange ml-6">
-          {!active ? (
-            <AiOutlineMenu size={30} />
-          ) : (
-            <button
-              className=" text-text-toast-red flex items-center"
-              onClick={() => changeHandler(false)}
-            >
-              <AiOutlineClose size={30} />
-            </button>
-          )}
-        </div>
-        <div className="w-1/3 flex justify-center">
-          <Link className="text-3xl text-toast-red font-semibold" to="/">
-            TOAST
-          </Link>
-        </div>
-        <div className="w-1/3 flex justify-end mr-6 text-toast-dark-orange items-center">
-          <button className="h-8 w-8 mr-4" onClick={() => changeHandler(true)}>
-            <MagnifyingGlassIcon />
-          </button>
-          <FaShoppingBasket size={30} />
-        </div>
+    <header className="fixed top-0 w-full z-20">
+      <div
+        className={classNames("w-full bg-toast-orange h-16 flex items-center", {
+          "h-5": filterSectionActive,
+        })}
+      >
+        {!filterSectionActive && (
+          <>
+            <div className="w-1/3 text-toast-dark-orange ml-6">
+              {!searchBarActive ? (
+                <AiOutlineMenu size={30} />
+              ) : (
+                <button
+                  className=" text-text-toast-red flex items-center"
+                  onClick={() => searchBarChangeHandler(false)}
+                >
+                  <AiOutlineClose size={30} />
+                </button>
+              )}
+            </div>
+            <div className="w-1/3 flex justify-center">
+              <Link
+                className="text-3xl text-toast-red font-semibold flex items-center"
+                to="/"
+                onClick={() => clearSearchState()}
+              >
+                <span>TOAST</span>
+              </Link>
+            </div>
+            <div className="w-1/3 flex justify-end mr-6 text-toast-dark-orange items-center">
+              <button className="h-8 w-8 mr-4" onClick={() => searchBarChangeHandler(true)}>
+                <MagnifyingGlassIcon />
+              </button>
+              <FaShoppingBasket size={30} />
+            </div>
+          </>
+        )}
       </div>
-    </>
+      {!searchBarActive && <ToastBanner />}
+    </header>
   );
 };
 

@@ -16,12 +16,27 @@ type Image = {
   thumbnails?: Thumbnail[];
 };
 
+// TODO: clean up interface and validation functions
 export interface Beverage {
   id: string;
   name: string;
   c_alcoholType: string;
   c_category: string;
   c_subCategory: string;
+  c_price: string;
+  primaryPhoto: {
+    image: {
+      url: string;
+      width: string;
+      height: string;
+      sourceUrl: string;
+      thumbnails: {
+        url: string;
+        width: string;
+        height: string;
+      }[];
+    };
+  };
   photoGallery?: {
     image: {
       url: string;
@@ -44,6 +59,8 @@ export const dataForRender = (result: Result | undefined): Partial<Beverage> => 
 
   const data = {
     name: result.rawData.name,
+    primaryPhoto: result.rawData.primaryPhoto,
+    c_price: result.rawData.c_price,
     photoGallery: result.rawData.photoGallery,
     c_priceRange: result.rawData.c_priceRange,
     c_alcoholType: result.rawData.c_alcoholType,
@@ -53,6 +70,8 @@ export const dataForRender = (result: Result | undefined): Partial<Beverage> => 
 
   return validateData(data, {
     name: isString,
+    primaryPhoto: isPhotoGallery,
+    c_price: isString,
     photoGallery: isPhotoGallery,
     c_priceRange: isString,
     c_alcoholType: isString,
@@ -66,7 +85,6 @@ const isPhotoGallery = (data: any) => {
 };
 
 const isImage = (data: any): data is Image => {
-  debugger;
   if (typeof data !== "object" || data === null) {
     return false;
   }
@@ -94,7 +112,8 @@ export const BeverageCard = ({ result, autocomplete }: BeverageCardProps): JSX.E
   return (
     <div
       className={classNames(
-        { "h-72 m-2": !autocomplete },
+        "flex flex-col justify-between",
+        { "h-72 mx-2 my-4": !autocomplete },
         {
           "max-h-28": false,
         },
@@ -102,32 +121,24 @@ export const BeverageCard = ({ result, autocomplete }: BeverageCardProps): JSX.E
       )}
     >
       <div
-        className={classNames("w-full h-40 flex justify-center items-center", {
+        className={classNames("w-full flex flex-col justify-center ", {
           "w-16": autocomplete,
         })}
       >
-        <img className="w-24" src={beverage.photoGallery?.[0].image.url} />
-      </div>
-      <div className="overflow-hidden text-ellipsis h-10">
-        <p className="text-sm">{beverage.name}</p>
-      </div>
-      <div className="mb-1 text-xs">
-        <p>{beverage.c_priceRange?.split(" ")[0]}</p>
-      </div>
-      <StarRating />
-      {/* <div className="ml-6 text-sm w-80">
-        <div
-          dangerouslySetInnerHTML={{
-            __html:
-              typeof beverageTitle === "string"
-                ? beverageTitle
-                : highlightText(beverageTitle),
-          }}
-        />
-        <div className="font-bold">
-          {beverageData.c_priceRange?.split(" ")[0]}
+        <div className="w-full flex justify-center">
+          <img
+            className="w-24"
+            src={beverage.photoGallery?.[0].image.url || beverage.primaryPhoto?.image.url}
+          />
         </div>
-      </div>  */}
+        <div className="overflow-hidden text-ellipsis text-base max-h-20">{beverage.name}</div>
+      </div>
+      <div className="">
+        <div className="pb-8">
+          <div className="text-base">{`$${beverage.c_price}`}</div>
+          <StarRating />
+        </div>
+      </div>
     </div>
   );
 };

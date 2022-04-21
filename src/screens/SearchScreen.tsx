@@ -4,7 +4,6 @@ import { CarouselSection, CarouselSectionProps } from "../components/CarouselSec
 import { BeverageSearchBar } from "../components/BeverageSearchBar";
 import { useContext } from "react";
 import { SearchCtx } from "../App";
-import { DeliveryBanner } from "../components/DeliveryBanner";
 import { ToastHeader } from "../components/ToastHeader";
 
 interface SearchScreenProps {
@@ -17,16 +16,15 @@ export const SearchScreen = ({
   categoryGrid,
   carouselSections,
 }: SearchScreenProps): JSX.Element => {
-  const { active, setActive } = useContext(SearchCtx);
+  const { searchBarActive, setSearchBarActive } = useContext(SearchCtx);
 
   return (
     <div>
       <ToastHeader />
-      <DeliveryBanner />
-      {active ? (
+      {searchBarActive ? (
         <BeverageSearchBar />
       ) : (
-        <div>
+        <div className="absolute top-28 w-screen">
           {categoryGrid && (
             <CategoryGrid title={categoryGrid.title} options={categoryGrid.options} />
           )}
