@@ -5,13 +5,22 @@ import { Link } from "react-router-dom";
 import { SearchCtx } from "../App";
 import { ToastBanner } from "./ToastBanner";
 import classNames from "classnames";
+import { useAnswersActions } from "@yext/answers-headless-react";
 
 export const ToastHeader = (): JSX.Element => {
-  const { searchBarActive, setSearchBarActive, filterSectionActive, setFilterSectionActive } =
-    useContext(SearchCtx);
+  const answersActions = useAnswersActions();
+
+  const { searchBarActive, setSearchBarActive, filterSectionActive } = useContext(SearchCtx);
 
   const searchBarChangeHandler = (change: boolean) => {
     setSearchBarActive(change);
+  };
+
+  const clearSearchState = () => {
+    searchBarChangeHandler(false);
+    answersActions.setQuery("");
+    answersActions.setSortBys([]);
+    answersActions.resetFacets();
   };
 
   return (
@@ -37,11 +46,11 @@ export const ToastHeader = (): JSX.Element => {
             </div>
             <div className="w-1/3 flex justify-center">
               <Link
-                className="text-3xl text-toast-red font-semibold"
+                className="text-3xl text-toast-red font-semibold flex items-center"
                 to="/"
-                onClick={() => searchBarChangeHandler(false)}
+                onClick={() => clearSearchState()}
               >
-                TOAST
+                <span>TOAST</span>
               </Link>
             </div>
             <div className="w-1/3 flex justify-end mr-6 text-toast-dark-orange items-center">

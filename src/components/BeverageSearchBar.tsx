@@ -145,13 +145,6 @@ export const BeverageSearchBar = () => {
     return (
       <div>
         {results.slice(0, 3).map((filter, i) => {
-          const filterText = filter.matchedSubstrings
-            ? highlightText({
-                value: filter.value,
-                matchedSubstrings: filter.matchedSubstrings,
-              })
-            : filter.value;
-
           const relatedBeverage = dataForRender(filter.relatedItem);
           const path = generatePath(
             filter.value,
@@ -162,7 +155,12 @@ export const BeverageSearchBar = () => {
 
           return (
             <div className="hover:bg-toast-gray" onClick={() => searchHandler(path)}>
-              <div className="py-1.5 px-3.5" dangerouslySetInnerHTML={{ __html: filterText }} />
+              <div className="py-1.5 px-3.5">
+                {renderHighlightedValue(filter, {
+                  nonHighlighted: "text-primary text-black text-base",
+                  highlighted: "text-toast-dark-orange text-base",
+                })}
+              </div>
               <Divider />
             </div>
           );
@@ -191,19 +189,6 @@ export const BeverageSearchBar = () => {
     }
   };
 
-  // TODO: see if there is an Answers React function for this
-  const highlightText = (highlightedValue: HighlightedValue) => {
-    const highlightedSection = highlightedValue.value.slice(
-      highlightedValue.matchedSubstrings[0].offset,
-      highlightedValue.matchedSubstrings[0].offset + highlightedValue.matchedSubstrings[0].length
-    );
-
-    return highlightedValue.value.replace(
-      highlightedSection,
-      `<span class="text-toast-dark-orange font-bold">${highlightedSection}</span>`
-    );
-  };
-
   const searchHandler = (path: string) => {
     answersActions.resetFacets();
     setSearchBarActive(false);
@@ -212,6 +197,7 @@ export const BeverageSearchBar = () => {
 
   const handleSubmit = (searchEventData: { verticalKey?: string; query?: string }) => {
     const { query } = searchEventData;
+    answersActions.setSortBys([]);
     searchHandler(`/search?query=${query}`);
   };
 

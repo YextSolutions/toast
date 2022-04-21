@@ -1,6 +1,6 @@
 import { useAnswersActions } from "@yext/answers-headless-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { BeverageInfo, extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
 
 const BeverageBreadcrumbs = (): JSX.Element => {
@@ -31,7 +31,10 @@ const BeverageBreadcrumbs = (): JSX.Element => {
           <Link
             className="text-toast-dark-orange hover:underline"
             to={to}
-            onClick={() => first && answersActions.resetFacets()}
+            onClick={() => {
+              answersActions.resetFacets();
+              answersActions.setSortBys([]);
+            }}
           >
             {label}
           </Link>

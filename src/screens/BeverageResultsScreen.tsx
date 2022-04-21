@@ -1,4 +1,5 @@
 import {
+  DisplayableFacet,
   Matcher,
   SelectableFilter,
   useAnswersActions,
@@ -16,6 +17,7 @@ import { extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl"
 import classNames from "classnames";
 import { FilterSection } from "../components/FilterSection";
 import { SortingDrawer } from "../components/SortingDrawer";
+import { ShakerLoader } from "../components/ShakerLoader";
 
 export const BeverageResultsScreen = () => {
   const [page, setPage] = useState("");
@@ -29,19 +31,20 @@ export const BeverageResultsScreen = () => {
 
   const answersActions = useAnswersActions();
   const resultsCount = useAnswersState((state) => state.vertical.resultsCount);
+  const isLoading = useAnswersState((state) => state.searchStatus.isLoading);
 
   const { searchBarActive: active, beverageResultImages } = useContext(SearchCtx);
 
   useEffect(() => {
+    searchParams.get("facets") &&
+      handleUrlFacets(JSON.parse(searchParams.get("facets") as string) as Record<string, string[]>);
+  }, []);
+
+  useEffect(() => {
+    setPage(location.pathname.split("/")[1]);
+
     const { alcoholType, category, subCategory } = extractBeverageInfoFromUrl(urlParams);
     const query = searchParams.get("query");
-
-    if (query) {
-      answersActions.setQuery(query);
-      setSearchResultsTitle({ query: true, title: `Results for ${query}` });
-    } else {
-      answersActions.setQuery("");
-    }
 
     const selectedFilters: SelectableFilter[] = [];
 
@@ -82,14 +85,44 @@ export const BeverageResultsScreen = () => {
         });
     }
 
+    handleSearchParams();
+
     answersActions.setStaticFilters(selectedFilters);
+
     answersActions.executeVerticalQuery();
-    answersActions.setStaticFilters([]);
   }, [urlParams]);
 
-  useEffect(() => {
-    setPage(location.pathname.split("/")[1]);
-  }, [location]);
+  const handleSearchParams = () => {
+    const query = searchParams.get("query");
+    const sortBy = searchParams.get("sortBy");
+
+    if (query) {
+      answersActions.setQuery(query);
+      setSearchResultsTitle({ query: true, title: `Results for ${query}` });
+    } else {
+      answersActions.setQuery("");
+    }
+
+    sortBy && answersActions.setSortBys([JSON.parse(sortBy)]);
+  };
+
+  const handleUrlFacets = (urlFacets: Record<string, string[]>) => {
+    const facets: DisplayableFacet[] = [];
+    Object.entries(urlFacets).forEach(([key, values]) => {
+      facets.push({
+        fieldId: key,
+        displayName: "bluh",
+        options: values.map((o) => ({
+          value: o,
+          matcher: Matcher.Equals,
+          displayName: "bluh",
+          count: 0,
+          selected: true,
+        })),
+      });
+    });
+    answersActions.setFacets(facets);
+  };
 
   return (
     <>
@@ -116,14 +149,18 @@ export const BeverageResultsScreen = () => {
                 >
                   {searchResultsTitle.title}
                 </div>
-                <div className="text-sm mt-1">{`(${resultsCount} results)`}</div>
+                {!isLoading && <div className="text-sm mt-1">{`(${resultsCount} results)`}</div>}
               </div>
               <SortingDrawer />
             </div>
-            <VerticalResults
-              customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3" }}
-              CardComponent={BeverageCard}
-            />
+            {isLoading ? (
+              <ShakerLoader />
+            ) : (
+              <VerticalResults
+                customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3" }}
+                CardComponent={BeverageCard}
+              />
+            )}
           </div>
           <FilterSection />
         </>

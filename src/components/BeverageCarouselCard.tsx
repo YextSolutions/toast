@@ -1,4 +1,4 @@
-import { CardProps, isString, validateData } from "@yext/answers-react-components";
+import { CardProps } from "@yext/answers-react-components";
 import { dataForRender } from "./BeverageCard";
 
 export const BeverageCarouselCard = ({ result }: CardProps) => {

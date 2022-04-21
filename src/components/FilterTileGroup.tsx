@@ -4,9 +4,11 @@ import { useContext, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { useFiltersContext } from "@yext/answers-react-components/lib/components/Filters";
 import { SearchCtx } from "../App";
+import { useSearchParams } from "react-router-dom";
 
 interface FilterTileGroupProps {
   facet: DisplayableFacet;
+  selectedOptions?: string[];
 }
 
 // TODO: remove show more if not enough options
@@ -14,6 +16,8 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
   const [expanded, setExpanded] = useState(false);
 
   const outerContainerRef = useRef<HTMLDivElement>(null);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { selectFilter, applyFilters } = useFiltersContext();
 
@@ -34,6 +38,9 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
     optionValue: string | number | boolean | NumberRangeValue,
     checked: boolean
   ) => {
+    const facetParams = searchParams.get("facets");
+    let existingUrlFacets: Record<string, string[]> = facetParams ? JSON.parse(facetParams) : {};
+
     selectFilter({
       matcher: Matcher.Equals,
       fieldId: facet.fieldId,
@@ -41,6 +48,26 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
       selected: checked,
     });
     applyFilters();
+
+    if (checked) {
+      if (existingUrlFacets[facet.fieldId]) {
+        existingUrlFacets[facet.fieldId].push(optionValue.toString());
+      } else {
+        existingUrlFacets[facet.fieldId] = [optionValue.toString()];
+      }
+    } else {
+      existingUrlFacets[facet.fieldId] = existingUrlFacets[facet.fieldId].filter(
+        (o) => o !== optionValue.toString()
+      );
+      if (existingUrlFacets[facet.fieldId].length === 0) {
+        delete existingUrlFacets[facet.fieldId];
+      }
+    }
+
+    searchParams.delete("facets");
+    searchParams.append("facets", JSON.stringify(existingUrlFacets));
+    setSearchParams(searchParams);
+
     setFilterSectionActive(false);
   };
 
