@@ -21,7 +21,6 @@ export enum BeverageTag {
   Gift = "GIFT",
 }
 
-// TODO: add spinner for carousels or use less cards
 const Carousel = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => {
   const answersActions = useAnswersActions();
 
@@ -29,13 +28,13 @@ const Carousel = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => 
     answersActions.setContext({ staticResults: beverageTag });
     answersActions.setVerticalLimit(limit || 8);
     answersActions.executeVerticalQuery();
-  }, []);
+  }, [beverageTag, limit]);
 
   return (
     <div className="px-4">
       <div>
         <div className="text-toast-dark-orange text-base font-extrabold">{sectionName}</div>
-      </div>
+      </div>{" "}
       <VerticalResults
         customCssClasses={{ results: "overflow-x-auto flex" }}
         CardComponent={BeverageCarouselCard}
@@ -51,15 +50,14 @@ const Carousel = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => 
 export const CarouselSection = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => {
   return (
     <AnswersHeadlessProvider
-      // TODO: headless id in the form best-sellers-carousel
-      headlessId={`${sectionName}-carousel`}
+      headlessId={`${sectionName.replaceAll(" ", "-").toLowerCase()}-carousel`}
       apiKey={answersApiKey}
       experienceKey={answersExperienceKey}
       locale="en"
       endpoints={answersSandboxEndpoints}
       verticalKey="beverages"
     >
-      <Carousel sectionName={sectionName} beverageTag={beverageTag} limit={limit} />
+      {<Carousel sectionName={sectionName} beverageTag={beverageTag} limit={limit} />}
     </AnswersHeadlessProvider>
   );
 };

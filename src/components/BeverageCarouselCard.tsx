@@ -1,9 +1,4 @@
-import {
-  CardProps,
-  isString,
-  validateData,
-} from "@yext/answers-react-components";
-import ImageAssets from "../assets/imageAssets";
+import { CardProps, isString, validateData } from "@yext/answers-react-components";
 import { dataForRender } from "./BeverageCard";
 
 export const BeverageCarouselCard = ({ result }: CardProps) => {
@@ -11,10 +6,9 @@ export const BeverageCarouselCard = ({ result }: CardProps) => {
 
   return (
     <div className="flex flex-col">
-      <div className="border border-toast-dark-orange bg-toast-light-orange mx-1">
+      <div className="border border-toast-dark-orange  mx-1">
         <div className="w-52 h-40 flex justify-center items-center">
-          {/* TODO: replace with actual image */}
-          <img className="" src={ImageAssets.titos} />
+          <img className="w-24" src={beverage.primaryPhoto?.image.sourceUrl} alt="beverage image" />
         </div>
       </div>
       <div className="mt-2 mb-6">
