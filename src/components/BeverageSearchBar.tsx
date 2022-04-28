@@ -3,17 +3,16 @@ import {
   isStringOrHighlightedValue,
   SearchBar,
   renderHighlightedValue,
+  DropdownItem,
 } from "@yext/answers-react-components";
 import {
-  AutocompleteResult,
-  HighlightedValue,
   provideAnswersHeadless,
   Result,
   useAnswersActions,
   useAnswersState,
   VerticalResults as VerticalResultsData,
 } from "@yext/answers-headless-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { Divider } from "./Divider";
 import classNames from "classnames";
@@ -24,21 +23,10 @@ import {
 } from "../config/answersConfig";
 import { StarRating } from "./StarRating";
 import { useNavigate } from "react-router-dom";
-import { dataForRender } from "./BeverageCard";
 import { SearchCtx } from "../App";
-
-const searchParamFields = [
-  {
-    fieldApiName: "c_subCategory",
-    entityType: "ce_beverage",
-    fetchEntities: true,
-  },
-  {
-    fieldApiName: "c_category",
-    entityType: "ce_beverage",
-    fetchEntities: true,
-  },
-];
+import { alcholicBeverageTypeDataForRender } from "../types/BeverageType";
+import { beverageDataForRender } from "../types/Beverage";
+import { extractPathFromBeverageType } from "../utils/extractPathFromBeverageType";
 
 export const BeverageSearchBar = () => {
   const entityPreviewSearcher = provideAnswersHeadless({
@@ -53,146 +41,107 @@ export const BeverageSearchBar = () => {
   const navigate = useNavigate();
 
   const { height } = useWindowDimensions();
-  const [autocompleteFilters, setAutocompleteFilters] = useState<AutocompleteResult[]>([]);
 
+  // TODO: why do I need this?
   const query = useAnswersState((state) => state.query.input);
   const answersActions = useAnswersActions();
-
-  useEffect(() => {
-    const fetchFilters = async () => {
-      const filters = await answersActions.executeFilterSearch(
-        query ?? "",
-        false,
-        searchParamFields
-      );
-
-      const filterResults = filters?.sections[0]?.results;
-      if (filterResults) {
-        let filterValueSet: Set<String> = new Set();
-        const filters: AutocompleteResult[] = [];
-        filterResults.forEach((filter) => {
-          if (!filterValueSet.has(filter.value)) {
-            filters.push(filter);
-          }
-          filterValueSet.add(filter.value);
-        });
-        setAutocompleteFilters(filters);
-      } else {
-        setAutocompleteFilters([]);
-      }
-    };
-
-    fetchFilters();
-  }, [query]);
 
   const renderEntityPreviews = (
     autocompleteLoading: boolean,
     verticalResultsArray: VerticalResultsData[],
     onSubmit: (value: string, _index: number, itemData?: FocusedItemData) => void
   ) => {
-    if (autocompleteLoading) {
-      return <></>;
-    }
-    const verticalResults = verticalResultsArray.flatMap(
-      (verticalResult) => verticalResult.results
-    );
+    const alcoholicBeverageTypeResults = verticalResultsArray.find(
+      (verticalResult) => verticalResult.verticalKey === "autocomplete"
+    )?.results;
+
+    const beverageResults = verticalResultsArray.find(
+      (verticalResult) => verticalResult.verticalKey === "beverages"
+    )?.results;
+
     return (
-      <div className="bg-white">
-        {renderFilterAutocomplete(autocompleteFilters)}
-        {renderBeveragesAutocomplete(verticalResults)}
-      </div>
+      <>
+        {renderFilterAutocomplete(alcoholicBeverageTypeResults)}
+        {renderBeveragesAutocomplete(beverageResults)}
+      </>
     );
   };
 
-  const renderBeveragesAutocomplete = (verticalResults: Result[]) =>
-    verticalResults.map((verticalResult) => {
-      const beverageData = dataForRender(verticalResult);
-      const beverageImg = beverageData.primaryPhoto?.image.url;
-      let beverageTitle: HighlightedValue | string;
-      if (
-        verticalResult.highlightedFields?.name &&
-        isStringOrHighlightedValue(verticalResult.highlightedFields?.name)
-      ) {
-        beverageTitle = verticalResult.highlightedFields?.name;
-      } else {
-        beverageTitle = verticalResult.name ?? "";
-      }
-      return (
-        <>
-          <div
-            className={classNames("flex py-1 items-center hover:bg-toast-gray", {
-              "max-h-28": beverageImg,
-            })}
-          >
-            <div className="w-16">
-              <img src={beverageImg} />
-            </div>
-            <div className="ml-6 text-sm w-80">
-              {renderHighlightedValue(beverageTitle, {
-                nonHighlighted: "text-primary text-black text-base",
-                highlighted: "text-toast-dark-orange text-base",
-              })}
-              <div className="font-bold">{beverageData.c_priceRange?.split(" ")[0]}</div>
-              <StarRating />
-            </div>
-          </div>
-          <Divider />
-        </>
-      );
-    });
+  const renderFilterAutocomplete = (results: Result[] | undefined) => {
+    if (!results || results.length === 0) return <></>;
 
-  const renderFilterAutocomplete = (results: AutocompleteResult[]) => {
     return (
       <div>
-        {results.slice(0, 3).map((filter, i) => {
-          const relatedBeverage = dataForRender(filter.relatedItem);
-          const path = generatePath(
-            filter.value,
-            relatedBeverage.c_alcoholType,
-            relatedBeverage.c_category,
-            relatedBeverage.c_subCategory
-          );
+        {results.slice(0, 3).map((result) => {
+          const beverageTypeData = alcholicBeverageTypeDataForRender(result);
+          const path = extractPathFromBeverageType(beverageTypeData);
 
-          return (
-            <div className="hover:bg-toast-gray" onClick={() => searchHandler(path)}>
+          const title = isStringOrHighlightedValue(result.highlightedFields?.name)
+            ? result.highlightedFields?.name
+            : result.name;
+
+          return title && result.name ? (
+            <DropdownItem value="idk" onClick={() => searchHandler(path)}>
               <div className="py-1.5 px-3.5">
-                {renderHighlightedValue(filter, {
-                  nonHighlighted: "text-primary text-black text-base",
+                {renderHighlightedValue(title, {
+                  nonHighlighted: "text-primary text-black text-base ",
                   highlighted: "text-toast-dark-orange text-base",
                 })}
+                <Divider />
               </div>
-              <Divider />
-            </div>
+            </DropdownItem>
+          ) : (
+            <></>
           );
         })}
       </div>
     );
   };
 
-  const generatePath = (
-    filterValue?: string,
-    alcoholType?: string,
-    category?: string,
-    subCategory?: string
-  ): string => {
-    if (!alcoholType) return "";
+  const renderBeveragesAutocomplete = (results: Result[] | undefined) => {
+    if (!results || results.length === 0) return <></>;
 
-    let link = `/${alcoholType.toLowerCase()}`;
-    if (category) {
-      link += `/${category.toLowerCase().replaceAll(" ", "-")}`;
-      if (subCategory && filterValue !== category) {
-        link += `/${subCategory.toLowerCase().replaceAll(" ", "-")}`;
-      }
-      return link;
-    } else {
-      return link + "/all";
-    }
+    return results.map((result) => {
+      const beverageData = beverageDataForRender(result);
+      const beverageImg = beverageData.primaryPhoto?.image.url;
+
+      const title = isStringOrHighlightedValue(result.highlightedFields?.name)
+        ? result.highlightedFields?.name
+        : result.name;
+
+      return title && result.name ? (
+        <DropdownItem value="something">
+          <div>
+            <div
+              className={classNames("flex py-1 items-center hover:bg-toast-gray", {
+                "max-h-28": beverageImg,
+              })}
+            >
+              <div className="w-16">
+                <img src={beverageImg} />
+              </div>
+              <div className="ml-6 w-80">
+                {renderHighlightedValue(title, {
+                  nonHighlighted: "text-primary text-black text-sm",
+                  highlighted: "text-toast-dark-orange text-sm",
+                })}
+                <div className="font-bold">{beverageData.c_price}</div>
+                <StarRating />
+              </div>
+            </div>
+            <Divider />
+          </div>
+        </DropdownItem>
+      ) : (
+        <></>
+      );
+    });
   };
 
-  const searchHandler = (path: string) => {
+  const searchHandler = (path?: string) => {
     answersActions.resetFacets();
     setSearchBarActive(false);
-    navigate(path);
+    path && navigate(path);
   };
 
   const handleSubmit = (searchEventData: { verticalKey?: string; query?: string }) => {
@@ -223,7 +172,6 @@ export const BeverageSearchBar = () => {
         visualAutocompleteConfig={{
           entityPreviewSearcher,
           renderEntityPreviews,
-          entityPreviewsDebouncingTime: 200,
         }}
       />
     </div>

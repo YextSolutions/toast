@@ -18,6 +18,7 @@ import classNames from "classnames";
 import { FilterSection } from "../components/FilterSection";
 import { SortingDrawer } from "../components/SortingDrawer";
 import { ShakerLoader } from "../components/ShakerLoader";
+import { formatSearchResultsTitle } from "../utils/formatSearchResultsTitle";
 
 export const BeverageResultsScreen = () => {
   const [page, setPage] = useState("");
@@ -57,7 +58,7 @@ export const BeverageResultsScreen = () => {
       });
       !query &&
         setSearchResultsTitle({
-          title: alcoholType.charAt(0).toUpperCase() + alcoholType.slice(1),
+          title: formatSearchResultsTitle(alcoholType),
         });
     }
 
@@ -68,8 +69,7 @@ export const BeverageResultsScreen = () => {
         value: category.replaceAll("-", " "),
         matcher: Matcher.Equals,
       });
-      !query &&
-        setSearchResultsTitle({ title: category.charAt(0).toUpperCase() + category.slice(1) });
+      !query && setSearchResultsTitle({ title: formatSearchResultsTitle(category) });
     }
 
     if (subCategory) {
@@ -81,7 +81,7 @@ export const BeverageResultsScreen = () => {
       });
       !query &&
         setSearchResultsTitle({
-          title: subCategory.charAt(0).toUpperCase() + subCategory.slice(1),
+          title: formatSearchResultsTitle(subCategory),
         });
     }
 
