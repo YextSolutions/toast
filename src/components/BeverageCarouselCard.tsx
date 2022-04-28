@@ -1,8 +1,8 @@
 import { CardProps } from "@yext/answers-react-components";
-import { dataForRender } from "./BeverageCard";
+import { beverageDataForRender } from "../types/Beverage";
 
 export const BeverageCarouselCard = ({ result }: CardProps) => {
-  const beverage = dataForRender(result);
+  const beverage = beverageDataForRender(result);
 
   return (
     <div className="flex flex-col">
