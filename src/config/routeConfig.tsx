@@ -118,6 +118,7 @@ export const routeConfig: RouteData[] = [
       />
     ),
   },
+
   {
     path: "/liquor",
     page: (
