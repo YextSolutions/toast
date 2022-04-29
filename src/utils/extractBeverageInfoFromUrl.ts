@@ -4,6 +4,7 @@ export interface BeverageInfo {
   alcoholType?: string;
   category?: string;
   subCategory?: string;
+  beverageId?: string;
 }
 
 export const extractBeverageInfoFromUrl = (params: Readonly<Params<string>>): BeverageInfo => {

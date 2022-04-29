@@ -25,8 +25,9 @@ import { StarRating } from "./StarRating";
 import { useNavigate } from "react-router-dom";
 import { SearchCtx } from "../App";
 import { alcholicBeverageTypeDataForRender } from "../types/BeverageType";
-import { beverageDataForRender } from "../types/Beverage";
+import { Beverage, beverageDataForRender } from "../types/Beverage";
 import { extractPathFromBeverageType } from "../utils/extractPathFromBeverageType";
+import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 
 export const BeverageSearchBar = () => {
   const entityPreviewSearcher = provideAnswersHeadless({
@@ -81,7 +82,7 @@ export const BeverageSearchBar = () => {
             : result.name;
 
           return title && result.name ? (
-            <DropdownItem value="idk" onClick={() => searchHandler(path)}>
+            <DropdownItem value={result.name} onClick={() => searchHandler(path)}>
               <div className="py-1.5 px-3.5">
                 {renderHighlightedValue(title, {
                   nonHighlighted: "text-primary text-black text-base ",
@@ -109,8 +110,10 @@ export const BeverageSearchBar = () => {
         ? result.highlightedFields?.name
         : result.name;
 
+      const path = extractPathFromBeverage(beverageData);
+
       return title && result.name ? (
-        <DropdownItem value="something">
+        <DropdownItem value={result.name} onClick={() => searchHandler(path, beverageData)}>
           <div>
             <div
               className={classNames("flex py-1 items-center hover:bg-toast-gray", {
@@ -138,10 +141,14 @@ export const BeverageSearchBar = () => {
     });
   };
 
-  const searchHandler = (path?: string) => {
+  const searchHandler = (path?: string, beverage?: Partial<Beverage>) => {
     answersActions.resetFacets();
     setSearchBarActive(false);
-    path && navigate(path);
+
+    path &&
+      navigate(path, {
+        state: { beverage },
+      });
   };
 
   const handleSubmit = (searchEventData: { verticalKey?: string; query?: string }) => {

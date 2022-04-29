@@ -20,7 +20,7 @@ import { SortingDrawer } from "../components/SortingDrawer";
 import { ShakerLoader } from "../components/ShakerLoader";
 import { formatSearchResultsTitle } from "../utils/formatSearchResultsTitle";
 
-export const BeverageResultsScreen = () => {
+export const BeverageResultsScreen = (): JSX.Element => {
   const [page, setPage] = useState("");
   const [searchResultsTitle, setSearchResultsTitle] = useState<{ query?: boolean; title: string }>({
     title: "",
@@ -139,7 +139,9 @@ export const BeverageResultsScreen = () => {
                 </div>
               </div>
             )}
-            <BeverageBreadcrumbs />
+            <div className="my-4 px-4 text-sm">
+              <BeverageBreadcrumbs />
+            </div>
             <div className="flex justify-between items-center px-4">
               <div className="my-2 ">
                 <div

@@ -18,6 +18,9 @@ type Image = {
 export interface Beverage {
   id: string;
   name: string;
+  description: string;
+  c_usState: string;
+  c_originCountry: string;
   c_alcoholType: string;
   c_category: string;
   c_subCategory: string;
@@ -43,7 +46,11 @@ export const beverageDataForRender = (result: Result | undefined): Partial<Bever
   if (!result) return {};
 
   const data = {
+    id: result.id,
     name: result.rawData.name,
+    description: result.rawData.description,
+    c_usState: result.rawData.c_usState,
+    c_originCountry: result.rawData.c_originCountry,
     primaryPhoto: result.rawData.primaryPhoto,
     c_price: result.rawData.c_price,
     c_priceRange: result.rawData.c_priceRange,
@@ -53,7 +60,11 @@ export const beverageDataForRender = (result: Result | undefined): Partial<Bever
   };
 
   return validateData(data, {
+    id: isString,
     name: isString,
+    description: isString,
+    c_usState: isString,
+    c_originCountry: isString,
     primaryPhoto: isPhotoGallery,
     c_price: isString,
     c_priceRange: isString,

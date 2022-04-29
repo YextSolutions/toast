@@ -1,6 +1,8 @@
 import { CardProps } from "@yext/answers-react-components";
 import classNames from "classnames";
+import { useNavigate } from "react-router-dom";
 import { beverageDataForRender } from "../types/Beverage";
+import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 import { StarRating } from "./StarRating";
 
 interface BeverageCardProps extends CardProps {
@@ -9,6 +11,18 @@ interface BeverageCardProps extends CardProps {
 
 export const BeverageCard = ({ result, autocomplete }: BeverageCardProps): JSX.Element => {
   const beverage = beverageDataForRender(result);
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    const path = extractPathFromBeverage(beverage);
+
+    if (path) {
+      navigate(`${extractPathFromBeverage(beverage)}`, {
+        state: { beverage },
+      });
+    }
+  };
 
   return (
     <div
@@ -20,6 +34,7 @@ export const BeverageCard = ({ result, autocomplete }: BeverageCardProps): JSX.E
         },
         { "flex py-1 items-center h-20 w-20": autocomplete }
       )}
+      onClick={() => handleClick()}
     >
       <div
         className={classNames("w-full flex flex-col justify-center ", {

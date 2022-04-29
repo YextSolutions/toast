@@ -3,17 +3,23 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BeverageInfo, extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
 
-const BeverageBreadcrumbs = (): JSX.Element => {
+interface BeverageBreadcrumbsProps {
+  beverageCategories?: BeverageInfo;
+}
+
+const BeverageBreadcrumbs = ({ beverageCategories }: BeverageBreadcrumbsProps): JSX.Element => {
   const urlParams = useParams();
   const [beverageInfo, setBeverageInfo] = useState<BeverageInfo>();
 
   const answersActions = useAnswersActions();
 
   useEffect(() => {
-    const { alcoholType, category, subCategory } = extractBeverageInfoFromUrl(urlParams);
+    const { alcoholType, category, subCategory, beverageId } = beverageCategories
+      ? beverageCategories
+      : extractBeverageInfoFromUrl(urlParams);
 
-    setBeverageInfo({ alcoholType, category, subCategory });
-  }, [urlParams]);
+    setBeverageInfo({ alcoholType, category, subCategory, beverageId });
+  }, [urlParams, beverageCategories]);
 
   const renderPageLink = (label?: string, to?: string, first?: boolean): JSX.Element => {
     if (!label) return <></>;
@@ -55,25 +61,31 @@ const BeverageBreadcrumbs = (): JSX.Element => {
   }
 
   return (
-    <div className="my-2 px-4 text-sm">
-      <div>
-        {renderPageLink("Toast", "/", true)}
-        {renderPageLink(
-          beverageInfo.alcoholType,
-          beverageInfo.category && beverageInfo.category !== "all"
-            ? `/${beverageInfo.alcoholType}/all`
+    <div>
+      {renderPageLink("Toast", "/", true)}
+      {renderPageLink(
+        beverageInfo.alcoholType,
+        beverageInfo.category && beverageInfo.category !== "all"
+          ? `/${beverageInfo.alcoholType}/all`
+          : undefined
+      )}
+      {beverageInfo.category &&
+        beverageInfo.category !== "all" &&
+        renderPageLink(
+          beverageInfo.category,
+          beverageInfo.subCategory || beverageInfo.beverageId
+            ? `/${beverageInfo.alcoholType}/${beverageInfo.category?.replaceAll(" ", "-")}`
             : undefined
         )}
-        {beverageInfo.category &&
-          beverageInfo.category !== "all" &&
-          renderPageLink(
-            beverageInfo.category,
-            beverageInfo.subCategory
-              ? `/${beverageInfo.alcoholType}/${beverageInfo.category?.replaceAll(" ", "-")}`
-              : undefined
-          )}
-        {renderPageLink(beverageInfo.subCategory)}
-      </div>
+      {renderPageLink(
+        beverageInfo.subCategory,
+        beverageInfo.beverageId
+          ? `/${beverageInfo.alcoholType}/${beverageInfo.category?.replaceAll(
+              " ",
+              "-"
+            )}/${beverageInfo.subCategory?.replaceAll(" ", "-")}`
+          : undefined
+      )}
     </div>
   );
 };

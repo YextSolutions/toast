@@ -2,6 +2,7 @@ import ImageAssets from "../assets/imageAssets";
 import { BeverageTag } from "../components/CarouselSection";
 import { RouteData } from "../PageRouter";
 import { BeverageResultsScreen } from "../screens/BeverageResultsScreen";
+import { BeverageScreen } from "../screens/BeverageScreen";
 import { SearchScreen } from "../screens/SearchScreen";
 
 export const routeConfig: RouteData[] = [
@@ -118,7 +119,6 @@ export const routeConfig: RouteData[] = [
       />
     ),
   },
-
   {
     path: "/liquor",
     page: (
@@ -157,10 +157,16 @@ export const routeConfig: RouteData[] = [
       />
     ),
   },
-  { path: "/:alcoholType/*", page: <BeverageResultsScreen /> },
-  { path: "/:alcoholType/:category/*", page: <BeverageResultsScreen /> },
+  { path: "/:alcoholType/all", page: <BeverageResultsScreen /> },
+  { path: "/:alcoholType/:category", page: <BeverageResultsScreen /> },
   {
-    path: "/:alcoholType/:category/:subCategory/*",
+    path: "/:alcoholType/:category/:subCategory",
     page: <BeverageResultsScreen />,
   },
+  // {
+  //   path: "/:alcoholType/:category/:subCategory/:beverageId",
+  //   page: <BeverageScreen />,
+  // },
+  { path: "/:alcoholType/:category/page/:beverageId", page: <BeverageScreen /> },
+  { path: "/:alcoholType/:category/:subCategory/page/:beverageId", page: <BeverageScreen /> },
 ];
