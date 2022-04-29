@@ -5,18 +5,42 @@ import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageSearchBar } from "../components/BeverageSearchBar";
 import { ToastHeader } from "../components/ToastHeader";
 import { Beverage } from "../types/Beverage";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import axios from "axios";
+
+const liveApiKey = import.meta.env.VITE_LIVE_API_KEY;
+
+interface LocationState {
+  state: {
+    beverage: Partial<Beverage>;
+  };
+}
 
 export const BeverageScreen = (): JSX.Element => {
   const [beverageData, setBeverageData] = useState<Partial<Beverage>>();
 
   const { searchBarActive, setSearchBarActive } = useContext(SearchCtx);
 
-  const location = useLocation();
+  const location = useLocation() as unknown as LocationState;
+  const urlParams = useParams();
 
   useEffect(() => {
-    // console.log(location.state.beverage);
-    setBeverageData(location.state?.beverage as Partial<Beverage>);
+    const fetchEntity = async (beverageId: string) => {
+      const result = await axios(
+        `https://liveapi-sandbox.yext.com/v2/accounts/3155222/entities/${beverageId}?api_key=${liveApiKey}&v=20220322`
+      );
+
+      setBeverageData({ ...result.data.response, id: result.data.response.meta.id });
+    };
+
+    if (location.state?.beverage) {
+      setBeverageData(location.state?.beverage as Partial<Beverage>);
+    } else {
+      const { beverageId } = urlParams;
+      if (beverageId) {
+        fetchEntity(beverageId);
+      }
+    }
   }, [location.state]);
 
   useEffect(() => {
