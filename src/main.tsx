@@ -8,6 +8,7 @@ import {
   answersExperienceKey,
   answersSandboxEndpoints,
 } from "./config/answersConfig";
+import { CartProvider } from "./providers/CartProvider";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,7 +19,9 @@ ReactDOM.render(
       verticalKey="beverages"
       endpoints={answersSandboxEndpoints}
     >
-      <App />
+      <CartProvider>
+        <App />
+      </CartProvider>
     </AnswersHeadlessProvider>
   </React.StrictMode>,
   document.getElementById("root")

@@ -7,6 +7,7 @@ import { ToastHeader } from "../components/ToastHeader";
 import { Beverage } from "../types/Beverage";
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
+import { CartActionTypes, CartContext } from "../providers/CartProvider";
 
 const liveApiKey = import.meta.env.VITE_LIVE_API_KEY;
 
@@ -17,9 +18,11 @@ interface LocationState {
 }
 
 export const BeverageScreen = (): JSX.Element => {
-  const [beverageData, setBeverageData] = useState<Partial<Beverage>>();
+  const [beverageData, setBeverageData] = useState<Partial<Beverage>>({});
 
-  const { searchBarActive, setSearchBarActive } = useContext(SearchCtx);
+  const { searchBarActive } = useContext(SearchCtx);
+  const cartContext = useContext(CartContext);
+  const { cart } = cartContext;
 
   const location = useLocation() as unknown as LocationState;
   const urlParams = useParams();
@@ -88,7 +91,15 @@ export const BeverageScreen = (): JSX.Element => {
         </div>
       )}
       <div className="fixed z-20 bottom-0 w-full bg-white flex justify-center items-center h-16 border-t">
-        <button className="bg-toast-blue w-80 h-10 rounded">
+        <button
+          className="bg-toast-blue w-80 h-10 rounded"
+          onClick={() =>
+            cartContext.dispatch({
+              type: CartActionTypes.ADD_ITEM,
+              payload: { beverage: beverageData },
+            })
+          }
+        >
           <p className="text-white text-center font-bold text-base">SORT / FILTER</p>
         </button>
       </div>
