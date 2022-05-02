@@ -2,7 +2,7 @@
   "artifactStructure": {
     "assets": [
       {
-        "root": "dist/"
+        "root": "dist"
       }
     ]
   },
@@ -13,7 +13,7 @@
   },
   "buildArtifacts": {
     "build_setup_cmd": "npm install",
-    "build_cmd": "npm run build"
+    "build_cmd": "tsc && vite build"
   },
   "livePreview": {
     "serve_setup_cmd": "echo setup",
