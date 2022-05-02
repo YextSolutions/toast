@@ -2,9 +2,10 @@ import { Filters } from "@yext/answers-react-components";
 import { DisplayableFacet, Matcher, NumberRangeValue } from "@yext/answers-headless-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
-import { useFiltersContext } from "@yext/answers-react-components/lib/components/Filters";
 import { SearchCtx } from "../App";
 import { useSearchParams } from "react-router-dom";
+import { useFiltersContext } from "@yext/answers-react-components/lib/components/Filters/FiltersContext";
+// import { useFiltersContext } from "@yext/answers-react-components/lib/components/Filters";
 
 interface FilterTileGroupProps {
   facet: DisplayableFacet;
