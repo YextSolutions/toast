@@ -11,11 +11,9 @@
     "requiredFiles": ["package.json", "package-lock.json"]
   },
   "buildArtifacts": {
-    "build_setup_cmd": "npm install",
     "build_cmd": "npm run build"
   },
   "livePreview": {
-    "serveSetupCmd": "echo setup",
-    "serveCmd": "echo serve"
+    "serveSetupCmd": ":"
   }
 }
