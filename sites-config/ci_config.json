@@ -6,17 +6,16 @@
       }
     ]
   },
-  "base_image_tag": "node-12.18",
   "dependencies": {
-    "installDepsCmd": "echo install",
-    "requiredFiles": []
+    "installDepsCmd": "npm install --production=false",
+    "requiredFiles": ["package.json", "package-lock.json"]
   },
   "buildArtifacts": {
     "build_setup_cmd": "npm install",
     "build_cmd": "npm run build"
   },
   "livePreview": {
-    "serve_setup_cmd": "echo setup",
-    "serve_cmd": "echo serve"
+    "serveSetupCmd": "echo setup",
+    "serveCmd": "echo serve"
   }
 }
