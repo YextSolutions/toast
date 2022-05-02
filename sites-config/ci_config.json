@@ -2,18 +2,21 @@
   "artifactStructure": {
     "assets": [
       {
-        "root": "dist/"
+        "root": "dist"
       }
     ]
   },
+  "base_image_tag": "node-12.18",
   "dependencies": {
-    "installDepsCmd": "npm install --production=false",
-    "requiredFiles": ["package.json", "package-lock.json"]
+    "installDepsCmd": "echo install",
+    "requiredFiles": []
   },
   "buildArtifacts": {
+    "build_setup_cmd": "npm install",
     "build_cmd": "npm run build"
   },
   "livePreview": {
-    "serveSetupCmd": ":"
+    "serve_setup_cmd": "echo setup",
+    "serve_cmd": "echo serve"
   }
 }
