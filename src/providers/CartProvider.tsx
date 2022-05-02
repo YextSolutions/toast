@@ -29,6 +29,7 @@ export enum CartActionTypes {
 type CartPayload = {
   [CartActionTypes.ADD_ITEM]: {
     beverage: Partial<Beverage>;
+    quantity: number;
   };
   [CartActionTypes.REMOVE_ITEM]: {
     beverage: Partial<Beverage>;
@@ -54,9 +55,12 @@ export const cartReducer = (state = initialState as Cart, action: CartActions) =
         (item) => item.beverage.id === action.payload.beverage.id
       );
       if (itemToAdd) {
-        itemToAdd.quantity++;
+        itemToAdd.quantity += action.payload.quantity;
       } else {
-        state.cartItems.push({ beverage: action.payload.beverage, quantity: 1 });
+        state.cartItems.push({
+          beverage: action.payload.beverage,
+          quantity: action.payload.quantity,
+        });
       }
       return { ...state };
 

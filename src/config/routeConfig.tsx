@@ -3,6 +3,7 @@ import { BeverageTag } from "../components/CarouselSection";
 import { RouteData } from "../PageRouter";
 import { BeverageResultsScreen } from "../screens/BeverageResultsScreen";
 import { BeverageScreen } from "../screens/BeverageScreen";
+import { CartScreen } from "../screens/CartScreen";
 import { SearchScreen } from "../screens/SearchScreen";
 
 export const routeConfig: RouteData[] = [
@@ -163,10 +164,7 @@ export const routeConfig: RouteData[] = [
     path: "/:alcoholType/:category/:subCategory",
     page: <BeverageResultsScreen />,
   },
-  // {
-  //   path: "/:alcoholType/:category/:subCategory/:beverageId",
-  //   page: <BeverageScreen />,
-  // },
   { path: "/:alcoholType/:category/page/:beverageId", page: <BeverageScreen /> },
   { path: "/:alcoholType/:category/:subCategory/page/:beverageId", page: <BeverageScreen /> },
+  { path: "/cart", page: <CartScreen /> },
 ];

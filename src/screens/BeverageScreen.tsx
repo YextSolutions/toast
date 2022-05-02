@@ -8,6 +8,7 @@ import { Beverage } from "../types/Beverage";
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import { CartActionTypes, CartContext } from "../providers/CartProvider";
+import { ProductCounter } from "../components/ProductCounter";
 
 const liveApiKey = import.meta.env.VITE_LIVE_API_KEY;
 
@@ -19,6 +20,7 @@ interface LocationState {
 
 export const BeverageScreen = (): JSX.Element => {
   const [beverageData, setBeverageData] = useState<Partial<Beverage>>({});
+  const [count, setCount] = useState(1);
 
   const { searchBarActive } = useContext(SearchCtx);
   const cartContext = useContext(CartContext);
@@ -45,10 +47,6 @@ export const BeverageScreen = (): JSX.Element => {
       }
     }
   }, [location.state]);
-
-  useEffect(() => {
-    console.log(beverageData);
-  }, [beverageData]);
 
   return (
     <>
@@ -91,16 +89,17 @@ export const BeverageScreen = (): JSX.Element => {
         </div>
       )}
       <div className="fixed z-20 bottom-0 w-full bg-white flex justify-center items-center h-16 border-t">
+        <ProductCounter quantity={count} onChange={setCount} />
         <button
-          className="bg-toast-blue w-80 h-10 rounded"
+          className="bg-toast-blue w-52 h-10 rounded ml-6"
           onClick={() =>
             cartContext.dispatch({
               type: CartActionTypes.ADD_ITEM,
-              payload: { beverage: beverageData },
+              payload: { beverage: beverageData, quantity: count },
             })
           }
         >
-          <p className="text-white text-center font-bold text-base">SORT / FILTER</p>
+          <p className="text-white text-center font-bold text-base">ADD TO CART</p>
         </button>
       </div>
     </>

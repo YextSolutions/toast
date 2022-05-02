@@ -15,19 +15,18 @@ import {
 import { useContext } from "react";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { Divider } from "./Divider";
-import classNames from "classnames";
 import {
   answersApiKey,
   answersExperienceKey,
   answersSandboxEndpoints,
 } from "../config/answersConfig";
-import { StarRating } from "./StarRating";
 import { useNavigate } from "react-router-dom";
 import { SearchCtx } from "../App";
 import { alcholicBeverageTypeDataForRender } from "../types/BeverageType";
 import { Beverage, beverageDataForRender } from "../types/Beverage";
 import { extractPathFromBeverageType } from "../utils/extractPathFromBeverageType";
 import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
+import { BeverageCard } from "./BeverageCard";
 
 export const BeverageSearchBar = () => {
   const entityPreviewSearcher = provideAnswersHeadless({
@@ -104,8 +103,8 @@ export const BeverageSearchBar = () => {
 
     return results.map((result) => {
       const beverageData = beverageDataForRender(result);
-      const beverageImg = beverageData.primaryPhoto?.image.url;
 
+      // TODO: Highlighted name in the Beverage card
       const title = isStringOrHighlightedValue(result.highlightedFields?.name)
         ? result.highlightedFields?.name
         : result.name;
@@ -114,26 +113,7 @@ export const BeverageSearchBar = () => {
 
       return title && result.name ? (
         <DropdownItem value={result.name} onClick={() => searchHandler(path, beverageData)}>
-          <div>
-            <div
-              className={classNames("flex py-1 items-center hover:bg-toast-gray", {
-                "max-h-28": beverageImg,
-              })}
-            >
-              <div className="w-16">
-                <img src={beverageImg} />
-              </div>
-              <div className="ml-6 w-80">
-                {renderHighlightedValue(title, {
-                  nonHighlighted: "text-primary text-black text-sm",
-                  highlighted: "text-toast-dark-orange text-sm",
-                })}
-                <div className="font-bold">{beverageData.c_price}</div>
-                <StarRating />
-              </div>
-            </div>
-            <Divider />
-          </div>
+          <BeverageCard result={result} autocomplete />
         </DropdownItem>
       ) : (
         <></>

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { FaShoppingBasket } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -6,11 +6,20 @@ import { SearchCtx } from "../App";
 import { ToastBanner } from "./ToastBanner";
 import classNames from "classnames";
 import { useAnswersActions } from "@yext/answers-headless-react";
+import { CartContext } from "../providers/CartProvider";
 
 export const ToastHeader = (): JSX.Element => {
+  const [totalCartItems, setTotalCartItems] = useState(0);
+
   const answersActions = useAnswersActions();
 
   const { searchBarActive, setSearchBarActive, filterSectionActive } = useContext(SearchCtx);
+  const cartContext = useContext(CartContext);
+  const { cart } = cartContext;
+
+  useEffect(() => {
+    setTotalCartItems(cart.cartItems.map((item) => item.quantity).reduce((a, b) => a + b, 0));
+  }, [cart]);
 
   const searchBarChangeHandler = (change: boolean) => {
     setSearchBarActive(change);
@@ -57,7 +66,12 @@ export const ToastHeader = (): JSX.Element => {
               <button className="h-8 w-8 mr-4" onClick={() => searchBarChangeHandler(true)}>
                 <MagnifyingGlassIcon />
               </button>
-              <FaShoppingBasket size={30} />
+              <Link className="relative" to="/cart">
+                <FaShoppingBasket size={30} />
+                <div className="bg-toast-red rounded-full h-3.5 w-3.5 text-white text-xxs flex justify-center items-center font-bold absolute -bottom-0.5 right-0">
+                  {totalCartItems}
+                </div>
+              </Link>
             </div>
           </>
         )}
