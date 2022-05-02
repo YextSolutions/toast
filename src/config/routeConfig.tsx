@@ -23,6 +23,8 @@ export const routeConfig: RouteData[] = [
             },
             { name: "OTHER", img: ImageAssets.shaker },
           ],
+          itemLayoutCssClasses:
+            "md:flex md:justify-center md:space-x-8 grid grid-cols-2 justify-items-center gap-2",
         }}
         carouselSections={[
           {
@@ -41,6 +43,7 @@ export const routeConfig: RouteData[] = [
             beverageTag: BeverageTag.Gift,
           },
         ]}
+        headerImage={ImageAssets.cocktails}
       />
     ),
   },

@@ -32,15 +32,20 @@ const Carousel = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => 
 
   return (
     <div className="px-4">
-      <div>
-        <div className="text-toast-dark-orange text-base font-extrabold">{sectionName}</div>
-      </div>{" "}
+      <div className="flex justify-between">
+        <div className="text-toast-dark-orange text-base sm:text-2xl font-extrabold">
+          {sectionName}
+        </div>
+        <button className="hidden md:flex font-bold text-sm text-toast-dark-orange">
+          VIEW ALL
+        </button>
+      </div>
       <VerticalResults
         customCssClasses={{ results: "overflow-x-auto flex" }}
         CardComponent={BeverageCarouselCard}
         allowPagination={false}
       />
-      <button className="flex justify-center items-center bg-toast-blue w-full h-10">
+      <button className="flex justify-center items-center bg-toast-blue w-full h-10 md:hidden">
         <div className="text-white font-bold text-xs">VIEW ALL</div>
       </button>
     </div>

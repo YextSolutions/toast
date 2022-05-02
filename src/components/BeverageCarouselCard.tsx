@@ -25,9 +25,9 @@ export const BeverageCarouselCard = ({ result }: CardProps) => {
           <img className="w-24" src={beverage.primaryPhoto?.image.sourceUrl} alt="beverage image" />
         </div>
       </div>
-      <div className="mt-2 mb-6">
-        <div className="font-semibold text-xxs">{beverage.name}</div>
-        <div className="text-xxs">{beverage.c_priceRange?.split(" ")[0]}</div>
+      <div className="mt-2 mb-6 pr-4 pl-1 w-52">
+        <p className="truncate font-semibold text-xs sm:text-sm">{beverage.name}</p>
+        {beverage.c_price && <div className="text-xxs sm:text-xs">{`$${beverage.c_price}`}</div>}
       </div>
     </div>
   );

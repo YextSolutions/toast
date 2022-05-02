@@ -125,17 +125,20 @@ export const BeverageResultsScreen = (): JSX.Element => {
   };
 
   return (
-    <>
+    <div className="relative h-full w-full flex justify-center">
       <ToastHeader />
       {active ? (
         <BeverageSearchBar />
       ) : (
         <>
-          <div className="fixed top-28 bottom-16 overflow-auto w-full ">
+          <div className="fixed top-28 bottom-16 overflow-auto w-full max-w-7xl">
             {beverageResultImages[page] && (
               <div className="flex justify-center">
-                <div className={" py-4 px-4 max-w-sm"}>
-                  <img className="w-96 h-44" src={beverageResultImages[page]}></img>
+                <div className={" py-8 "}>
+                  <img
+                    className="sm:w-[42.75rem] sm:h-[21.75rem] w-96 h-44"
+                    src={beverageResultImages[page]}
+                  ></img>
                 </div>
               </div>
             )}
@@ -167,6 +170,6 @@ export const BeverageResultsScreen = (): JSX.Element => {
           <FilterSection />
         </>
       )}
-    </>
+    </div>
   );
 };
