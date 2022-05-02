@@ -18,6 +18,7 @@ export interface Cart {
     beverage: Partial<Beverage>;
     quantity: number;
   }[];
+  totalPrice: number;
 }
 
 export enum CartActionTypes {
@@ -62,7 +63,7 @@ export const cartReducer = (state = initialState as Cart, action: CartActions) =
           quantity: action.payload.quantity,
         });
       }
-      return { ...state };
+      return { ...state, totalPrice: calculateTotalPrice(state.cartItems) };
 
     case CartActionTypes.REMOVE_ITEM:
       const itemToRemove = state.cartItems.find(
@@ -75,12 +76,24 @@ export const cartReducer = (state = initialState as Cart, action: CartActions) =
             (item) => item.beverage.id !== action.payload.beverage.id
           );
         }
-        return { ...state };
+        return { ...state, totalPrice: calculateTotalPrice(state.cartItems) };
       }
     case CartActionTypes.CLEAR_CART:
       state.cartItems = [];
-      return { ...state };
+      return { ...state, totalPrice: 0 };
   }
+};
+
+const calculateTotalPrice = (
+  cartItems: { beverage: Partial<Beverage>; quantity: number }[]
+): number => {
+  return (
+    Math.round(
+      cartItems
+        .map((item) => (Number(item.beverage.c_price) ?? 0) * item.quantity)
+        .reduce((a, b) => a + b, 0) * 100
+    ) / 100
+  );
 };
 
 const CartContext: Context<CartContext> = createContext({} as CartContext);

@@ -1,3 +1,4 @@
+import { Result } from "@yext/answers-headless-react";
 import { CardProps } from "@yext/answers-react-components";
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
@@ -6,10 +7,20 @@ import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 import { StarRating } from "./StarRating";
 
 interface BeverageCardProps extends CardProps {
+  result?: Result;
   autocomplete?: boolean;
+  name?: string;
+  imageUrl?: string;
+  price?: string;
 }
 
-export const BeverageCard = ({ result, autocomplete }: BeverageCardProps): JSX.Element => {
+export const BeverageCard = ({
+  result,
+  autocomplete,
+  name,
+  imageUrl,
+  price,
+}: BeverageCardProps): JSX.Element => {
   const beverage = beverageDataForRender(result);
 
   const navigate = useNavigate();
@@ -33,7 +44,7 @@ export const BeverageCard = ({ result, autocomplete }: BeverageCardProps): JSX.E
         <div className={classNames("flex", { "justify-center": !autocomplete })}>
           <img
             className={autocomplete ? "w-16" : "w-24 mb-2"}
-            src={beverage.primaryPhoto?.image.url}
+            src={imageUrl ?? beverage.primaryPhoto?.image.url}
           />
         </div>
       </div>
@@ -43,11 +54,13 @@ export const BeverageCard = ({ result, autocomplete }: BeverageCardProps): JSX.E
             "h-20": !autocomplete,
           })}
         >
-          {beverage.name}
+          {name ?? beverage.name}
         </div>
         <div>
           <div className={autocomplete ? "" : "pb-8"}>
-            {beverage.c_price && <div className="text-base">{`$${beverage.c_price}`}</div>}
+            {(price || beverage.c_price) && (
+              <div className="text-base">{`$${price ?? beverage.c_price}`}</div>
+            )}
             <StarRating />
           </div>
         </div>

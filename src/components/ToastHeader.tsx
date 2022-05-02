@@ -68,9 +68,11 @@ export const ToastHeader = (): JSX.Element => {
               </button>
               <Link className="relative" to="/cart">
                 <FaShoppingBasket size={30} />
-                <div className="bg-toast-red rounded-full h-3.5 w-3.5 text-white text-xxs flex justify-center items-center font-bold absolute -bottom-0.5 right-0">
-                  {totalCartItems}
-                </div>
+                {totalCartItems > 0 && (
+                  <div className="bg-toast-red rounded-full h-3.5 w-3.5 text-white text-xxs flex justify-center items-center font-bold absolute -bottom-0.5 right-0">
+                    {totalCartItems}
+                  </div>
+                )}
               </Link>
             </div>
           </>

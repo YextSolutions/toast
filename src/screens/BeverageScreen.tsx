@@ -89,7 +89,9 @@ export const BeverageScreen = (): JSX.Element => {
         </div>
       )}
       <div className="fixed z-20 bottom-0 w-full bg-white flex justify-center items-center h-16 border-t">
-        <ProductCounter quantity={count} onChange={setCount} />
+        {beverageData.id && (
+          <ProductCounter productId={beverageData.id} onChange={setCount} quantity={count} />
+        )}
         <button
           className="bg-toast-blue w-52 h-10 rounded ml-6"
           onClick={() =>
