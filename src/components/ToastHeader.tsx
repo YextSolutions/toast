@@ -41,7 +41,7 @@ export const ToastHeader = (): JSX.Element => {
       >
         {!filterSectionActive && (
           <>
-            <div className="w-1/3 text-toast-dark-orange ml-6">
+            <div className="w-1/3 text-toast-dark-orange ml-6 sm:hidden">
               {!searchBarActive ? (
                 <AiOutlineMenu size={30} />
               ) : (
@@ -53,13 +53,27 @@ export const ToastHeader = (): JSX.Element => {
                 </button>
               )}
             </div>
-            <div className="w-1/3 flex justify-center">
+            <div className="w-1/3 flex justify-center sm:justify-start sm:pl-4">
               <Link
                 className="text-3xl text-toast-red font-semibold flex items-center"
                 to="/"
                 onClick={() => clearSearchState()}
               >
                 <span>TOAST</span>
+                <div className="hidden sm:flex pl-4 text-black text-base">
+                  <Link className="px-4" to="/">
+                    WINE
+                  </Link>
+                  <Link className="px-4" to="/">
+                    BEER
+                  </Link>
+                  <Link className="px-4" to="/">
+                    SPIRITS
+                  </Link>
+                  <Link className="px-4" to="/">
+                    OTHER
+                  </Link>
+                </div>
               </Link>
             </div>
             <div className="w-1/3 flex justify-end mr-6 text-toast-dark-orange items-center">
