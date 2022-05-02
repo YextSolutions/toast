@@ -6,7 +6,7 @@ import { beverageDataForRender } from "../types/Beverage";
 import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 import { StarRating } from "./StarRating";
 
-interface BeverageCardProps extends CardProps {
+interface BeverageCardProps {
   result?: Result;
   autocomplete?: boolean;
   name?: string;
