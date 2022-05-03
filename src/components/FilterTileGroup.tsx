@@ -1,11 +1,10 @@
 import { Filters } from "@yext/answers-react-components";
 import { DisplayableFacet, Matcher, NumberRangeValue } from "@yext/answers-headless-react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import classNames from "classnames";
 import { SearchCtx } from "../App";
 import { useSearchParams } from "react-router-dom";
 import { useFiltersContext } from "@yext/answers-react-components/lib/components/Filters/FiltersContext";
-// import { useFiltersContext } from "@yext/answers-react-components/lib/components/Filters";
 
 interface FilterTileGroupProps {
   facet: DisplayableFacet;
@@ -73,15 +72,15 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
   };
 
   return (
-    <div className="mb-16">
+    <div className="mb-16 md:pt-4 md:mb-8 ">
       <span className="font-bold pl-8">{facet.displayName.toUpperCase()}</span>
       <div
         ref={outerContainerRef}
         key={facet.fieldId}
         className={classNames(
-          "px-8 flex flex-wrap mt-6 overflow-hidden transition-max-h duration-200 ease-linear",
+          "px-8 md:px-0 md:pl-8  flex flex-wrap mt-6 overflow-hidden transition-max-h duration-200 ease-linear",
           {
-            "max-h-36": !expanded,
+            "max-h-32 md:max-h-28": !expanded,
             "max-h-72 overflow-y-scroll": expanded,
           }
         )}
@@ -90,12 +89,12 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
           {reorderFacetOptions(facet).options.map((o) => (
             <div
               className={classNames(
-                "h-10 w-fit border border-toast-orange flex items-center mr-3 mb-3 hover:bg-toast-orange",
+                "w-fit border border-toast-orange flex items-center mr-3 mb-3 hover:bg-toast-orange",
                 { "bg-toast-orange": o.selected, "bg-toast-light-orange": !o.selected }
               )}
               onClick={() => handleTileClick(o.value, !o.selected)}
             >
-              <div className="px-6">
+              <div className="px-6 py-1 md:text-xs md:px-3">
                 {o.displayName} {o.count && <span className="text-xxs">{`(${o.count})`}</span>}
               </div>
             </div>

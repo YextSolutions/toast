@@ -1,5 +1,4 @@
 import { Result } from "@yext/answers-headless-react";
-import { CardProps } from "@yext/answers-react-components";
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 import { beverageDataForRender } from "../types/Beverage";
@@ -38,7 +37,7 @@ export const BeverageCard = ({
   return (
     <div
       className={classNames("flex ", {
-        "mx-2 px-2 py-4 flex-col hover:border-4 border-toast-orange": !autocomplete,
+        "px-4 py-4 flex-col border-transparent border-4 hover:border-toast-orange": !autocomplete,
         "hover:bg-toast-gray py-2": autocomplete,
       })}
       onClick={() => handleClick()}
@@ -54,10 +53,10 @@ export const BeverageCard = ({
       <div className={classNames("flex flex-col", { "justify-center": autocomplete })}>
         <div
           className={classNames("overflow-hidden text-ellipsis text-base ", {
-            "h-20": !autocomplete,
+            "h-16": !autocomplete,
           })}
         >
-          {name ?? beverage.name}
+          <p className="line-clamp-2 xl:line-clamp-3">{name ?? beverage.name}</p>
         </div>
         <div>
           <div className={autocomplete ? "" : "pb-8"}>

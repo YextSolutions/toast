@@ -15,11 +15,12 @@ import { BeverageSearchBar } from "../components/BeverageSearchBar";
 import { ToastHeader } from "../components/ToastHeader";
 import { extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
 import classNames from "classnames";
-import { FilterSection } from "../components/FilterSection";
+import { MobileFilterScreen } from "./MobileFilterScreen";
 import { SortingDrawer } from "../components/SortingDrawer";
 import { ShakerLoader } from "../components/ShakerLoader";
 import { formatSearchResultsTitle } from "../utils/formatSearchResultsTitle";
 import useWindowDimensions from "../hooks/useWindowDimensions";
+import { BeverageFacets } from "../components/BeverageFacets";
 
 export const BeverageResultsScreen = (): JSX.Element => {
   const [page, setPage] = useState("");
@@ -139,7 +140,7 @@ export const BeverageResultsScreen = (): JSX.Element => {
         </div>
       ) : (
         <>
-          <div className="fixed top-28 bottom-16 overflow-auto w-full max-w-7xl px-4">
+          <div className="fixed top-28 bottom-16 md:bottom-0 overflow-auto w-full max-w-7xl px-4">
             {beverageResultImages[page] && (
               <div className="flex justify-center">
                 <div className="py-8">
@@ -169,13 +170,20 @@ export const BeverageResultsScreen = (): JSX.Element => {
             {isLoading ? (
               <ShakerLoader />
             ) : (
-              <VerticalResults
-                customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3 gap-4" }}
-                CardComponent={BeverageCard}
-              />
+              <div className="flex">
+                <div className="w-1/3 hidden md:block">
+                  <BeverageFacets />
+                </div>
+                <div>
+                  <VerticalResults
+                    customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3 gap-4" }}
+                    CardComponent={BeverageCard}
+                  />
+                </div>
+              </div>
             )}
           </div>
-          <FilterSection />
+          <MobileFilterScreen />
         </>
       )}
     </div>

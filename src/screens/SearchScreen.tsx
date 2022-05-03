@@ -14,7 +14,6 @@ interface SearchScreenProps {
   headerImage?: string;
 }
 
-// TODO: Rename
 export const SearchScreen = ({
   categoryGrid,
   carouselSections,
