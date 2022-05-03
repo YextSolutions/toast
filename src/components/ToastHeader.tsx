@@ -7,6 +7,7 @@ import { ToastBanner } from "./ToastBanner";
 import classNames from "classnames";
 import { useAnswersActions } from "@yext/answers-headless-react";
 import { CartContext } from "../providers/CartProvider";
+import { BeverageSearchBar } from "./BeverageSearchBar";
 
 export const ToastHeader = (): JSX.Element => {
   const [totalCartItems, setTotalCartItems] = useState(0);
@@ -33,15 +34,15 @@ export const ToastHeader = (): JSX.Element => {
   };
 
   return (
-    <header className="fixed top-0 w-full z-20">
+    <header className="absolute top-0 w-full z-20">
       <div
         className={classNames("w-full bg-toast-orange h-16 flex items-center", {
           "h-5": filterSectionActive,
         })}
       >
         {!filterSectionActive && (
-          <>
-            <div className="w-1/3 text-toast-dark-orange ml-6 sm:hidden">
+          <div className="flex  w-full justify-between">
+            <div className="w-1/3 text-toast-dark-orange ml-6 md:hidden">
               {!searchBarActive ? (
                 <AiOutlineMenu size={30} />
               ) : (
@@ -53,31 +54,35 @@ export const ToastHeader = (): JSX.Element => {
                 </button>
               )}
             </div>
-            <div className="w-1/3 flex justify-center sm:justify-start sm:pl-4">
+            <div className=" flex justify-center items-center md:justify-start md:pl-4">
               <Link
                 className="text-3xl text-toast-red font-semibold flex items-center"
                 to="/"
                 onClick={() => clearSearchState()}
               >
                 <span>TOAST</span>
-                <div className="hidden sm:flex pl-4 text-black text-base">
-                  <Link className="px-4" to="/">
+                <div className="hidden md:flex pl-4 text-black text-sm">
+                  <Link className="px-4" to="/wine">
                     WINE
                   </Link>
-                  <Link className="px-4" to="/">
+                  <Link className="px-4" to="/beer">
                     BEER
                   </Link>
-                  <Link className="px-4" to="/">
+                  <Link className="px-4" to="/liquor">
                     SPIRITS
                   </Link>
-                  <Link className="px-4" to="/">
-                    OTHER
-                  </Link>
+                  <div className="px-4">OTHER</div>
                 </div>
               </Link>
+              <div className="hidden md:block">
+                <BeverageSearchBar />
+              </div>
             </div>
-            <div className="w-1/3 flex justify-end mr-6 text-toast-dark-orange items-center">
-              <button className="h-8 w-8 mr-4" onClick={() => searchBarChangeHandler(true)}>
+            <div className=" w-1/3 flex justify-end mr-6 text-toast-dark-orange items-center">
+              <button
+                className="md:hidden h-8 w-8 mr-4"
+                onClick={() => searchBarChangeHandler(true)}
+              >
                 <MagnifyingGlassIcon />
               </button>
               <Link className="relative" to="/cart">
@@ -89,7 +94,7 @@ export const ToastHeader = (): JSX.Element => {
                 )}
               </Link>
             </div>
-          </>
+          </div>
         )}
       </div>
       {!searchBarActive && <ToastBanner />}

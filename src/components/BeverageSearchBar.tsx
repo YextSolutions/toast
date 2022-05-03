@@ -40,8 +40,6 @@ export const BeverageSearchBar = () => {
 
   const navigate = useNavigate();
 
-  const { height } = useWindowDimensions();
-
   // TODO: why do I need this?
   const query = useAnswersState((state) => state.query.input);
   const answersActions = useAnswersActions();
@@ -60,10 +58,10 @@ export const BeverageSearchBar = () => {
     )?.results;
 
     return (
-      <>
+      <div className="sm:max-h-96 overflow-y-scroll sm:shadow-2xl">
         {renderFilterAutocomplete(alcoholicBeverageTypeResults)}
         {renderBeveragesAutocomplete(beverageResults)}
-      </>
+      </div>
     );
   };
 
@@ -82,7 +80,7 @@ export const BeverageSearchBar = () => {
 
           return title && result.name ? (
             <DropdownItem value={result.name} onClick={() => searchHandler(path)}>
-              <div className="py-1.5 px-3.5">
+              <div className="py-1.5 px-3.5 hover:bg-toast-gray">
                 {renderHighlightedValue(title, {
                   nonHighlighted: "text-primary text-black text-base ",
                   highlighted: "text-toast-dark-orange text-base",
@@ -138,30 +136,25 @@ export const BeverageSearchBar = () => {
   };
 
   return (
-    // TODO: replace with Tailwind theme function
-    <div
-      className="absolute top-16 w-full  bg-white overflow-y-scroll"
-      style={{ maxHeight: `${height - 64}px` }}
-    >
-      <SearchBar
-        customCssClasses={{
-          container: `relative mb-6 w-full px-4 py-2 h-full overflow-y-scroll`,
-          inputContainer:
-            "inline-flex items-center justify-between w-full rounded-3xl border border-black",
-          logoContainer: "w-7 mx-2.5 my-2 ",
-          inputDropdownContainer: "relative bg-white w-full  ",
-          inputDropdownContainer___active: "",
-          optionContainer: "fixed top-[-2000px]",
-        }}
-        cssCompositionMethod="assign"
-        onSearch={handleSubmit}
-        placeholder="Search beer, wine, liqour "
-        visualAutocompleteConfig={{
-          entityPreviewSearcher,
-          renderEntityPreviews,
-          // includedVerticals: ["autocomplete", "beverages"],
-        }}
-      />
-    </div>
+    <SearchBar
+      customCssClasses={{
+        container: `sm:h-12 mt-6 px-4 sm:px-0 sm:my-6`,
+        inputContainer:
+          "inline-flex items-center justify-between w-full rounded-3xl border border-black",
+        logoContainer: "w-7 mx-2.5 my-2 ",
+        dropdownContainer: "z-10",
+        inputDropdownContainer: "relative bg-white  rounded-3xl w-full  ",
+        inputDropdownContainer___active: "",
+        optionContainer: "hidden",
+      }}
+      cssCompositionMethod="assign"
+      onSearch={handleSubmit}
+      placeholder="Search beer, wine, liqour "
+      visualAutocompleteConfig={{
+        entityPreviewSearcher,
+        renderEntityPreviews,
+        // includedVerticals: ["autocomplete", "beverages"],
+      }}
+    />
   );
 };

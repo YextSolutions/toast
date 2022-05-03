@@ -8,7 +8,7 @@ export const FilterSection = () => {
   const { filterSectionActive, setFilterSectionActive } = useContext(SearchCtx);
 
   return filterSectionActive ? (
-    <div className="top-16 right-0 left-0 bg-white h-full w-full absolute">
+    <div className="top-16 right-0 left-0 bg-white h-full w-full fixed ">
       <div className="mt-8">
         <SortingDrawer containerCss="px-8 mb-8" />
         <Filters.Facets className="" searchOnChange={true}>

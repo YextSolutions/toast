@@ -37,13 +37,16 @@ export const BeverageCard = ({
 
   return (
     <div
-      className={classNames("flex ", { "mx-2 my-4 flex-col ": !autocomplete })}
+      className={classNames("flex ", {
+        "mx-2 px-2 py-4 flex-col hover:border-4 border-toast-orange": !autocomplete,
+        "hover:bg-toast-gray py-2": autocomplete,
+      })}
       onClick={() => handleClick()}
     >
       <div className={classNames(" flex flex-col justify-center ")}>
         <div className={classNames("flex", { "justify-center": !autocomplete })}>
           <img
-            className={autocomplete ? "w-16" : "w-24 mb-2"}
+            className={autocomplete ? "w-16 px-2" : "w-24 mb-2"}
             src={imageUrl ?? beverage.primaryPhoto?.image.url}
           />
         </div>

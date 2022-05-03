@@ -19,6 +19,7 @@ import { FilterSection } from "../components/FilterSection";
 import { SortingDrawer } from "../components/SortingDrawer";
 import { ShakerLoader } from "../components/ShakerLoader";
 import { formatSearchResultsTitle } from "../utils/formatSearchResultsTitle";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 
 export const BeverageResultsScreen = (): JSX.Element => {
   const [page, setPage] = useState("");
@@ -35,6 +36,8 @@ export const BeverageResultsScreen = (): JSX.Element => {
   const isLoading = useAnswersState((state) => state.searchStatus.isLoading);
 
   const { searchBarActive: active, beverageResultImages } = useContext(SearchCtx);
+
+  const { height } = useWindowDimensions();
 
   useEffect(() => {
     searchParams.get("facets") &&
@@ -128,13 +131,18 @@ export const BeverageResultsScreen = (): JSX.Element => {
     <div className="relative h-full w-full flex justify-center">
       <ToastHeader />
       {active ? (
-        <BeverageSearchBar />
+        <div
+          className="absolute top-16 w-full bg-white overflow-y-scroll"
+          style={{ maxHeight: `${height - 64}px` }}
+        >
+          <BeverageSearchBar />
+        </div>
       ) : (
         <>
-          <div className="fixed top-28 bottom-16 overflow-auto w-full max-w-7xl">
+          <div className="fixed top-28 bottom-16 overflow-auto w-full max-w-7xl px-4">
             {beverageResultImages[page] && (
               <div className="flex justify-center">
-                <div className={" py-8 "}>
+                <div className="py-8">
                   <img
                     className="sm:w-[42.75rem] sm:h-[21.75rem] w-96 h-44"
                     src={beverageResultImages[page]}
@@ -162,7 +170,7 @@ export const BeverageResultsScreen = (): JSX.Element => {
               <ShakerLoader />
             ) : (
               <VerticalResults
-                customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3" }}
+                customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3 gap-4" }}
                 CardComponent={BeverageCard}
               />
             )}

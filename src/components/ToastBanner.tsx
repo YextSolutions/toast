@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import { FaFilter } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { SearchCtx } from "../App";
@@ -9,12 +8,7 @@ export const ToastBanner = (): JSX.Element => {
 
   // TODO: How do I know if the order of tailwind classes is important?
   return (
-    <div
-      className={classNames(
-        "absolute top-16 flex bg-toast-light-orange w-full h-12 items-center shadow-lg",
-        { "top-5": filterSectionActive }
-      )}
-    >
+    <div className="flex bg-toast-light-orange w-full h-12 items-center shadow-lg">
       <div className="w-full">
         <span>
           {filterSectionActive ? (
