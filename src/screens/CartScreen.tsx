@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { BeverageCard } from "../components/BeverageCard";
 import { BeverageSearchBar } from "../components/BeverageSearchBar";
 import { CounterAction, ProductCounter } from "../components/ProductCounter";
@@ -27,6 +27,16 @@ export const CartScreen = () => {
         type: CartActionTypes.REMOVE_ITEM,
         payload: { beverage: { id: changer.productId } },
       });
+    }
+  };
+
+  const formatTotalPrice = (price: number) => {
+    const priceString = price.toString();
+    const priceParts = priceString.split(".");
+    if (priceParts[1] && priceParts[1].length < 2) {
+      return `${priceParts[0]}.${priceParts[1]}0`;
+    } else {
+      return priceString;
     }
   };
 
@@ -60,7 +70,7 @@ export const CartScreen = () => {
           </div>
           <div className="flex justify-between w-full pt-1">
             <div className="font-bold">TOTAL:</div>
-            <div className="font-bold">{`$${cart.totalPrice}`}</div>
+            <div className="font-bold">{`$${formatTotalPrice(cart.totalPrice)}`}</div>
           </div>
         </div>
       )}
