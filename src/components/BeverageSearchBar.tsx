@@ -9,11 +9,9 @@ import {
   provideAnswersHeadless,
   Result,
   useAnswersActions,
-  useAnswersState,
   VerticalResults as VerticalResultsData,
 } from "@yext/answers-headless-react";
 import { useContext } from "react";
-import useWindowDimensions from "../hooks/useWindowDimensions";
 import { Divider } from "./Divider";
 import {
   answersApiKey,
@@ -40,8 +38,6 @@ export const BeverageSearchBar = () => {
 
   const navigate = useNavigate();
 
-  // TODO: why do I need this?
-  const query = useAnswersState((state) => state.query.input);
   const answersActions = useAnswersActions();
 
   const renderEntityPreviews = (
@@ -153,7 +149,7 @@ export const BeverageSearchBar = () => {
       visualAutocompleteConfig={{
         entityPreviewSearcher,
         renderEntityPreviews,
-        // includedVerticals: ["autocomplete", "beverages"],
+        includedVerticals: ["autocomplete", "beverages"],
       }}
     />
   );

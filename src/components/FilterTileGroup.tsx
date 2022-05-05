@@ -4,7 +4,7 @@ import { useContext, useRef, useState } from "react";
 import classNames from "classnames";
 import { SearchCtx } from "../App";
 import { useSearchParams } from "react-router-dom";
-import { useFiltersContext } from "@yext/answers-react-components/lib/components/Filters/FiltersContext";
+// import { useFiltersContext } from "@yext/answers-react-components/lib/components/Filters/FiltersContext";
 
 interface FilterTileGroupProps {
   facet: DisplayableFacet;
@@ -19,7 +19,7 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { selectFilter, applyFilters } = useFiltersContext();
+  const { selectFilter, applyFilters } = Filters.useFiltersContext();
 
   const { setFilterSectionActive } = useContext(SearchCtx);
 
