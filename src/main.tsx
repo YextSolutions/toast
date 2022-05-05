@@ -9,6 +9,7 @@ import {
   answersSandboxEndpoints,
 } from "./config/answersConfig";
 import { CartProvider } from "./providers/CartProvider";
+import { MobileViewProvider } from "./providers/MobileViewProvider";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,7 +21,9 @@ ReactDOM.render(
       endpoints={answersSandboxEndpoints}
     >
       <CartProvider>
-        <App />
+        <MobileViewProvider>
+          <App />
+        </MobileViewProvider>
       </CartProvider>
     </AnswersHeadlessProvider>
   </React.StrictMode>,

@@ -2,7 +2,7 @@ import { Context, createContext, useEffect, useReducer } from "react";
 import { Beverage } from "../types/Beverage";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type ActionMap<M extends { [index: string]: any }> = {
+export type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined
     ? {
         type: Key;
@@ -81,6 +81,8 @@ export const cartReducer = (state = initialState as Cart, action: CartActions) =
     case CartActionTypes.CLEAR_CART:
       state.cartItems = [];
       return { ...state, totalPrice: 0 };
+    default:
+      return state;
   }
 };
 

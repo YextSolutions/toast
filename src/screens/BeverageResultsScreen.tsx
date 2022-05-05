@@ -8,7 +8,6 @@ import {
 import { VerticalResults } from "@yext/answers-react-components";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { SearchCtx } from "../App";
 import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageCard } from "../components/BeverageCard";
 import { BeverageSearchBar } from "../components/BeverageSearchBar";
@@ -21,6 +20,7 @@ import { ShakerLoader } from "../components/ShakerLoader";
 import { formatSearchResultsTitle } from "../utils/formatSearchResultsTitle";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { BeverageFacets } from "../components/BeverageFacets";
+import { MobileViewContext } from "../providers/MobileViewProvider";
 
 export const BeverageResultsScreen = (): JSX.Element => {
   const [page, setPage] = useState("");
@@ -36,7 +36,7 @@ export const BeverageResultsScreen = (): JSX.Element => {
   const resultsCount = useAnswersState((state) => state.vertical.resultsCount);
   const isLoading = useAnswersState((state) => state.searchStatus.isLoading);
 
-  const { searchBarActive: active, beverageResultImages } = useContext(SearchCtx);
+  const { mobileView, dispatch } = useContext(MobileViewContext);
 
   const { height } = useWindowDimensions();
 
@@ -131,7 +131,7 @@ export const BeverageResultsScreen = (): JSX.Element => {
   return (
     <div className="relative h-full w-full flex justify-center">
       <ToastHeader />
-      {active ? (
+      {mobileView.searchBarActive ? (
         <div
           className="absolute top-16 w-full bg-white overflow-y-scroll"
           style={{ maxHeight: `${height - 64}px` }}
@@ -141,12 +141,12 @@ export const BeverageResultsScreen = (): JSX.Element => {
       ) : (
         <>
           <div className="fixed top-28 bottom-16 md:bottom-0 overflow-auto w-full max-w-7xl px-4">
-            {beverageResultImages[page] && (
+            {mobileView.beverageResultImages[page] && (
               <div className="flex justify-center">
                 <div className="py-8">
                   <img
                     className="sm:w-[42.75rem] sm:h-[21.75rem] w-96 h-44"
-                    src={beverageResultImages[page]}
+                    src={mobileView.beverageResultImages[page]}
                   ></img>
                 </div>
               </div>

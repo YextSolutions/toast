@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { SearchCtx } from "../App";
 import { MdLocationPin } from "react-icons/md";
 import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageSearchBar } from "../components/BeverageSearchBar";
@@ -9,6 +8,7 @@ import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import { CartActionTypes, CartContext } from "../providers/CartProvider";
 import { ProductCounter } from "../components/ProductCounter";
+import { MobileViewContext } from "../providers/MobileViewProvider";
 
 const liveApiKey = import.meta.env.VITE_LIVE_API_KEY;
 
@@ -22,9 +22,8 @@ export const BeverageScreen = (): JSX.Element => {
   const [beverageData, setBeverageData] = useState<Partial<Beverage>>({});
   const [count, setCount] = useState(1);
 
-  const { searchBarActive } = useContext(SearchCtx);
+  const { mobileView } = useContext(MobileViewContext);
   const cartContext = useContext(CartContext);
-  const { cart } = cartContext;
 
   const location = useLocation() as unknown as LocationState;
   const urlParams = useParams();
@@ -51,7 +50,7 @@ export const BeverageScreen = (): JSX.Element => {
   return (
     <>
       <ToastHeader />
-      {searchBarActive ? (
+      {mobileView.searchBarActive ? (
         <BeverageSearchBar />
       ) : (
         <div className="absolute top-28 bottom-16 overflow-auto w-full px-4">

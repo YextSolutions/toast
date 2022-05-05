@@ -3,10 +3,10 @@ import { CategoryGrid, CategoryGridProps } from "../components/CategoryGrid";
 import { CarouselSection, CarouselSectionProps } from "../components/CarouselSection";
 import { BeverageSearchBar } from "../components/BeverageSearchBar";
 import { useContext } from "react";
-import { SearchCtx } from "../App";
 import { ToastHeader } from "../components/ToastHeader";
 import ImageAssets from "../assets/imageAssets";
 import useWindowDimensions from "../hooks/useWindowDimensions";
+import { MobileViewContext } from "../providers/MobileViewProvider";
 
 interface SearchScreenProps {
   categoryGrid?: CategoryGridProps;
@@ -19,14 +19,14 @@ export const SearchScreen = ({
   carouselSections,
   headerImage,
 }: SearchScreenProps): JSX.Element => {
-  const { searchBarActive, setSearchBarActive } = useContext(SearchCtx);
+  const { mobileView } = useContext(MobileViewContext);
 
   const { height } = useWindowDimensions();
 
   return (
     <div className="relative h-full w-full flex justify-center">
       <ToastHeader />
-      {searchBarActive ? (
+      {mobileView.searchBarActive ? (
         <div
           className="absolute top-16 w-full  bg-white overflow-y-scroll"
           style={{ maxHeight: `${height - 64}px` }}

@@ -19,12 +19,12 @@ import {
   answersSandboxEndpoints,
 } from "../config/answersConfig";
 import { useNavigate } from "react-router-dom";
-import { SearchCtx } from "../App";
 import { alcholicBeverageTypeDataForRender } from "../types/BeverageType";
 import { Beverage, beverageDataForRender } from "../types/Beverage";
 import { extractPathFromBeverageType } from "../utils/extractPathFromBeverageType";
 import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 import { BeverageCard } from "./BeverageCard";
+import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
 
 export const BeverageSearchBar = () => {
   const entityPreviewSearcher = provideAnswersHeadless({
@@ -34,7 +34,7 @@ export const BeverageSearchBar = () => {
     locale: "en",
     endpoints: answersSandboxEndpoints,
   });
-  const { setSearchBarActive } = useContext(SearchCtx);
+  const { dispatch } = useContext(MobileViewContext);
 
   const navigate = useNavigate();
 
@@ -117,7 +117,7 @@ export const BeverageSearchBar = () => {
 
   const searchHandler = (path?: string, beverage?: Partial<Beverage>) => {
     answersActions.resetFacets();
-    setSearchBarActive(false);
+    dispatch({ type: MobileViewActionTypes.TOGGLE_SEARCH_SCREEN, payload: false });
 
     path &&
       navigate(path, {

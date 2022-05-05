@@ -2,9 +2,8 @@ import { Filters } from "@yext/answers-react-components";
 import { DisplayableFacet, Matcher, NumberRangeValue } from "@yext/answers-headless-react";
 import { useContext, useRef, useState } from "react";
 import classNames from "classnames";
-import { SearchCtx } from "../App";
 import { useSearchParams } from "react-router-dom";
-// import { useFiltersContext } from "@yext/answers-react-components/lib/components/Filters/FiltersContext";
+import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
 
 interface FilterTileGroupProps {
   facet: DisplayableFacet;
@@ -21,7 +20,7 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
 
   const { selectFilter, applyFilters } = Filters.useFiltersContext();
 
-  const { setFilterSectionActive } = useContext(SearchCtx);
+  const { dispatch } = useContext(MobileViewContext);
 
   const reorderFacetOptions = (facet: DisplayableFacet): DisplayableFacet => {
     const selectedOptions = facet.options.filter((o) => o.selected);
@@ -68,7 +67,7 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
     searchParams.append("facets", JSON.stringify(existingUrlFacets));
     setSearchParams(searchParams);
 
-    setFilterSectionActive(false);
+    dispatch({ type: MobileViewActionTypes.TOGGLE_FILTER_SECTION, payload: false });
   };
 
   return (

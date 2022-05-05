@@ -1,9 +1,9 @@
 import { Direction, SortBy, SortType, useAnswersState } from "@yext/answers-headless-react";
 import { useContext, useState } from "react";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
-import { SearchCtx } from "../App";
 import classNames from "classnames";
 import { useSearchParams } from "react-router-dom";
+import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
 
 const sortByOptions: { label: string; sortBy: SortBy }[] = [
   {
@@ -36,13 +36,13 @@ export const SortingDrawer = ({ containerCss = "" }: SortingDrawerProps) => {
     (s) => s.sortBy.field === sortBys?.[0]?.field && s.sortBy.direction === sortBys?.[0]?.direction
   );
 
-  const { setFilterSectionActive } = useContext(SearchCtx);
+  const { dispatch } = useContext(MobileViewContext);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleTileClick = (sortBy: SortBy) => {
     setOpen(false);
-    setFilterSectionActive(false);
+    dispatch({ type: MobileViewActionTypes.TOGGLE_FILTER_SECTION, payload: false });
 
     searchParams.delete("sortBy");
     searchParams.append("sortBy", JSON.stringify(sortBy));

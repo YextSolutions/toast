@@ -2,19 +2,19 @@ import { useContext, useEffect, useState } from "react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { FaShoppingBasket } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { SearchCtx } from "../App";
 import { ToastBanner } from "./ToastBanner";
 import classNames from "classnames";
 import { useAnswersActions } from "@yext/answers-headless-react";
 import { CartContext } from "../providers/CartProvider";
 import { BeverageSearchBar } from "./BeverageSearchBar";
+import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
 
 export const ToastHeader = (): JSX.Element => {
   const [totalCartItems, setTotalCartItems] = useState(0);
 
   const answersActions = useAnswersActions();
 
-  const { searchBarActive, setSearchBarActive, filterSectionActive } = useContext(SearchCtx);
+  const { mobileView, dispatch } = useContext(MobileViewContext);
   const cartContext = useContext(CartContext);
   const { cart } = cartContext;
 
@@ -23,7 +23,7 @@ export const ToastHeader = (): JSX.Element => {
   }, [cart]);
 
   const searchBarChangeHandler = (change: boolean) => {
-    setSearchBarActive(change);
+    dispatch({ type: MobileViewActionTypes.TOGGLE_SEARCH_SCREEN, payload: change });
   };
 
   const clearSearchState = () => {
@@ -37,13 +37,13 @@ export const ToastHeader = (): JSX.Element => {
     <header className="absolute top-0 w-full z-20">
       <div
         className={classNames("w-full bg-toast-orange h-16 flex items-center", {
-          "h-5": filterSectionActive,
+          "h-5": mobileView.filterSectionActive,
         })}
       >
-        {!filterSectionActive && (
+        {!mobileView.filterSectionActive && (
           <div className="flex  w-full justify-between">
             <div className="w-1/3 text-toast-dark-orange ml-6 md:hidden">
-              {!searchBarActive ? (
+              {!mobileView.searchBarActive ? (
                 <AiOutlineMenu size={30} />
               ) : (
                 <button
@@ -97,7 +97,7 @@ export const ToastHeader = (): JSX.Element => {
           </div>
         )}
       </div>
-      {!searchBarActive && <ToastBanner />}
+      {!mobileView.searchBarActive && <ToastBanner />}
     </header>
   );
 };

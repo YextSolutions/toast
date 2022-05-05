@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import { SearchCtx } from "../App";
 import { BeverageCard } from "../components/BeverageCard";
 import { BeverageSearchBar } from "../components/BeverageSearchBar";
 import { CounterAction, ProductCounter } from "../components/ProductCounter";
 import { ToastHeader } from "../components/ToastHeader";
 import { CartActionTypes, CartContext } from "../providers/CartProvider";
+import { MobileViewContext } from "../providers/MobileViewProvider";
 
 export const CartScreen = () => {
-  const { searchBarActive } = useContext(SearchCtx);
+  const { mobileView } = useContext(MobileViewContext);
   const cartContext = useContext(CartContext);
   const { cart } = cartContext;
 
@@ -33,7 +33,7 @@ export const CartScreen = () => {
   return (
     <>
       <ToastHeader />
-      {searchBarActive ? (
+      {mobileView.searchBarActive ? (
         <BeverageSearchBar />
       ) : (
         <div className="absolute px-4 w-full top-28 bottom-16">
