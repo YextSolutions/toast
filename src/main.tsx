@@ -8,8 +8,7 @@ import {
   answersExperienceKey,
   answersSandboxEndpoints,
 } from "./config/answersConfig";
-import { CartProvider } from "./providers/CartProvider";
-import { MobileViewProvider } from "./providers/MobileViewProvider";
+import { AppContextProvider } from "./providers/AppContextProvider";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,11 +19,9 @@ ReactDOM.render(
       verticalKey="beverages"
       endpoints={answersSandboxEndpoints}
     >
-      <CartProvider>
-        <MobileViewProvider>
-          <App />
-        </MobileViewProvider>
-      </CartProvider>
+      <AppContextProvider>
+        <App />
+      </AppContextProvider>
     </AnswersHeadlessProvider>
   </React.StrictMode>,
   document.getElementById("root")
