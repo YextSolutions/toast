@@ -1,6 +1,6 @@
 import { Filters } from "@yext/answers-react-components";
 import { DisplayableFacet, Matcher, NumberRangeValue } from "@yext/answers-headless-react";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { useSearchParams } from "react-router-dom";
 import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
@@ -13,6 +13,7 @@ interface FilterTileGroupProps {
 // TODO: remove show more if not enough options
 export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
   const [expanded, setExpanded] = useState(false);
+  const [canExpand, setCanExpand] = useState(false);
 
   const outerContainerRef = useRef<HTMLDivElement>(null);
 
@@ -21,6 +22,13 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
   const { selectFilter, applyFilters } = Filters.useFiltersContext();
 
   const { dispatch } = useContext(MobileViewContext);
+
+  useEffect(() => {
+    if (outerContainerRef.current) {
+      outerContainerRef.current.scrollHeight > outerContainerRef.current.clientHeight &&
+        setCanExpand(true);
+    }
+  }, [outerContainerRef.current?.clientHeight]);
 
   const reorderFacetOptions = (facet: DisplayableFacet): DisplayableFacet => {
     const selectedOptions = facet.options.filter((o) => o.selected);
@@ -100,13 +108,15 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
           ))}
         </Filters.FilterGroup>
       </div>
-      <div className="w-full flex justify-center">
-        <button onClick={() => handleChange(!expanded)}>
-          <span className="text-sm hover:underline text-toast-dark-orange">
-            {expanded ? "Show Less" : "Show More"}
-          </span>
-        </button>
-      </div>
+      {canExpand && (
+        <div className="w-full flex justify-center">
+          <button onClick={() => handleChange(!expanded)}>
+            <span className="text-sm hover:underline text-toast-dark-orange">
+              {expanded ? "Show Less" : "Show More"}
+            </span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
