@@ -1,8 +1,8 @@
 import { CardProps } from "@yext/answers-react-components";
 import { useNavigate } from "react-router-dom";
-import ImageAssets from "../assets/imageAssets";
 import { beverageDataForRender } from "../types/Beverage";
 import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
+import { GrayWineBottle } from "./BeverageCard";
 import { ImagePlaceholder } from "./ImagePlaceholder";
 
 export const BeverageCarouselCard = ({ result }: CardProps) => {
@@ -27,7 +27,7 @@ export const BeverageCarouselCard = ({ result }: CardProps) => {
           <ImagePlaceholder
             imgCssClasses="w-24"
             imgUrl={beverage.primaryPhoto?.image.sourceUrl}
-            placeholderImg={ImageAssets.wineOutline}
+            placeholder={GrayWineBottle()}
             alt={result.name}
           />
         </div>

@@ -2,14 +2,14 @@ import { useState } from "react";
 
 interface ImagePlaceholderProps {
   imgUrl?: string;
-  placeholderImg?: string;
+  placeholder?: JSX.Element;
   alt?: string;
   imgCssClasses?: string;
 }
 
 export const ImagePlaceholder = ({
   imgUrl,
-  placeholderImg,
+  placeholder,
   alt,
   imgCssClasses,
 }: ImagePlaceholderProps) => {
@@ -17,11 +17,7 @@ export const ImagePlaceholder = ({
 
   return (
     <>
-      <img
-        alt={"image placeholder"}
-        className={loaded ? "hidden" : imgCssClasses ?? "w-24"}
-        src={placeholderImg}
-      />
+      <div className={loaded && imgUrl ? "hidden" : ""}>{placeholder}</div>
       <img
         alt={alt ?? "image"}
         className={!loaded ? "hidden" : imgCssClasses ?? "w-24"}
