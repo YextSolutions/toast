@@ -1,5 +1,7 @@
 import { v4 as uuid } from "uuid";
 import { useNavigate } from "react-router-dom";
+import { ImagePlaceholder } from "./ImagePlaceholder";
+import ImageAssets from "../assets/imageAssets";
 
 export interface CategoryGridProps {
   title: string;
@@ -34,7 +36,12 @@ export const CategoryGrid = ({
           return (
             <button onClick={() => handleTileClick(option.linkPath)}>
               <div key={`tile_${uuid()}`} className="flex flex-col items-center mt-4">
-                <img className="object-cover w-40 h-44" src={option.img} />
+                <ImagePlaceholder
+                  imgCssClasses="w-40 h-44"
+                  imgUrl={option.img}
+                  placeholderImg={ImageAssets.wineOutline}
+                  alt={"category"}
+                />
                 <div className="text-toast-blue text-xs sm:text-sm font-semibold mt-1.5 hover:underline">
                   {option.name}
                 </div>

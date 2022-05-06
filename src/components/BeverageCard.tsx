@@ -1,8 +1,10 @@
 import { Result } from "@yext/answers-headless-react";
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
+import ImageAssets from "../assets/imageAssets";
 import { beverageDataForRender } from "../types/Beverage";
 import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
+import { ImagePlaceholder } from "./ImagePlaceholder";
 import { StarRating } from "./StarRating";
 
 interface BeverageCardProps {
@@ -44,9 +46,10 @@ export const BeverageCard = ({
     >
       <div className={classNames(" flex flex-col justify-center ")}>
         <div className={classNames("flex", { "justify-center": !autocomplete })}>
-          <img
-            className={autocomplete ? "w-16 px-2" : "w-24 mb-2"}
-            src={imageUrl ?? beverage.primaryPhoto?.image.url}
+          <ImagePlaceholder
+            imgCssClasses={autocomplete ? "w-16 px-2" : "w-24 mb-2"}
+            imgUrl={imageUrl ?? beverage.primaryPhoto?.image.url}
+            placeholderImg={ImageAssets.wineOutline}
           />
         </div>
       </div>

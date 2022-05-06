@@ -27,6 +27,7 @@ import cocktailToast from "../assets/img/cocktail_toast.png";
 import toast from "../assets/img/toast.png";
 import wineToast from "../assets/img/wine_toast.png";
 import wineParty from "../assets/img/wine_party.png";
+import wineOutline from "../assets/img/wine_outline.png";
 
 const ImageAssets = {
   beerBottles,
@@ -58,6 +59,7 @@ const ImageAssets = {
   toast,
   wineToast,
   wineParty,
+  wineOutline,
 };
 
 export default ImageAssets;
