@@ -53,7 +53,7 @@ export const SortingDrawer = ({ containerCss = "" }: SortingDrawerProps) => {
   return (
     <div className={classNames("flex", containerCss)}>
       <div className="relative">
-        <div className="w-full border border-toast-dark-orange h-10 w-48 flex justify-between items-center px-2 bg-toast-light-orange">
+        <div className="border border-toast-dark-orange h-10 w-48 flex justify-between items-center px-2 bg-toast-light-orange">
           <div className="text-sm ">
             <div className="font-semibold">Sort By:</div>
             <div>{selectedSort?.label}</div>
@@ -72,7 +72,7 @@ export const SortingDrawer = ({ containerCss = "" }: SortingDrawerProps) => {
               .filter((s) => s.sortBy !== selectedSort?.sortBy)
               .map((s) => (
                 <li onClick={() => handleTileClick(s.sortBy)}>
-                  <div className="w-full h-10 w-48 flex items-center px-2 bg-toast-light-orange hover:bg-toast-orange text-sm">
+                  <div className="h-10 w-48 flex items-center px-2 bg-toast-light-orange hover:bg-toast-orange text-sm">
                     {s.label}
                   </div>
                 </li>

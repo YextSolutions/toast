@@ -5,13 +5,13 @@ import classNames from "classnames";
 import { useSearchParams } from "react-router-dom";
 import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
 
-interface FilterTileGroupProps {
+interface FacetTilesProps {
   facet: DisplayableFacet;
-  selectedOptions?: string[];
+  label?: string;
 }
 
 // TODO: remove show more if not enough options
-export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
+export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
   const [expanded, setExpanded] = useState(false);
   const [canExpand, setCanExpand] = useState(false);
 
@@ -79,34 +79,32 @@ export const FilterTileGroup = ({ facet }: FilterTileGroupProps) => {
   };
 
   return (
-    <div className="mb-16 md:pt-4 md:mb-8 ">
-      <span className="font-bold pl-8">{facet.displayName.toUpperCase()}</span>
+    <div className="mb-8 md:pt-4 ml-4">
+      <span className="font-bold ">{label ?? facet.displayName.toUpperCase()}</span>
       <div
         ref={outerContainerRef}
         key={facet.fieldId}
         className={classNames(
-          "px-8 md:px-0 md:pl-8  flex flex-wrap mt-6 overflow-hidden transition-max-h duration-200 ease-linear",
+          " md:px-0 px-4  flex flex-wrap mt-6 overflow-hidden transition-max-h duration-200 ease-linear",
           {
             "max-h-32 md:max-h-28": !expanded,
             "max-h-72 overflow-y-scroll": expanded,
           }
         )}
       >
-        <Filters.FilterGroup fieldId={facet.fieldId} defaultExpanded={false}>
-          {reorderFacetOptions(facet).options.map((o) => (
-            <div
-              className={classNames(
-                "w-fit border border-toast-orange flex items-center mr-3 mb-3 hover:bg-toast-orange",
-                { "bg-toast-orange": o.selected, "bg-toast-light-orange": !o.selected }
-              )}
-              onClick={() => handleTileClick(o.value, !o.selected)}
-            >
-              <div className="px-6 py-1 md:text-xs md:px-3">
-                {o.displayName} {o.count && <span className="text-xxs">{`(${o.count})`}</span>}
-              </div>
+        {reorderFacetOptions(facet).options.map((o) => (
+          <div
+            className={classNames(
+              "w-fit border border-toast-orange flex items-center mr-3 mb-3 hover:bg-toast-orange",
+              { "bg-toast-orange": o.selected, "bg-toast-light-orange": !o.selected }
+            )}
+            onClick={() => handleTileClick(o.value, !o.selected)}
+          >
+            <div className="px-6 py-1 md:text-xs md:px-3">
+              {o.displayName} {o.count && <span className="text-xxs">{`(${o.count})`}</span>}
             </div>
-          ))}
-        </Filters.FilterGroup>
+          </div>
+        ))}
       </div>
       {canExpand && (
         <div className="w-full flex justify-center">

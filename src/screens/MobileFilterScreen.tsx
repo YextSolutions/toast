@@ -7,10 +7,12 @@ export const MobileFilterScreen = () => {
   const { mobileView, dispatch } = useContext(MobileViewContext);
 
   return mobileView.filterSectionActive ? (
-    <div className="top-28 right-0 left-0 bg-white h-full w-full fixed ">
+    <div className="top-[4.25rem] right-0 left-0 bg-white h-full w-full fixed overflow-y-auto">
       <div className="mt-8">
-        <SortingDrawer containerCss="px-8 mb-8" />
-        <BeverageFacets />
+        <SortingDrawer containerCss="px-4 mb-8" />
+        <div className="pb-16">
+          <BeverageFacets />
+        </div>
       </div>
     </div>
   ) : (
