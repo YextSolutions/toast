@@ -8,11 +8,11 @@ export const ToastBanner = (): JSX.Element => {
 
   // TODO: How do I know if the order of tailwind classes is important?
   return (
-    <div className="flex bg-toast-light-orange w-full h-12 items-center shadow-lg">
+    <div className="flex h-12 w-full items-center bg-toast-light-orange shadow-lg">
       <div className="w-full">
         <span>
           {mobileView.filterSectionActive ? (
-            <div className="flex items-center font-bold justify-between px-6">
+            <div className="flex items-center justify-between px-6 font-bold">
               <div className="flex items-center">
                 FILTER <FaFilter className="ml-1.5" />
               </div>

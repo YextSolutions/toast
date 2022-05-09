@@ -72,7 +72,7 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
                   max: max ?? MAX,
                 }),
               }}
-              className="border border-toast-orange h-2 w-full "
+              className="h-2 w-full border border-toast-orange "
             >
               {children}
             </div>
@@ -83,9 +83,9 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
               style={{
                 ...props.style,
               }}
-              className="rounded-full bg-toast-orange h-6 w-6"
+              className="h-6 w-6 rounded-full bg-toast-orange"
             >
-              <div className="-top-4 text-xs absolute">{`$${
+              <div className="absolute -top-4 text-xs">{`$${
                 priceValues[index] === (max ?? MAX)
                   ? priceValues[index].toFixed(0) + "+"
                   : priceValues[index].toFixed(0)
@@ -94,21 +94,21 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
           )}
         />
       </div>
-      <div className="flex justify-between mt-6">
+      <div className="mt-6 flex justify-between">
         {/* TODO: move to function */}
         <div className="flex">
-          <div className="border-t border-l border-b h-8 flex items-center ">$</div>
+          <div className="flex h-8 items-center border-t border-l border-b ">$</div>
           <input
-            className="w-16 h-8 border-t border-b border-r text-sm outline-none "
+            className="h-8 w-16 border-t border-b border-r text-sm outline-none "
             type="number"
             value={priceValues[0]}
             onChange={(e) => handleChange([Number(e.target.value), priceValues[1]])}
           />
         </div>
         <div className="flex">
-          <div className="border-t border-l border-b h-8 flex items-center ">$</div>
+          <div className="flex h-8 items-center border-t border-l border-b ">$</div>
           <input
-            className="w-16 h-8 border-t border-b border-r text-sm outline-none "
+            className="h-8 w-16 border-t border-b border-r text-sm outline-none "
             type="number"
             value={priceValues[1]}
             onChange={(e) => handleChange([priceValues[0], Number(e.target.value)])}

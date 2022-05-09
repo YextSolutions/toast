@@ -54,7 +54,7 @@ export const BeverageSearchBar = () => {
     )?.results;
 
     return (
-      <div className="sm:max-h-96 overflow-y-scroll sm:shadow-2xl">
+      <div className="overflow-y-scroll sm:max-h-96 sm:shadow-2xl">
         {renderFilterAutocomplete(alcoholicBeverageTypeResults)}
         {renderBeveragesAutocomplete(beverageResults)}
       </div>

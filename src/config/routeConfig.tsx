@@ -17,7 +17,7 @@ export const routeConfig: RouteData[] = [
             { name: "BEER", img: ImageAssets.beerBottles, linkPath: "/beer" },
             { name: "WINE", img: ImageAssets.wineGlasses, linkPath: "/wine" },
             {
-              name: "LIQOUR",
+              name: "LIQUOR",
               img: ImageAssets.orangeCocktail,
               linkPath: "/liquor",
             },

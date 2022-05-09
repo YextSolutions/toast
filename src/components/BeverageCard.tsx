@@ -38,8 +38,8 @@ export const BeverageCard = ({
   return (
     <div
       className={classNames("flex ", {
-        "px-4 py-4 flex-col border-transparent border-4 hover:border-toast-orange": !autocomplete,
-        "hover:bg-toast-gray py-2": autocomplete,
+        "flex-col border-4 border-transparent px-4 py-4 hover:border-toast-orange": !autocomplete,
+        "py-2 hover:bg-toast-gray": autocomplete,
       })}
       onClick={() => handleClick()}
     >

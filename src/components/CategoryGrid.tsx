@@ -1,7 +1,6 @@
 import { v4 as uuid } from "uuid";
 import { useNavigate } from "react-router-dom";
 import { ImagePlaceholder } from "./ImagePlaceholder";
-import ImageAssets from "../assets/imageAssets";
 import { GrayWineBottle } from "./BeverageCard";
 
 export interface CategoryGridProps {
@@ -30,20 +29,20 @@ export const CategoryGrid = ({
   return (
     <div className="mt-2 px-4">
       <div>
-        <span className="text-toast-dark-orange text-base sm:text-2xl font-extrabold">{title}</span>
+        <span className="text-base font-extrabold text-toast-dark-orange sm:text-2xl">{title}</span>
       </div>
       <div className={itemLayoutCssClasses ?? "grid grid-cols-2 justify-items-center gap-2"}>
         {options.map((option) => {
           return (
             <button onClick={() => handleTileClick(option.linkPath)}>
-              <div key={`tile_${uuid()}`} className="flex flex-col items-center mt-4">
+              <div key={`tile_${uuid()}`} className="mt-4 flex flex-col items-center">
                 <ImagePlaceholder
                   imgCssClasses="w-40 h-44 object-cover"
                   imgUrl={option.img}
                   placeholder={GrayWineBottle()}
                   alt={"category"}
                 />
-                <div className="text-toast-blue text-xs sm:text-sm font-semibold mt-1.5 hover:underline">
+                <div className="mt-1.5 text-xs font-semibold text-toast-blue hover:underline sm:text-sm">
                   {option.name}
                 </div>
               </div>

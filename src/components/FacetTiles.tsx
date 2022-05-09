@@ -68,13 +68,13 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
   };
 
   return (
-    <div className="mb-8 md:pt-4 ml-4">
+    <div className="mb-8 ml-4 md:pt-4">
       <span className="font-bold ">{label ?? facet.displayName.toUpperCase()}</span>
       <div
         ref={outerContainerRef}
         key={facet.fieldId}
         className={classNames(
-          " md:px-0 px-4  flex flex-wrap mt-6 overflow-hidden transition-max-h duration-200 ease-linear",
+          " mt-6 flex  flex-wrap overflow-hidden px-4 transition-max-h duration-200 ease-linear md:px-0",
           {
             "max-h-32 md:max-h-28": !expanded,
             "max-h-72 overflow-y-scroll": expanded,
@@ -84,21 +84,21 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
         {reorderFacetOptions(facet).options.map((o) => (
           <div
             className={classNames(
-              "w-fit border border-toast-orange flex items-center mr-3 mb-3 hover:bg-toast-orange",
+              "mr-3 mb-3 flex w-fit items-center border border-toast-orange hover:bg-toast-orange",
               { "bg-toast-orange": o.selected, "bg-toast-light-orange": !o.selected }
             )}
             onClick={() => handleTileClick(o.value, !o.selected)}
           >
-            <div className="px-6 py-1 md:text-xs md:px-3">
+            <div className="px-6 py-1 md:px-3 md:text-xs">
               {o.displayName} {o.count && <span className="text-xxs">{`(${o.count})`}</span>}
             </div>
           </div>
         ))}
       </div>
       {canExpand && (
-        <div className="w-full flex justify-center">
+        <div className="flex w-full justify-center">
           <button onClick={() => handleChange(!expanded)}>
-            <span className="text-sm hover:underline text-toast-dark-orange">
+            <span className="text-sm text-toast-dark-orange hover:underline">
               {expanded ? "Show Less" : "Show More"}
             </span>
           </button>

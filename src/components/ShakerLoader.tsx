@@ -1,6 +1,6 @@
 export const ShakerLoader = () => (
-  <div className="w-full h-96 flex justify-center items-center">
-    <div className="animate-shaker rotate-20">
+  <div className="flex h-96 w-full items-center justify-center">
+    <div className="rotate-20 animate-shaker">
       <ShakerIcon />
     </div>
   </div>

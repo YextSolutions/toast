@@ -46,13 +46,13 @@ export const CartScreen = () => {
       {mobileView.searchBarActive ? (
         <BeverageSearchBar />
       ) : (
-        <div className="absolute px-4 w-full top-28 bottom-16">
-          <div className="h-16 w-full border-b border-toast-orange  flex justify-center items-center">
-            <div className="text-toast-dark-orange font-bold">Your Cart</div>
+        <div className="absolute top-28 bottom-16 w-full px-4">
+          <div className="flex h-16 w-full items-center  justify-center border-b border-toast-orange">
+            <div className="font-bold text-toast-dark-orange">Your Cart</div>
           </div>
           <div>
             {cart.cartItems.map((item) => (
-              <div className="py-2 flex items-end justify-between">
+              <div className="flex items-end justify-between py-2">
                 <BeverageCard
                   autocomplete
                   name={item.beverage.name}
@@ -65,10 +65,10 @@ export const CartScreen = () => {
               </div>
             ))}
           </div>
-          <div className="h-16 w-full border-b border-toast-orange  flex justify-center items-center">
-            <div className="text-toast-dark-orange font-bold">Order Summary</div>
+          <div className="flex h-16 w-full items-center  justify-center border-b border-toast-orange">
+            <div className="font-bold text-toast-dark-orange">Order Summary</div>
           </div>
-          <div className="flex justify-between w-full pt-1">
+          <div className="flex w-full justify-between pt-1">
             <div className="font-bold">TOTAL:</div>
             <div className="font-bold">{`$${formatTotalPrice(cart.totalPrice)}`}</div>
           </div>

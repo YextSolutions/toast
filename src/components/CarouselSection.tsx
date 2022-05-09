@@ -40,17 +40,17 @@ const Carousel = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => 
   return (
     <div className="px-4">
       <div className="flex justify-between">
-        <div className="text-toast-dark-orange text-base sm:text-2xl font-extrabold">
+        <div className="text-base font-extrabold text-toast-dark-orange sm:text-2xl">
           {sectionName}
         </div>
         {!resultsLoading && (
-          <button className="hidden md:flex font-bold text-sm text-toast-dark-orange">
+          <button className="hidden text-sm font-bold text-toast-dark-orange md:flex">
             VIEW ALL
           </button>
         )}
       </div>
       {resultsLoading ? (
-        <div className="h-60 flex justify-center items-center">
+        <div className="flex h-60 items-center justify-center">
           <MoonLoader color="#FFB563" />
         </div>
       ) : (
@@ -60,8 +60,8 @@ const Carousel = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => 
             CardComponent={BeverageCarouselCard}
             allowPagination={false}
           />
-          <button className="flex justify-center items-center bg-toast-blue w-full h-10 md:hidden">
-            <div className="text-white font-bold text-xs">VIEW ALL</div>
+          <button className="flex h-10 w-full items-center justify-center bg-toast-blue md:hidden">
+            <div className="text-xs font-bold text-white">VIEW ALL</div>
           </button>
         </>
       )}

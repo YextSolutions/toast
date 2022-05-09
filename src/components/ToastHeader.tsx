@@ -34,15 +34,15 @@ export const ToastHeader = (): JSX.Element => {
   };
 
   return (
-    <header className="absolute top-0 w-full z-20">
+    <header className="absolute top-0 z-20 w-full">
       <div
-        className={classNames("w-full bg-toast-orange h-16 flex items-center", {
+        className={classNames("flex h-16 w-full items-center bg-toast-orange", {
           "h-5": mobileView.filterSectionActive,
         })}
       >
         {!mobileView.filterSectionActive && (
           <div className="flex  w-full justify-between">
-            <div className="w-1/3 text-toast-dark-orange ml-6 md:hidden">
+            <div className="ml-6 w-1/3 text-toast-dark-orange md:hidden">
               {!mobileView.searchBarActive ? (
                 <AiOutlineMenu size={30} />
               ) : (
@@ -54,14 +54,14 @@ export const ToastHeader = (): JSX.Element => {
                 </button>
               )}
             </div>
-            <div className=" flex justify-center items-center md:justify-start md:pl-4">
+            <div className=" flex items-center justify-center md:justify-start md:pl-4">
               <Link
-                className="text-3xl text-toast-red font-semibold flex items-center"
+                className="flex items-center text-3xl font-semibold text-toast-red"
                 to="/"
                 onClick={() => clearSearchState()}
               >
                 <span>TOAST</span>
-                <div className="hidden md:flex pl-4 text-black text-sm">
+                <div className="hidden pl-4 text-sm text-black md:flex">
                   <Link className="px-4" to="/wine">
                     WINE
                   </Link>
@@ -78,9 +78,9 @@ export const ToastHeader = (): JSX.Element => {
                 <BeverageSearchBar />
               </div>
             </div>
-            <div className=" w-1/3 flex justify-end mr-6 text-toast-dark-orange items-center">
+            <div className=" mr-6 flex w-1/3 items-center justify-end text-toast-dark-orange">
               <button
-                className="md:hidden h-8 w-8 mr-4"
+                className="mr-4 h-8 w-8 md:hidden"
                 onClick={() => searchBarChangeHandler(true)}
               >
                 <MagnifyingGlassIcon />
@@ -88,7 +88,7 @@ export const ToastHeader = (): JSX.Element => {
               <Link className="relative" to="/cart">
                 <FaShoppingBasket size={30} />
                 {totalCartItems > 0 && (
-                  <div className="bg-toast-red rounded-full h-3.5 w-3.5 text-white text-xxs flex justify-center items-center font-bold absolute -bottom-0.5 right-0">
+                  <div className="absolute -bottom-0.5 right-0 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-toast-red text-xxs font-bold text-white">
                     {totalCartItems}
                   </div>
                 )}

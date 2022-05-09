@@ -53,7 +53,7 @@ export const BeverageScreen = (): JSX.Element => {
       {mobileView.searchBarActive ? (
         <BeverageSearchBar />
       ) : (
-        <div className="absolute top-28 bottom-16 overflow-auto w-full px-4">
+        <div className="absolute top-28 bottom-16 w-full overflow-auto px-4">
           <div className="my-8 text-sm">
             <BeverageBreadcrumbs
               beverageCategories={{
@@ -69,12 +69,12 @@ export const BeverageScreen = (): JSX.Element => {
               <img className="w-60" src={beverageData.primaryPhoto.image.url} />
             </div>
           )}
-          {beverageData?.name && <div className="font-semibold my-4">{beverageData.name}</div>}
+          {beverageData?.name && <div className="my-4 font-semibold">{beverageData.name}</div>}
           {beverageData?.c_price && (
-            <div className="font-semibold text-sm my-4">{`$${beverageData.c_price}`}</div>
+            <div className="my-4 text-sm font-semibold">{`$${beverageData.c_price}`}</div>
           )}
           {beverageData?.c_originCountry && (
-            <div className="text-xs my-4 flex items-center">
+            <div className="my-4 flex items-center text-xs">
               <MdLocationPin size={20} className="mr-1 text-toast-dark-orange" />
               {beverageData?.c_usState && (
                 <span className="mr-1">{`${beverageData.c_usState},`}</span>
@@ -87,12 +87,12 @@ export const BeverageScreen = (): JSX.Element => {
           )}
         </div>
       )}
-      <div className="fixed z-20 bottom-0 w-full bg-white flex justify-center items-center h-16 border-t">
+      <div className="fixed bottom-0 z-20 flex h-16 w-full items-center justify-center border-t bg-white">
         {beverageData.id && (
           <ProductCounter productId={beverageData.id} onChange={setCount} quantity={count} />
         )}
         <button
-          className="bg-toast-blue w-52 h-10 rounded ml-6"
+          className="ml-6 h-10 w-52 rounded bg-toast-blue"
           onClick={() =>
             cartContext.dispatch({
               type: CartActionTypes.ADD_ITEM,
@@ -100,7 +100,7 @@ export const BeverageScreen = (): JSX.Element => {
             })
           }
         >
-          <p className="text-white text-center font-bold text-base">ADD TO CART</p>
+          <p className="text-center text-base font-bold text-white">ADD TO CART</p>
         </button>
       </div>
     </>

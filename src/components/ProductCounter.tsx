@@ -16,19 +16,19 @@ export const ProductCounter = ({ productId, onChange, quantity }: ProductCounter
     quantity ?? cart.cartItems.find((item) => item.beverage.id === productId)?.quantity ?? 1;
 
   return (
-    <div className="h-10 w-28 border flex">
+    <div className="flex h-10 w-28 border">
       <button
-        className="w-1/3 flex justify-center items-center disabled:opacity-30"
+        className="flex w-1/3 items-center justify-center disabled:opacity-30"
         disabled={quantity === 1}
         onClick={() => onChange(displayQuantity - 1, { action: "subtract", productId })}
       >
         <AiOutlineMinus size={24} />
       </button>
-      <div className="w-1/3 flex justify-center items-center text-xlreacreac">
+      <div className="text-xlreacreac flex w-1/3 items-center justify-center">
         {displayQuantity}
       </div>
       <button
-        className="w-1/3 flex justify-center items-center"
+        className="flex w-1/3 items-center justify-center"
         onClick={() => onChange(displayQuantity + 1, { action: "add", productId })}
       >
         <AiOutlinePlus size={24} />

@@ -24,11 +24,11 @@ export const SearchScreen = ({
   const { height } = useWindowDimensions();
 
   return (
-    <div className="relative h-full w-full flex justify-center">
+    <div className="relative flex h-full w-full justify-center">
       <ToastHeader />
       {mobileView.searchBarActive ? (
         <div
-          className="absolute top-16 w-full  bg-white overflow-y-scroll"
+          className="absolute top-16 w-full  overflow-y-scroll bg-white"
           style={{ maxHeight: `${height - 64}px` }}
         >
           <BeverageSearchBar />
@@ -36,9 +36,9 @@ export const SearchScreen = ({
       ) : (
         <div className="absolute top-28  w-screen sm:max-w-7xl">
           {headerImage && (
-            <div className="flex justify-center my-8">
+            <div className="my-8 flex justify-center">
               <img
-                className={"sm:w-[42.75rem] sm:h-[21.75rem] w-96 h-44"}
+                className={"h-44 w-96 sm:h-[21.75rem] sm:w-[42.75rem]"}
                 src={ImageAssets.cocktails}
               />
             </div>
