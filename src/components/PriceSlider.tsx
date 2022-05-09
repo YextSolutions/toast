@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Range, getTrackBackground } from "react-range";
+import { useSearchParams } from "react-router-dom";
+import { debounce } from "lodash";
 
 interface PriceSliderProps {
   min?: number;
@@ -11,28 +13,41 @@ const STEP = 1;
 const MIN = 0;
 const MAX = 100;
 
-type Bound = "min" | "max";
-
 export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element => {
-  const [values, setValues] = useState<number[]>([0, 100]);
+  const [priceValues, setPriceValues] = useState<number[]>([min ?? MIN, max ?? MAX]);
 
-  // TODO: update URL and apply filters in search results screen
+  const [searchParams, setSearchParams] = useSearchParams();
+
   useEffect(() => {
-    // onChange(values[0], values[1]);
-  }, [values]);
-
-  const handleChange = (value: number, bound: Bound) => {
-    if (bound === "min") {
-      if (value > values[1]) {
-        value = values[1];
-      }
-      setValues([value, values[1]]);
-    } else {
-      if (value < (min ?? MIN)) {
-        value = min ?? MIN;
-      }
-      setValues([values[0], value]);
+    if (searchParams.has("priceRange")) {
+      const priceRange = JSON.parse(searchParams.get("priceRange") as string) as {
+        min: number;
+        max?: number;
+      };
+      setPriceValues([priceRange.min, priceRange.max ?? max ?? MAX]);
     }
+  }, []);
+
+  const updateUrl = (priceMin: number, priceMax?: number): void => {
+    searchParams.set("priceRange", JSON.stringify({ min: priceMin, max: priceMax }));
+    setSearchParams(searchParams);
+  };
+
+  const debouncedUpdateUrl = useMemo(() => debounce(updateUrl, 500), []);
+
+  const handleChange = (values: number[]) => {
+    if (values[0] > values[1]) {
+      values[0] = values[1];
+    }
+    if (values[1] < values[0]) {
+      values[1] = values[0];
+    }
+
+    setPriceValues(values);
+
+    values[1] < (max ?? MAX)
+      ? debouncedUpdateUrl(values[0], values[1])
+      : debouncedUpdateUrl(values[0]);
   };
 
   return (
@@ -43,15 +58,15 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
           step={step ?? STEP}
           min={min ?? MIN}
           max={max ?? MAX}
-          values={values}
-          onChange={(values) => setValues(values)}
+          values={priceValues}
+          onChange={(values) => handleChange(values)}
           renderTrack={({ props, children }) => (
             <div
               {...props}
               style={{
                 ...props.style,
                 background: getTrackBackground({
-                  values,
+                  values: priceValues,
                   colors: ["#c4c4c442", "#FFB563", "#c4c4c442"],
                   min: min ?? MIN,
                   max: max ?? MAX,
@@ -71,9 +86,9 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
               className="rounded-full bg-toast-orange h-6 w-6"
             >
               <div className="-top-4 text-xs absolute">{`$${
-                values[index] === (max ?? MAX)
-                  ? values[index].toFixed(0) + "+"
-                  : values[index].toFixed(0)
+                priceValues[index] === (max ?? MAX)
+                  ? priceValues[index].toFixed(0) + "+"
+                  : priceValues[index].toFixed(0)
               }`}</div>
             </div>
           )}
@@ -86,8 +101,8 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
           <input
             className="w-16 h-8 border-t border-b border-r text-sm outline-none "
             type="number"
-            value={values[0]}
-            onChange={(e) => handleChange(Number(e.target.value), "min")}
+            value={priceValues[0]}
+            onChange={(e) => handleChange([Number(e.target.value), priceValues[1]])}
           />
         </div>
         <div className="flex">
@@ -95,8 +110,8 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
           <input
             className="w-16 h-8 border-t border-b border-r text-sm outline-none "
             type="number"
-            value={values[1]}
-            onChange={(e) => handleChange(Number(e.target.value), "max")}
+            value={priceValues[1]}
+            onChange={(e) => handleChange([priceValues[0], Number(e.target.value)])}
           />
         </div>
       </div>

@@ -36,21 +36,28 @@ export const BeverageResultsScreen = (): JSX.Element => {
   const resultsCount = useAnswersState((state) => state.vertical.resultsCount);
   const isLoading = useAnswersState((state) => state.searchStatus.isLoading);
 
-  const { mobileView, dispatch } = useContext(MobileViewContext);
+  const { mobileView } = useContext(MobileViewContext);
 
   const { height } = useWindowDimensions();
 
   useEffect(() => {
-    searchParams.get("facets") &&
-      handleUrlFacets(JSON.parse(searchParams.get("facets") as string) as Record<string, string[]>);
-  }, []);
-
-  useEffect(() => {
     setPage(location.pathname.split("/")[1]);
 
+    const selectedFilters: SelectableFilter[] = [];
+    selectedFilters.push(...extractBeverageStaticFiltersFromUrlParams());
+    const priceFilter = extractPriceRangeFilterFromSearchParams();
+    priceFilter && selectedFilters.push(priceFilter);
+
+    handleSearchParams();
+
+    answersActions.setStaticFilters(selectedFilters);
+
+    answersActions.executeVerticalQuery();
+  }, [urlParams]);
+
+  const extractBeverageStaticFiltersFromUrlParams = (): SelectableFilter[] => {
     const { alcoholType, category, subCategory } = extractBeverageInfoFromUrl(urlParams);
     const query = searchParams.get("query");
-
     const selectedFilters: SelectableFilter[] = [];
 
     if (alcoholType) {
@@ -73,7 +80,9 @@ export const BeverageResultsScreen = (): JSX.Element => {
         value: category.replaceAll("-", " "),
         matcher: Matcher.Equals,
       });
-      !query && setSearchResultsTitle({ title: formatSearchResultsTitle(category) });
+      if (!query) {
+        !query && setSearchResultsTitle({ title: formatSearchResultsTitle(category) });
+      }
     }
 
     if (subCategory) {
@@ -89,12 +98,36 @@ export const BeverageResultsScreen = (): JSX.Element => {
         });
     }
 
-    handleSearchParams();
+    return selectedFilters;
+  };
 
-    answersActions.setStaticFilters(selectedFilters);
+  const extractPriceRangeFilterFromSearchParams = (): SelectableFilter | undefined => {
+    if (!searchParams.has("priceRange")) return;
 
-    answersActions.executeVerticalQuery();
-  }, [urlParams]);
+    const priceRange = JSON.parse(searchParams.get("priceRange") as string) as {
+      min: number;
+      max?: number;
+    };
+
+    if (priceRange.max) {
+      return {
+        selected: true,
+        fieldId: "c_price",
+        value: {
+          start: { matcher: Matcher.GreaterThanOrEqualTo, value: priceRange.min },
+          end: { matcher: Matcher.LessThanOrEqualTo, value: priceRange.max },
+        },
+        matcher: Matcher.Between,
+      };
+    } else {
+      return {
+        selected: true,
+        fieldId: "c_price",
+        value: priceRange.min,
+        matcher: Matcher.GreaterThanOrEqualTo,
+      };
+    }
+  };
 
   const handleSearchParams = () => {
     const query = searchParams.get("query");
@@ -110,7 +143,11 @@ export const BeverageResultsScreen = (): JSX.Element => {
     sortBy && answersActions.setSortBys([JSON.parse(sortBy)]);
   };
 
-  const handleUrlFacets = (urlFacets: Record<string, string[]>) => {
+  const handleUrlFacets = () => {
+    if (!searchParams.has("facets")) return;
+
+    const urlFacets = JSON.parse(searchParams.get("facets") as string) as Record<string, string[]>;
+
     const facets: DisplayableFacet[] = [];
     Object.entries(urlFacets).forEach(([key, values]) => {
       facets.push({

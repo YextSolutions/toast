@@ -1,4 +1,3 @@
-import { Filters } from "@yext/answers-react-components";
 import { DisplayableFacet, Matcher, NumberRangeValue } from "@yext/answers-headless-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
@@ -18,8 +17,6 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
   const outerContainerRef = useRef<HTMLDivElement>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const { selectFilter, applyFilters } = Filters.useFiltersContext();
 
   const { dispatch } = useContext(MobileViewContext);
 
@@ -47,14 +44,6 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
   ) => {
     const facetParams = searchParams.get("facets");
     let existingUrlFacets: Record<string, string[]> = facetParams ? JSON.parse(facetParams) : {};
-
-    selectFilter({
-      matcher: Matcher.Equals,
-      fieldId: facet.fieldId,
-      value: optionValue,
-      selected: checked,
-    });
-    applyFilters();
 
     if (checked) {
       if (existingUrlFacets[facet.fieldId]) {
