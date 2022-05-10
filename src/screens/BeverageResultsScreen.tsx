@@ -10,7 +10,6 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageCard } from "../components/BeverageCard";
-import { BeverageSearchBar } from "../components/BeverageSearchBar";
 import { ToastHeader } from "../components/ToastHeader";
 import { extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
 import classNames from "classnames";
@@ -18,7 +17,6 @@ import { MobileFilterScreen } from "./MobileFilterScreen";
 import { SortingDrawer } from "../components/SortingDrawer";
 import { ShakerLoader } from "../components/ShakerLoader";
 import { formatSearchResultsTitle } from "../utils/formatSearchResultsTitle";
-import useWindowDimensions from "../hooks/useWindowDimensions";
 import { BeverageFacets } from "../components/BeverageFacets";
 import { MobileViewContext } from "../providers/MobileViewProvider";
 
@@ -37,8 +35,6 @@ export const BeverageResultsScreen = (): JSX.Element => {
   const isLoading = useAnswersState((state) => state.searchStatus.isLoading);
 
   const { mobileView } = useContext(MobileViewContext);
-
-  const { height } = useWindowDimensions();
 
   useEffect(() => {
     setPage(location.pathname.split("/")[1]);
@@ -175,61 +171,50 @@ export const BeverageResultsScreen = (): JSX.Element => {
   return (
     <div className="relative flex h-full w-full justify-center">
       <ToastHeader />
-      {mobileView.searchBarActive ? (
-        <div
-          className="absolute top-16 w-full overflow-y-scroll bg-white"
-          style={{ maxHeight: `${height - 64}px` }}
-        >
-          <BeverageSearchBar />
-        </div>
-      ) : (
-        <>
-          <div className="fixed top-28 bottom-16 w-full max-w-7xl overflow-auto px-4 md:bottom-0">
-            {mobileView.beverageResultImages[page] && (
-              <div className="flex justify-center">
-                <div className="py-8">
-                  <img
-                    className="h-44 w-96 sm:h-[21.75rem] sm:w-[42.75rem]"
-                    src={mobileView.beverageResultImages[page]}
-                  ></img>
-                </div>
-              </div>
-            )}
-            <div className="my-4 px-4 text-sm">
-              <BeverageBreadcrumbs />
+      <div className="fixed top-28 bottom-16 w-full max-w-7xl overflow-auto px-4 md:bottom-0">
+        {mobileView.beverageResultImages[page] && (
+          <div className="flex justify-center">
+            <div className="py-8">
+              <img
+                className="h-44 w-96 sm:h-[21.75rem] sm:w-[42.75rem]"
+                src={mobileView.beverageResultImages[page]}
+              ></img>
             </div>
-            <div className="flex items-center justify-between px-4">
-              <div className="my-2 ">
-                <div
-                  className={classNames("mr-1.5 text-3xl font-bold", {
-                    "text-toast-dark-orange  ": !searchResultsTitle.query,
-                  })}
-                >
-                  {searchResultsTitle.title}
-                </div>
-                {!isLoading && <div className="mt-1 text-sm">{`(${resultsCount} results)`}</div>}
-              </div>
-              <SortingDrawer />
-            </div>
-            {isLoading ? (
-              <ShakerLoader />
-            ) : (
-              <div className="flex">
-                <div className="hidden w-1/3 md:block">
-                  <BeverageFacets />
-                </div>
-                <div>
-                  <VerticalResults
-                    customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3 gap-4" }}
-                    CardComponent={BeverageCard}
-                  />
-                </div>
-              </div>
-            )}
           </div>
-          <MobileFilterScreen />
-        </>
-      )}
+        )}
+        <div className="my-4 px-4 text-sm">
+          <BeverageBreadcrumbs />
+        </div>
+        <div className="flex items-center justify-between px-4">
+          <div className="my-2 ">
+            <div
+              className={classNames("mr-1.5 text-3xl font-bold", {
+                "text-toast-dark-orange": !searchResultsTitle.query,
+              })}
+            >
+              {searchResultsTitle.title}
+            </div>
+            {!isLoading && <div className="mt-1 text-sm">{`(${resultsCount} results)`}</div>}
+          </div>
+          <SortingDrawer />
+        </div>
+        {isLoading ? (
+          <ShakerLoader />
+        ) : (
+          <div className="flex">
+            <div className="hidden w-1/3 md:block">
+              <BeverageFacets />
+            </div>
+            <div>
+              <VerticalResults
+                customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3 gap-4" }}
+                CardComponent={BeverageCard}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+      <MobileFilterScreen />
     </div>
   );
 };

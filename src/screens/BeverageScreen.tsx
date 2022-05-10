@@ -50,59 +50,55 @@ export const BeverageScreen = (): JSX.Element => {
   return (
     <>
       <ToastHeader />
-      {mobileView.searchBarActive ? (
-        <BeverageSearchBar />
-      ) : (
-        <div className="absolute top-28 bottom-16 w-full overflow-auto px-4">
-          <div className="my-8 text-sm">
-            <BeverageBreadcrumbs
-              beverageCategories={{
-                alcoholType: beverageData?.c_alcoholType,
-                category: beverageData?.c_category,
-                subCategory: beverageData?.c_subCategory,
-                beverageId: beverageData?.id,
-              }}
-            />
+      <div className="absolute top-28 bottom-16 w-full overflow-auto px-4">
+        <div className="my-8 text-sm">
+          <BeverageBreadcrumbs
+            beverageCategories={{
+              alcoholType: beverageData?.c_alcoholType,
+              category: beverageData?.c_category,
+              subCategory: beverageData?.c_subCategory,
+              beverageId: beverageData?.id,
+            }}
+          />
+        </div>
+        {beverageData?.primaryPhoto && (
+          <div className="flex justify-center">
+            <img className="w-60" src={beverageData.primaryPhoto.image.url} />
           </div>
-          {beverageData?.primaryPhoto && (
-            <div className="flex justify-center">
-              <img className="w-60" src={beverageData.primaryPhoto.image.url} />
-            </div>
+        )}
+        {beverageData?.name && <div className="my-4 font-semibold">{beverageData.name}</div>}
+        {beverageData?.c_price && (
+          <div className="my-4 text-sm font-semibold">{`$${beverageData.c_price}`}</div>
+        )}
+        {beverageData?.c_originCountry && (
+          <div className="my-4 flex items-center text-xs">
+            <MdLocationPin size={20} className="mr-1 text-toast-dark-orange" />
+            {beverageData?.c_usState && (
+              <span className="mr-1">{`${beverageData.c_usState},`}</span>
+            )}
+            {beverageData?.c_originCountry}
+          </div>
+        )}
+        {beverageData?.description && <p className="leading-relaxed">{beverageData.description}</p>}
+      </div>
+      {!mobileView.searchBarActive && (
+        <div className="fixed bottom-0 z-20 flex h-16 w-full items-center justify-center border-t bg-white">
+          {beverageData.id && (
+            <ProductCounter productId={beverageData.id} onChange={setCount} quantity={count} />
           )}
-          {beverageData?.name && <div className="my-4 font-semibold">{beverageData.name}</div>}
-          {beverageData?.c_price && (
-            <div className="my-4 text-sm font-semibold">{`$${beverageData.c_price}`}</div>
-          )}
-          {beverageData?.c_originCountry && (
-            <div className="my-4 flex items-center text-xs">
-              <MdLocationPin size={20} className="mr-1 text-toast-dark-orange" />
-              {beverageData?.c_usState && (
-                <span className="mr-1">{`${beverageData.c_usState},`}</span>
-              )}
-              {beverageData?.c_originCountry}
-            </div>
-          )}
-          {beverageData?.description && (
-            <p className="leading-relaxed">{beverageData.description}</p>
-          )}
+          <button
+            className="ml-6 h-10 w-52 rounded bg-toast-blue"
+            onClick={() =>
+              cartContext.dispatch({
+                type: CartActionTypes.ADD_ITEM,
+                payload: { beverage: beverageData, quantity: count },
+              })
+            }
+          >
+            <p className="text-center text-base font-bold text-white">ADD TO CART</p>
+          </button>
         </div>
       )}
-      <div className="fixed bottom-0 z-20 flex h-16 w-full items-center justify-center border-t bg-white">
-        {beverageData.id && (
-          <ProductCounter productId={beverageData.id} onChange={setCount} quantity={count} />
-        )}
-        <button
-          className="ml-6 h-10 w-52 rounded bg-toast-blue"
-          onClick={() =>
-            cartContext.dispatch({
-              type: CartActionTypes.ADD_ITEM,
-              payload: { beverage: beverageData, quantity: count },
-            })
-          }
-        >
-          <p className="text-center text-base font-bold text-white">ADD TO CART</p>
-        </button>
-      </div>
     </>
   );
 };
