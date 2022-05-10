@@ -1,10 +1,12 @@
 import { Context, createContext, useReducer } from "react";
 import ImageAssets from "../assets/imageAssets";
-import { ActionMap, CartContext } from "./CartProvider";
+import { ActionMap } from "./CartProvider";
 
 interface MobileView {
   searchBarActive: boolean;
   filterSectionActive: boolean;
+
+  //TODO: Refactor to remove from context
   beverageResultImages: Record<string, string>;
 }
 

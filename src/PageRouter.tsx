@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { BrowserRouter, Route, Routes, HashRouter } from "react-router-dom";
+import { Route, Routes, HashRouter } from "react-router-dom";
 
 export interface RouteData {
   path: string;

@@ -116,6 +116,7 @@ export const BeverageSearchBar = () => {
   };
 
   const searchHandler = (path?: string, beverage?: Partial<Beverage>) => {
+    answersActions.setSortBys([]);
     answersActions.resetFacets();
     dispatch({ type: MobileViewActionTypes.TOGGLE_SEARCH_SCREEN, payload: false });
 
@@ -127,7 +128,6 @@ export const BeverageSearchBar = () => {
 
   const handleSubmit = (searchEventData: { verticalKey?: string; query?: string }) => {
     const { query } = searchEventData;
-    answersActions.setSortBys([]);
     searchHandler(`/search?query=${query}`);
   };
 
