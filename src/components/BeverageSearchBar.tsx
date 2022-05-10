@@ -152,7 +152,7 @@ export const BeverageSearchBar = () => {
       visualAutocompleteConfig={{
         entityPreviewSearcher,
         renderEntityPreviews,
-        includedVerticals: ["autocomplete", "beverages"],
+        // includedVerticals: ["autocomplete", "beverages"],
       }}
     />
   );
