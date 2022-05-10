@@ -146,25 +146,30 @@ export const BeverageResultsScreen = (): JSX.Element => {
   };
 
   const handleUrlFacets = () => {
-    if (!searchParams.has("facets")) return;
+    if (searchParams.has("facets")) {
+      const urlFacets = JSON.parse(searchParams.get("facets") as string) as Record<
+        string,
+        string[]
+      >;
 
-    const urlFacets = JSON.parse(searchParams.get("facets") as string) as Record<string, string[]>;
-
-    const facets: DisplayableFacet[] = [];
-    Object.entries(urlFacets).forEach(([key, values]) => {
-      facets.push({
-        fieldId: key,
-        displayName: "bluh",
-        options: values.map((o) => ({
-          value: o,
-          matcher: Matcher.Equals,
+      const facets: DisplayableFacet[] = [];
+      Object.entries(urlFacets).forEach(([key, values]) => {
+        facets.push({
+          fieldId: key,
           displayName: "bluh",
-          count: 0,
-          selected: true,
-        })),
+          options: values.map((o) => ({
+            value: o,
+            matcher: Matcher.Equals,
+            displayName: "bluh",
+            count: 0,
+            selected: true,
+          })),
+        });
       });
-    });
-    answersActions.setFacets(facets);
+      answersActions.setFacets(facets);
+    } else {
+      answersActions.setFacets([]);
+    }
   };
 
   return (
