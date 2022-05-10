@@ -9,6 +9,7 @@ import {
   provideAnswersHeadless,
   Result,
   useAnswersActions,
+  useAnswersState,
   VerticalResults as VerticalResultsData,
 } from "@yext/answers-headless-react";
 import { useContext } from "react";
@@ -39,6 +40,8 @@ export const BeverageSearchBar = () => {
   const navigate = useNavigate();
 
   const answersActions = useAnswersActions();
+
+  const query = useAnswersState((state) => state.query.input);
 
   const renderEntityPreviews = (
     autocompleteLoading: boolean,
