@@ -41,7 +41,7 @@ export const ToastHeader = (): JSX.Element => {
         })}
       >
         {!mobileView.filterSectionActive && (
-          <div className="flex  w-full justify-between">
+          <div className="flex w-full justify-between">
             <div className="ml-6 w-1/3 text-toast-dark-orange md:hidden">
               {!mobileView.searchBarActive ? (
                 <AiOutlineMenu size={30} />
@@ -74,11 +74,17 @@ export const ToastHeader = (): JSX.Element => {
                   <div className="px-4">OTHER</div>
                 </div>
               </Link>
-              <div className="hidden md:block">
+              <div
+                className={classNames("md:block", {
+                  "fixed top-16 h-full w-full overflow-y-scroll bg-white":
+                    mobileView.searchBarActive,
+                  hidden: !mobileView.searchBarActive,
+                })}
+              >
                 <BeverageSearchBar />
               </div>
             </div>
-            <div className=" mr-6 flex w-1/3 items-center justify-end text-toast-dark-orange">
+            <div className="mr-6 flex w-1/3 items-center justify-end text-toast-dark-orange">
               <button
                 className="mr-4 h-8 w-8 md:hidden"
                 onClick={() => searchBarChangeHandler(true)}
