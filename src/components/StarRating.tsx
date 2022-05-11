@@ -9,7 +9,6 @@ export const StarRating = ({ rating }: StarRatingProps) => {
   const [numStars, setNumStars] = useState([0, 0]);
 
   useEffect(() => {
-    debugger;
     const ratingParts = rating.split(".");
     if (ratingParts.length === 1) {
       setNumStars([Number(ratingParts[0]), 0]);
