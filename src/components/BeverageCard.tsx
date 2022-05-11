@@ -65,7 +65,7 @@ export const BeverageCard = ({
             {(price || beverage.c_price) && (
               <div className="text-base">{`$${price ?? beverage.c_price}`}</div>
             )}
-            <StarRating />
+            {beverage.c_rating && <StarRating rating={beverage.c_rating} />}
           </div>
         </div>
       </div>

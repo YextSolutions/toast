@@ -21,14 +21,14 @@ export interface Beverage {
   id: string;
   name: string;
   description: string;
+  primaryPhoto: Photo;
   c_usState: string;
   c_originCountry: string;
   c_alcoholType: string;
   c_category: string;
   c_subCategory: string;
   c_price: string;
-  primaryPhoto: Photo;
-  c_priceRange: string;
+  c_rating: string;
 }
 
 export const beverageDataForRender = (result: Result | undefined): Partial<Beverage> => {
@@ -46,6 +46,7 @@ export const beverageDataForRender = (result: Result | undefined): Partial<Bever
     c_alcoholType: result.rawData.c_alcoholType,
     c_category: result.rawData.c_category,
     c_subCategory: result.rawData.c_subCategory,
+    c_rating: result.rawData.c_rating,
   };
 
   return validateData(data, {
@@ -60,6 +61,7 @@ export const beverageDataForRender = (result: Result | undefined): Partial<Bever
     c_alcoholType: isString,
     c_category: isString,
     c_subCategory: isString,
+    c_rating: isString,
   });
 };
 
