@@ -14,7 +14,9 @@ type Image = {
   thumbnails?: Thumbnail[];
 };
 
-// TODO: clean up interface and validation functions
+type Photo = {
+  image: Image;
+};
 export interface Beverage {
   id: string;
   name: string;
@@ -25,23 +27,10 @@ export interface Beverage {
   c_category: string;
   c_subCategory: string;
   c_price: string;
-  primaryPhoto: {
-    image: {
-      url: string;
-      width: string;
-      height: string;
-      sourceUrl: string;
-      thumbnails: {
-        url: string;
-        width: string;
-        height: string;
-      }[];
-    };
-  };
+  primaryPhoto: Photo;
   c_priceRange: string;
 }
 
-// TODO: either pass as prop to other components or add to util folder
 export const beverageDataForRender = (result: Result | undefined): Partial<Beverage> => {
   if (!result) return {};
 
@@ -65,7 +54,7 @@ export const beverageDataForRender = (result: Result | undefined): Partial<Bever
     description: isString,
     c_usState: isString,
     c_originCountry: isString,
-    primaryPhoto: isPhotoGallery,
+    primaryPhoto: isPhoto,
     c_price: isString,
     c_priceRange: isString,
     c_alcoholType: isString,
@@ -74,8 +63,12 @@ export const beverageDataForRender = (result: Result | undefined): Partial<Bever
   });
 };
 
-const isPhotoGallery = (data: any) => {
-  return true;
+const isPhoto = (data: any): data is Photo => {
+  if (typeof data !== "object" || data === null) {
+    return false;
+  }
+
+  return data.image && isImage(data.image);
 };
 
 const isImage = (data: any): data is Image => {
