@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { Range, getTrackBackground } from "react-range";
 import { useSearchParams } from "react-router-dom";
 import { debounce } from "lodash";
-import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
+import { OverlayActionTypes, OverlayContext } from "../providers/OverlayProvider";
 
 interface PriceSliderProps {
   min?: number;
@@ -19,7 +19,7 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { dispatch } = useContext(MobileViewContext);
+  const { dispatch } = useContext(OverlayContext);
 
   useEffect(() => {
     if (searchParams.has("priceRange")) {
@@ -34,7 +34,7 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
   const updateUrl = (priceMin: number, priceMax?: number): void => {
     searchParams.set("priceRange", JSON.stringify({ min: priceMin, max: priceMax }));
     setSearchParams(searchParams);
-    dispatch({ type: MobileViewActionTypes.TOGGLE_FILTER_SECTION, payload: false });
+    dispatch({ type: OverlayActionTypes.ToggleFilterOverlay, payload: { open: false } });
   };
 
   const debouncedUpdateUrl = useMemo(() => debounce(updateUrl, 500), []);

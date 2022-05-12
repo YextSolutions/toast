@@ -1,8 +1,8 @@
-import { DisplayableFacet, Matcher, NumberRangeValue } from "@yext/answers-headless-react";
+import { DisplayableFacet, NumberRangeValue } from "@yext/answers-headless-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { useSearchParams } from "react-router-dom";
-import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
+import { OverlayActionTypes, OverlayContext } from "../providers/OverlayProvider";
 
 interface FacetTilesProps {
   facet: DisplayableFacet;
@@ -18,7 +18,7 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { dispatch } = useContext(MobileViewContext);
+  const { dispatch } = useContext(OverlayContext);
 
   useEffect(() => {
     if (outerContainerRef.current) {
@@ -64,7 +64,7 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
     searchParams.append("facets", JSON.stringify(existingUrlFacets));
     setSearchParams(searchParams);
 
-    dispatch({ type: MobileViewActionTypes.TOGGLE_FILTER_SECTION, payload: false });
+    dispatch({ type: OverlayActionTypes.ToggleSearchOverlay, payload: { open: false } });
   };
 
   return (

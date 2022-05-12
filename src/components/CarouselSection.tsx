@@ -11,7 +11,6 @@ import {
 } from "../config/answersConfig";
 import { VerticalResults } from "@yext/answers-react-components";
 import { BeverageCarouselCard } from "./BeverageCarouselCard";
-import { ShakerLoader } from "./ShakerLoader";
 import MoonLoader from "react-spinners/MoonLoader";
 
 export interface CarouselSectionProps {

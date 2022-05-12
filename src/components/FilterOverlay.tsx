@@ -1,13 +1,13 @@
 import { useContext } from "react";
-import { BeverageFacets } from "../components/BeverageFacets";
-import { SortingDrawer } from "../components/SortingDrawer";
-import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
+import { BeverageFacets } from "./BeverageFacets";
+import { SortingDrawer } from "./SortingDrawer";
+import { OverlayActionTypes, OverlayContext } from "../providers/OverlayProvider";
 
-export const MobileFilterPage = () => {
-  const { mobileView, dispatch } = useContext(MobileViewContext);
+export const FilterOverlay = () => {
+  const { overlayState, dispatch } = useContext(OverlayContext);
 
-  if (!mobileView.searchBarActive) {
-    return mobileView.filterSectionActive ? (
+  if (!overlayState.searchOverlay.open) {
+    return overlayState.filterOverlay.open ? (
       <div className="fixed top-[4.25rem] right-0 left-0 h-full w-full overflow-y-auto bg-white">
         <div className="mt-8">
           <SortingDrawer containerCss="px-4 mb-8" />
@@ -21,7 +21,7 @@ export const MobileFilterPage = () => {
         <button
           className="h-10 w-80 rounded bg-toast-blue"
           onClick={() =>
-            dispatch({ type: MobileViewActionTypes.TOGGLE_FILTER_SECTION, payload: true })
+            dispatch({ type: OverlayActionTypes.ToggleFilterOverlay, payload: { open: true } })
           }
         >
           <p className="text-center text-base font-bold text-white">SORT / FILTER</p>

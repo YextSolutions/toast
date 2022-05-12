@@ -1,6 +1,6 @@
 export const GrayWineBottleIcon = (): JSX.Element => (
   <svg width="96" height="144" viewBox="0 0 67 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g clip-path="url(#clip0_434_142)">
+    <g clipPath="url(#clip0_434_142)">
       <path d="M63.7144 103.981H43.9248V242.509H63.7144V103.981Z" fill="white" />
       <path d="M43.9235 10.6875H32.6152V68.6438H43.9235V10.6875Z" fill="white" />
       <path

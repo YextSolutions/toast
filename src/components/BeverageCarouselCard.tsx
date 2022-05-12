@@ -26,7 +26,7 @@ export const BeverageCarouselCard = ({ result }: CardProps) => {
         <div className="flex h-40 w-52 items-center justify-center">
           <ImagePlaceholder
             imgCssClasses="w-24"
-            imgUrl={beverage.primaryPhoto?.image.sourceUrl}
+            imgUrl={beverage.primaryPhoto?.image.url}
             placeholder={<GrayWineBottleIcon />}
             alt={result.name}
           />

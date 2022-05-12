@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaStar, FaStarHalf } from "react-icons/fa";
+import { v4 as uuid } from "uuid";
 
 interface StarRatingProps {
   rating: string;
@@ -27,7 +28,7 @@ export const StarRating = ({ rating }: StarRatingProps) => {
   return (
     <div className="flex text-toast-orange">
       {[...Array(numStars[0])].map((_, i) => (
-        <FaStar size={16} />
+        <FaStar key={uuid()} size={16} />
       ))}
       {numStars[1] === 1 && <FaStarHalf size={16} />}
     </div>

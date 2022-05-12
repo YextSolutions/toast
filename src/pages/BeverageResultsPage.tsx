@@ -12,12 +12,12 @@ import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageCard } from "../components/BeverageCard";
 import { extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
 import classNames from "classnames";
-import { MobileFilterPage } from "./MobileFilterPage";
+import { FilterOverlay } from "../components/FilterOverlay";
 import { SortingDrawer } from "../components/SortingDrawer";
 import { ShakerLoader } from "../components/ShakerLoader";
 import { formatSearchResultsTitle } from "../utils/formatSearchResultsTitle";
 import { BeverageFacets } from "../components/BeverageFacets";
-import { MobileViewContext } from "../providers/MobileViewProvider";
+import { OverlayContext } from "../providers/OverlayProvider";
 import { PageLayout } from "./PageLayout";
 
 export const BeverageResultsPage = (): JSX.Element => {
@@ -28,13 +28,13 @@ export const BeverageResultsPage = (): JSX.Element => {
 
   const urlParams = useParams();
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const answersActions = useAnswersActions();
   const resultsCount = useAnswersState((state) => state.vertical.resultsCount);
   const isLoading = useAnswersState((state) => state.searchStatus.isLoading);
 
-  const { mobileView } = useContext(MobileViewContext);
+  const { overlayState } = useContext(OverlayContext);
 
   useEffect(() => {
     setPage(location.pathname.split("/")[1]);
@@ -50,6 +50,7 @@ export const BeverageResultsPage = (): JSX.Element => {
 
     handleUrlFacets();
 
+    answersActions.setVerticalLimit(21);
     answersActions.executeVerticalQuery();
   }, [urlParams]);
 
@@ -172,12 +173,12 @@ export const BeverageResultsPage = (): JSX.Element => {
     <PageLayout>
       <div className="flex h-full justify-center">
         <div className="absolute top-28 bottom-16 w-full max-w-7xl overflow-auto px-4 md:bottom-0">
-          {mobileView.beverageResultImages[page] && (
+          {overlayState.beverageResultImages[page] && (
             <div className="flex justify-center">
               <div className="py-8">
                 <img
                   className="h-44 w-96 sm:h-[21.75rem] sm:w-[42.75rem]"
-                  src={mobileView.beverageResultImages[page]}
+                  src={overlayState.beverageResultImages[page]}
                 ></img>
               </div>
             </div>
@@ -207,14 +208,14 @@ export const BeverageResultsPage = (): JSX.Element => {
               </div>
               <div>
                 <VerticalResults
-                  customCssClasses={{ results: "grid grid-cols-2 sm:grid-cols-3 gap-4" }}
+                  customCssClasses={{ results: "grid grid-cols-2 md:grid-cols-3 gap-4" }}
                   CardComponent={BeverageCard}
                 />
               </div>
             </div>
           )}
         </div>
-        <MobileFilterPage />
+        <FilterOverlay />
       </div>
     </PageLayout>
   );
