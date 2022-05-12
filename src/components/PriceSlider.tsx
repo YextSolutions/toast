@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Range, getTrackBackground } from "react-range";
 import { useSearchParams } from "react-router-dom";
 import { debounce } from "lodash";
+import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
 
 interface PriceSliderProps {
   min?: number;
@@ -18,6 +19,8 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
 
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const { dispatch } = useContext(MobileViewContext);
+
   useEffect(() => {
     if (searchParams.has("priceRange")) {
       const priceRange = JSON.parse(searchParams.get("priceRange") as string) as {
@@ -31,6 +34,7 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
   const updateUrl = (priceMin: number, priceMax?: number): void => {
     searchParams.set("priceRange", JSON.stringify({ min: priceMin, max: priceMax }));
     setSearchParams(searchParams);
+    dispatch({ type: MobileViewActionTypes.TOGGLE_FILTER_SECTION, payload: false });
   };
 
   const debouncedUpdateUrl = useMemo(() => debounce(updateUrl, 500), []);
@@ -51,7 +55,7 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
   };
 
   return (
-    <div className="px-4">
+    <div className="px-8 md:px-6">
       <div className="mb-8 font-bold">PRICE RANGE</div>
       <div className="px-2">
         <Range

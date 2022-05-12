@@ -1,14 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { MdLocationPin } from "react-icons/md";
 import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
-import { BeverageSearchBar } from "../components/BeverageSearchBar";
-import { ToastHeader } from "../components/ToastHeader";
 import { Beverage } from "../types/Beverage";
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import { CartActionTypes, CartContext } from "../providers/CartProvider";
 import { ProductCounter } from "../components/ProductCounter";
 import { MobileViewContext } from "../providers/MobileViewProvider";
+import { PageLayout } from "./PageLayout";
 
 const liveApiKey = import.meta.env.VITE_LIVE_API_KEY;
 
@@ -18,7 +17,7 @@ interface LocationState {
   };
 }
 
-export const BeverageScreen = (): JSX.Element => {
+export const BeveragePage = (): JSX.Element => {
   const [beverageData, setBeverageData] = useState<Partial<Beverage>>({});
   const [count, setCount] = useState(1);
 
@@ -48,8 +47,7 @@ export const BeverageScreen = (): JSX.Element => {
   }, [location.state]);
 
   return (
-    <>
-      <ToastHeader />
+    <PageLayout>
       <div className="absolute top-28 bottom-16 w-full overflow-auto px-4">
         <div className="my-8 text-sm">
           <BeverageBreadcrumbs
@@ -99,6 +97,6 @@ export const BeverageScreen = (): JSX.Element => {
           </button>
         </div>
       )}
-    </>
+    </PageLayout>
   );
 };

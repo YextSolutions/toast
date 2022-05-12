@@ -3,7 +3,7 @@ import { BeverageFacets } from "../components/BeverageFacets";
 import { SortingDrawer } from "../components/SortingDrawer";
 import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
 
-export const MobileFilterScreen = () => {
+export const MobileFilterPage = () => {
   const { mobileView, dispatch } = useContext(MobileViewContext);
 
   if (!mobileView.searchBarActive) {

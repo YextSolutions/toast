@@ -15,5 +15,5 @@ export const extractPathFromBeverage = (beverage: Partial<Beverage>): string | u
 
   if (!path) return;
 
-  return path.concat(`/page/${beverage.id}`);
+  return path.concat(`/${beverage.name}/${beverage.id}`);
 };

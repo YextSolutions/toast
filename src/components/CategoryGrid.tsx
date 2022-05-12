@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 import { useNavigate } from "react-router-dom";
 import { ImagePlaceholder } from "./ImagePlaceholder";
-import { GrayWineBottle } from "./BeverageCard";
+import { GrayWineBottleIcon } from "./GrayWineBottleIcon";
 
 export interface CategoryGridProps {
   title: string;
@@ -39,7 +39,7 @@ export const CategoryGrid = ({
                 <ImagePlaceholder
                   imgCssClasses="w-40 h-44 object-cover"
                   imgUrl={option.img}
-                  placeholder={GrayWineBottle()}
+                  placeholder={GrayWineBottleIcon()}
                   alt={"category"}
                 />
                 <div className="mt-1.5 text-xs font-semibold text-toast-blue hover:underline sm:text-sm">

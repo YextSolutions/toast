@@ -126,7 +126,7 @@ export const BeverageSearchBar = () => {
       });
   };
 
-  const handleSubmit = (searchEventData: { verticalKey?: string; query?: string }) => {
+  const onSearch = (searchEventData: { verticalKey?: string; query?: string }) => {
     const { query } = searchEventData;
     searchHandler(`/search?query=${query}`);
   };
@@ -144,7 +144,7 @@ export const BeverageSearchBar = () => {
         optionContainer: "hidden",
       }}
       cssCompositionMethod="assign"
-      onSearch={handleSubmit}
+      onSearch={onSearch}
       placeholder="Search beer, wine, liqour "
       visualAutocompleteConfig={{
         entityPreviewSearcher,

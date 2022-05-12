@@ -1,16 +1,16 @@
 import ImageAssets from "../assets/imageAssets";
 import { BeverageTag } from "../components/CarouselSection";
 import { RouteData } from "../PageRouter";
-import { BeverageResultsScreen } from "../screens/BeverageResultsScreen";
-import { BeverageScreen } from "../screens/BeverageScreen";
-import { CartScreen } from "../screens/CartScreen";
-import { SearchScreen } from "../screens/SearchScreen";
+import { BeverageResultsPage } from "../pages/BeverageResultsPage";
+import { BeveragePage } from "../pages/BeveragePage";
+import { CartPage } from "../pages/CartPage";
+import { SearchPage } from "../pages/SearchPage";
 
 export const routeConfig: RouteData[] = [
   {
     path: "/",
     page: (
-      <SearchScreen
+      <SearchPage
         categoryGrid={{
           title: "BROWSE CATEGORIES",
           options: [
@@ -49,12 +49,12 @@ export const routeConfig: RouteData[] = [
   },
   {
     path: "/search",
-    page: <BeverageResultsScreen />,
+    page: <BeverageResultsPage />,
   },
   {
     path: "/wine",
     page: (
-      <SearchScreen
+      <SearchPage
         categoryGrid={{
           title: "WINE",
           options: [
@@ -92,7 +92,7 @@ export const routeConfig: RouteData[] = [
   {
     path: "/beer",
     page: (
-      <SearchScreen
+      <SearchPage
         categoryGrid={{
           title: "BEER",
           options: [
@@ -126,7 +126,7 @@ export const routeConfig: RouteData[] = [
   {
     path: "/liquor",
     page: (
-      <SearchScreen
+      <SearchPage
         categoryGrid={{
           title: "LIQUOR",
           options: [
@@ -161,13 +161,16 @@ export const routeConfig: RouteData[] = [
       />
     ),
   },
-  { path: "/:alcoholType/all", page: <BeverageResultsScreen /> },
-  { path: "/:alcoholType/:category", page: <BeverageResultsScreen /> },
+  { path: "/:alcoholType/all", page: <BeverageResultsPage /> },
+  { path: "/:alcoholType/:category", page: <BeverageResultsPage /> },
   {
     path: "/:alcoholType/:category/:subCategory",
-    page: <BeverageResultsScreen />,
+    page: <BeverageResultsPage />,
   },
-  { path: "/:alcoholType/:category/page/:beverageId", page: <BeverageScreen /> },
-  { path: "/:alcoholType/:category/:subCategory/page/:beverageId", page: <BeverageScreen /> },
-  { path: "/cart", page: <CartScreen /> },
+  { path: "/:alcoholType/:category/:beverageName/:beverageId", page: <BeveragePage /> },
+  {
+    path: "/:alcoholType/:category/:subCategory/:beverageName/:beverageId",
+    page: <BeveragePage />,
+  },
+  { path: "/cart", page: <CartPage /> },
 ];
