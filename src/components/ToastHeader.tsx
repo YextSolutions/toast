@@ -54,31 +54,31 @@ export const ToastHeader = (): JSX.Element => {
                 </button>
               )}
             </div>
-            <div className=" flex items-center justify-center md:justify-start md:pl-4">
+            <div className="flex items-center justify-center md:justify-start md:pl-4">
               <Link
-                className="flex items-center text-3xl font-semibold text-toast-red"
+                className="text-3xl font-semibold text-toast-red"
                 to="/"
                 onClick={() => clearSearchState()}
               >
-                <span>TOAST</span>
-                <div className="hidden pl-4 text-sm text-black md:flex">
-                  <Link className="px-4" to="/wine">
-                    WINE
-                  </Link>
-                  <Link className="px-4" to="/beer">
-                    BEER
-                  </Link>
-                  <Link className="px-4" to="/liquor">
-                    SPIRITS
-                  </Link>
-                  <div className="px-4">OTHER</div>
-                </div>
+                TOAST
               </Link>
+              <div className="hidden pl-4 text-sm text-black md:flex">
+                <Link className="px-4" to="/wine">
+                  WINE
+                </Link>
+                <Link className="px-4" to="/beer">
+                  BEER
+                </Link>
+                <Link className="px-4" to="/liquor">
+                  SPIRITS
+                </Link>
+                <div className="px-4">OTHER</div>
+              </div>
               <div
                 className={classNames("md:block", {
                   "fixed top-16 h-full w-full overflow-y-scroll bg-white":
-                    mobileView.searchBarActive,
-                  hidden: !mobileView.searchBarActive,
+                    overlayState.searchOverlay.open,
+                  hidden: !overlayState.searchOverlay.open,
                 })}
               >
                 <BeverageSearchBar />

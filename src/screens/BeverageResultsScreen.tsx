@@ -13,7 +13,7 @@ import { BeverageCard } from "../components/BeverageCard";
 import { ToastHeader } from "../components/ToastHeader";
 import { extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
 import classNames from "classnames";
-import { MobileFilterScreen } from "./MobileFilterScreen";
+import { MobileFilterOverlay } from "../components/MobileFilterOverlay";
 import { SortingDrawer } from "../components/SortingDrawer";
 import { ShakerLoader } from "../components/ShakerLoader";
 import { formatSearchResultsTitle } from "../utils/formatSearchResultsTitle";
@@ -214,7 +214,7 @@ export const BeverageResultsScreen = (): JSX.Element => {
           </div>
         )}
       </div>
-      <MobileFilterScreen />
+      <MobileFilterOverlay />
     </div>
   );
 };

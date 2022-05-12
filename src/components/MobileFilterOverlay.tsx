@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { BeverageFacets } from "../components/BeverageFacets";
-import { SortingDrawer } from "../components/SortingDrawer";
+import { BeverageFacets } from "./BeverageFacets";
+import { SortingDrawer } from "./SortingDrawer";
 import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
 
-export const MobileFilterScreen = () => {
+export const MobileFilterOverlay = () => {
   const { mobileView, dispatch } = useContext(MobileViewContext);
 
   if (!mobileView.searchBarActive) {

@@ -1,35 +1,34 @@
-import { Context, createContext, useReducer } from "react";
+import { createContext, Dispatch, useReducer } from "react";
 import ImageAssets from "../assets/imageAssets";
-import { ActionMap } from "./CartProvider";
 
-interface MobileView {
-  searchBarActive: boolean;
-  filterSectionActive: boolean;
+interface OverlayState {
+  searchOverlay: { open: boolean };
+  filterOverlay: { open: boolean };
 
   //TODO: Refactor to remove from context
   beverageResultImages: Record<string, string>;
 }
 
-export enum MobileViewActionTypes {
-  TOGGLE_SEARCH_SCREEN = "TOGGLE_SEARCH_SCREEN",
-  TOGGLE_FILTER_SECTION = "TOGGLE_FILTER_SECTION",
+export enum OverlayActionTypes {
+  ToggleSearchOverlay,
+  ToggleFilterOverlay,
 }
 
-type MobileViewPayload = {
-  [MobileViewActionTypes.TOGGLE_SEARCH_SCREEN]: boolean;
-  [MobileViewActionTypes.TOGGLE_FILTER_SECTION]: boolean;
-};
-
-export type MobileViewActions = ActionMap<MobileViewPayload>[keyof ActionMap<MobileViewPayload>];
-
-interface MobileViewContext {
-  mobileView: MobileView;
-  dispatch: React.Dispatch<MobileViewActions>;
+export interface ToggleSearchOverlay {
+  type: OverlayActionTypes.ToggleSearchOverlay;
+  payload: { open: boolean };
 }
 
-const initialState = {
-  searchBarActive: false,
-  filterSectionActive: false,
+export interface ToggleFilterOverlay {
+  type: OverlayActionTypes.ToggleFilterOverlay;
+  payload: { open: boolean };
+}
+
+export type OverlayActions = ToggleSearchOverlay | ToggleFilterOverlay;
+
+const initialState: OverlayState = {
+  searchOverlay: { open: false },
+  filterOverlay: { open: false },
   beverageResultImages: {
     beer: ImageAssets.beerToast,
     wine: ImageAssets.wineToast,
@@ -38,27 +37,28 @@ const initialState = {
   },
 };
 
-export const MobileViewReducer = (state = initialState, action: MobileViewActions) => {
+export const OverlayReducer = (state = initialState, action: OverlayActions) => {
   switch (action.type) {
-    case MobileViewActionTypes.TOGGLE_SEARCH_SCREEN:
-      return { ...state, searchBarActive: action.payload };
-    case MobileViewActionTypes.TOGGLE_FILTER_SECTION:
-      return { ...state, filterSectionActive: action.payload };
+    case OverlayActionTypes.ToggleSearchOverlay:
+      return { ...state, searchOverlay: { open: action.payload.open } };
+    case OverlayActionTypes.ToggleFilterOverlay:
+      return { ...state, filterOverlay: { open: action.payload.open } };
     default:
       return state;
   }
 };
 
-const MobileViewContext: Context<MobileViewContext> = createContext({} as MobileViewContext);
+const OverlayContext = createContext<{
+  overlayState: OverlayState;
+  dispatch: Dispatch<OverlayActions>;
+}>({ overlayState: initialState, dispatch: () => {} });
 
-const MobileViewProvider: React.FC = ({ children }) => {
-  const [mobileView, dispatch] = useReducer(MobileViewReducer, initialState);
+const OverlayProvider: React.FC = ({ children }) => {
+  const [overlayState, dispatch] = useReducer(OverlayReducer, initialState);
 
   return (
-    <MobileViewContext.Provider value={{ mobileView, dispatch }}>
-      {children}
-    </MobileViewContext.Provider>
+    <OverlayContext.Provider value={{ overlayState, dispatch }}>{children}</OverlayContext.Provider>
   );
 };
 
-export { MobileViewProvider, MobileViewContext };
+export { OverlayProvider, OverlayContext };
