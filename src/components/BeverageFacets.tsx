@@ -2,6 +2,7 @@ import { Matcher } from "@yext/answers-headless-react";
 import { Filters } from "@yext/answers-react-components";
 import { FacetTiles } from "./FacetTiles";
 import { PriceSlider } from "./PriceSlider";
+import { v4 as uuid } from "uuid";
 
 export const BeverageFacets = (): JSX.Element => {
   return (
@@ -25,6 +26,7 @@ export const BeverageFacets = (): JSX.Element => {
                   <div className="mb-6 font-bold">ABV</div>
                   {abvFacet.options.map((o, _i) => (
                     <Filters.CheckboxOption
+                      key={uuid()}
                       label={`${o.displayName} (${o.count})`}
                       value={o.value}
                       matcher={Matcher.Between}

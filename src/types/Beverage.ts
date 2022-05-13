@@ -14,34 +14,23 @@ type Image = {
   thumbnails?: Thumbnail[];
 };
 
-// TODO: clean up interface and validation functions
+type Photo = {
+  image: Image;
+};
 export interface Beverage {
   id: string;
   name: string;
   description: string;
+  primaryPhoto: Photo;
   c_usState: string;
   c_originCountry: string;
   c_alcoholType: string;
   c_category: string;
   c_subCategory: string;
   c_price: string;
-  primaryPhoto: {
-    image: {
-      url: string;
-      width: string;
-      height: string;
-      sourceUrl: string;
-      thumbnails: {
-        url: string;
-        width: string;
-        height: string;
-      }[];
-    };
-  };
-  c_priceRange: string;
+  c_rating: string;
 }
 
-// TODO: either pass as prop to other components or add to util folder
 export const beverageDataForRender = (result: Result | undefined): Partial<Beverage> => {
   if (!result) return {};
 
@@ -57,6 +46,7 @@ export const beverageDataForRender = (result: Result | undefined): Partial<Bever
     c_alcoholType: result.rawData.c_alcoholType,
     c_category: result.rawData.c_category,
     c_subCategory: result.rawData.c_subCategory,
+    c_rating: result.rawData.c_rating,
   };
 
   return validateData(data, {
@@ -65,17 +55,22 @@ export const beverageDataForRender = (result: Result | undefined): Partial<Bever
     description: isString,
     c_usState: isString,
     c_originCountry: isString,
-    primaryPhoto: isPhotoGallery,
+    primaryPhoto: isPhoto,
     c_price: isString,
     c_priceRange: isString,
     c_alcoholType: isString,
     c_category: isString,
     c_subCategory: isString,
+    c_rating: isString,
   });
 };
 
-const isPhotoGallery = (data: any) => {
-  return true;
+const isPhoto = (data: any): data is Photo => {
+  if (typeof data !== "object" || data === null) {
+    return false;
+  }
+
+  return data.image && isImage(data.image);
 };
 
 const isImage = (data: any): data is Image => {

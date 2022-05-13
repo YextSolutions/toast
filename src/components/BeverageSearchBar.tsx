@@ -25,7 +25,7 @@ import { Beverage, beverageDataForRender } from "../types/Beverage";
 import { extractPathFromBeverageType } from "../utils/extractPathFromBeverageType";
 import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 import { BeverageCard } from "./BeverageCard";
-import { MobileViewActionTypes, MobileViewContext } from "../providers/MobileViewProvider";
+import { OverlayActionTypes, OverlayContext } from "../providers/OverlayProvider";
 
 export const BeverageSearchBar = () => {
   const entityPreviewSearcher = provideAnswersHeadless({
@@ -35,7 +35,7 @@ export const BeverageSearchBar = () => {
     locale: "en",
     endpoints: answersSandboxEndpoints,
   });
-  const { dispatch } = useContext(MobileViewContext);
+  const { dispatch } = useContext(OverlayContext);
 
   const navigate = useNavigate();
 
@@ -121,7 +121,7 @@ export const BeverageSearchBar = () => {
   const searchHandler = (path?: string, beverage?: Partial<Beverage>) => {
     answersActions.setSortBys([]);
     answersActions.resetFacets();
-    dispatch({ type: MobileViewActionTypes.TOGGLE_SEARCH_SCREEN, payload: false });
+    dispatch({ type: OverlayActionTypes.ToggleSearchOverlay, payload: { open: false } });
 
     path &&
       navigate(path, {
@@ -129,7 +129,7 @@ export const BeverageSearchBar = () => {
       });
   };
 
-  const handleSubmit = (searchEventData: { verticalKey?: string; query?: string }) => {
+  const onSearch = (searchEventData: { verticalKey?: string; query?: string }) => {
     const { query } = searchEventData;
     searchHandler(`/search?query=${query}`);
   };
@@ -147,7 +147,7 @@ export const BeverageSearchBar = () => {
         optionContainer: "hidden",
       }}
       cssCompositionMethod="assign"
-      onSearch={handleSubmit}
+      onSearch={onSearch}
       placeholder="Search beer, wine, liqour "
       visualAutocompleteConfig={{
         entityPreviewSearcher,
