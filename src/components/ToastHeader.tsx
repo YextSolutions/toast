@@ -38,7 +38,7 @@ export const ToastHeader = (): JSX.Element => {
     <header className="absolute top-0 z-20 w-full">
       <div
         className={classNames("flex h-16 w-full items-center bg-toast-orange", {
-          "h-5": overlayState.searchOverlay.open,
+          "h-5": overlayState.filterOverlay.open,
         })}
       >
         {!overlayState.filterOverlay.open && (
