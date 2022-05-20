@@ -4,7 +4,7 @@ import { FacetTiles } from "./FacetTiles";
 import { PriceSlider } from "./PriceSlider";
 import { v4 as uuid } from "uuid";
 
-export const BeverageFacets = (): JSX.Element => {
+export const BeverageFilters = (): JSX.Element => {
   return (
     <Filters.Facets searchOnChange={true}>
       {(facets) => {
@@ -31,7 +31,7 @@ export const BeverageFacets = (): JSX.Element => {
                       value={o.value}
                       matcher={Matcher.Between}
                       customCssClasses={{
-                        label: "text-neutral md:text-sm text-base  font-normal cursor-pointer",
+                        label: "text-neutral md:text-sm text-base  font-normal cursor-pointer pl-2",
                         input:
                           "w-3.5 h-3.5 form-checkbox cursor-pointer border border-gray-300 rounded-sm text-toast-orange focus:ring-toast-orange",
                       }}

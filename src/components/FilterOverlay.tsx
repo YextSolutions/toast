@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { BeverageFacets } from "./BeverageFacets";
+import { BeverageFilters } from "./BeverageFilters";
 import { SortingDrawer } from "./SortingDrawer";
 import { OverlayActionTypes, OverlayContext } from "../providers/OverlayProvider";
 
@@ -12,7 +12,7 @@ export const FilterOverlay = () => {
         <div className="mt-8">
           <SortingDrawer containerCss="px-4 mb-8" />
           <div className="pb-16">
-            <BeverageFacets />
+            <BeverageFilters />
           </div>
         </div>
       </div>

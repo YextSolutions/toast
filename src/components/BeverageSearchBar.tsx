@@ -9,6 +9,7 @@ import {
   provideAnswersHeadless,
   Result,
   useAnswersActions,
+  useAnswersState,
   VerticalResults as VerticalResultsData,
 } from "@yext/answers-headless-react";
 import { useContext } from "react";
@@ -60,6 +61,8 @@ export const BeverageSearchBar = () => {
       </div>
     );
   };
+
+  const query = useAnswersState((state) => state.query);
 
   const renderFilterAutocomplete = (results: Result[] | undefined) => {
     if (!results || results.length === 0) return <></>;
@@ -149,7 +152,7 @@ export const BeverageSearchBar = () => {
       visualAutocompleteConfig={{
         entityPreviewSearcher,
         renderEntityPreviews,
-        includedVerticals: ["autocomplete", "beverages"],
+        // includedVerticals: ["autocomplete", "beverages"],
       }}
     />
   );

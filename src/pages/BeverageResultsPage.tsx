@@ -16,7 +16,7 @@ import { FilterOverlay } from "../components/FilterOverlay";
 import { SortingDrawer } from "../components/SortingDrawer";
 import { ShakerLoader } from "../components/ShakerLoader";
 import { formatSearchResultsTitle } from "../utils/formatSearchResultsTitle";
-import { BeverageFacets } from "../components/BeverageFacets";
+import { BeverageFilters } from "../components/BeverageFilters";
 import { OverlayContext } from "../providers/OverlayProvider";
 import { PageLayout } from "./PageLayout";
 
@@ -37,6 +37,10 @@ export const BeverageResultsPage = (): JSX.Element => {
   const { overlayState } = useContext(OverlayContext);
 
   useEffect(() => {
+    handleUrlFacets();
+  }, []);
+
+  useEffect(() => {
     setPage(location.pathname.split("/")[1]);
 
     const selectedFilters: SelectableFilter[] = [];
@@ -48,11 +52,9 @@ export const BeverageResultsPage = (): JSX.Element => {
 
     answersActions.setStaticFilters(selectedFilters);
 
-    handleUrlFacets();
-
     answersActions.setVerticalLimit(21);
     answersActions.executeVerticalQuery();
-  }, [urlParams]);
+  }, [searchParams]);
 
   const extractBeverageStaticFiltersFromUrlParams = (): SelectableFilter[] => {
     const { alcoholType, category, subCategory } = extractBeverageInfoFromUrl(urlParams);
@@ -204,7 +206,7 @@ export const BeverageResultsPage = (): JSX.Element => {
           ) : (
             <div className="flex">
               <div className="hidden w-1/3 md:block">
-                <BeverageFacets />
+                <BeverageFilters />
               </div>
               <div>
                 <VerticalResults

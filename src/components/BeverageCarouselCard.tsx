@@ -22,7 +22,7 @@ export const BeverageCarouselCard = ({ result }: CardProps) => {
 
   return (
     <div className="flex flex-col" onClick={() => handleClick()}>
-      <div className="mx-1 border border-toast-dark-orange">
+      <div className="mx-1  bg-toast-light-orange">
         <div className="flex h-40 w-52 items-center justify-center">
           <ImagePlaceholder
             imgCssClasses="w-24"

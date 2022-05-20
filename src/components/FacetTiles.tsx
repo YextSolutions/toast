@@ -1,8 +1,8 @@
-import { DisplayableFacet, NumberRangeValue } from "@yext/answers-headless-react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { DisplayableFacet, Matcher, NumberRangeValue } from "@yext/answers-headless-react";
+import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { useSearchParams } from "react-router-dom";
-import { OverlayActionTypes, OverlayContext } from "../providers/OverlayProvider";
+import { Filters } from "@yext/answers-react-components";
 
 interface FacetTilesProps {
   facet: DisplayableFacet;
@@ -18,7 +18,7 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { dispatch } = useContext(OverlayContext);
+  const filterContext = Filters.useFiltersContext();
 
   useEffect(() => {
     if (outerContainerRef.current) {
@@ -27,10 +27,10 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
     }
   }, [outerContainerRef.current?.clientHeight]);
 
-  const reorderFacetOptions = (facet: DisplayableFacet): DisplayableFacet => {
+  const reorderFacetOptions = () => {
     const selectedOptions = facet.options.filter((o) => o.selected);
     const unselectedOptions = facet.options.filter((o) => !o.selected);
-    return { ...facet, options: [...selectedOptions, ...unselectedOptions] };
+    return [...selectedOptions, ...unselectedOptions];
   };
 
   const handleChange = (expand: boolean) => {
@@ -51,6 +51,13 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
       } else {
         existingUrlFacets[facet.fieldId] = [optionValue.toString()];
       }
+
+      filterContext.selectFilter({
+        selected: true,
+        fieldId: facet.fieldId,
+        value: optionValue,
+        matcher: Matcher.Equals,
+      });
     } else {
       existingUrlFacets[facet.fieldId] = existingUrlFacets[facet.fieldId].filter(
         (o) => o !== optionValue.toString()
@@ -58,13 +65,20 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
       if (existingUrlFacets[facet.fieldId].length === 0) {
         delete existingUrlFacets[facet.fieldId];
       }
+
+      filterContext.selectFilter({
+        selected: false,
+        fieldId: facet.fieldId,
+        value: optionValue,
+        matcher: Matcher.Equals,
+      });
     }
 
-    searchParams.delete("facets");
-    searchParams.append("facets", JSON.stringify(existingUrlFacets));
-    setSearchParams(searchParams);
+    Object.keys(existingUrlFacets).length > 0
+      ? searchParams.set("facets", JSON.stringify(existingUrlFacets))
+      : searchParams.delete("facets");
 
-    dispatch({ type: OverlayActionTypes.ToggleSearchOverlay, payload: { open: false } });
+    setSearchParams(searchParams);
   };
 
   return (
@@ -81,10 +95,10 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
           }
         )}
       >
-        {reorderFacetOptions(facet).options.map((o) => (
+        {reorderFacetOptions().map((o) => (
           <div
             className={classNames(
-              "mr-3 mb-3 flex w-fit items-center border border-toast-orange hover:bg-toast-orange",
+              "mr-3 mb-3 flex w-fit items-center border border-toast-orange md:hover:bg-toast-orange",
               { "bg-toast-orange": o.selected, "bg-toast-light-orange": !o.selected }
             )}
             onClick={() => handleTileClick(o.value, !o.selected)}
