@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 import { useNavigate } from "react-router-dom";
 import { ImagePlaceholder } from "./ImagePlaceholder";
-import { GrayWineBottleIcon } from "./GrayWineBottleIcon";
+import { GrayWineBottleIcon } from "../icons/GrayWineBottleIcon";
 
 export interface CategoryGridProps {
   title: string;

@@ -2,7 +2,7 @@ import { CardProps } from "@yext/answers-react-components";
 import { useNavigate } from "react-router-dom";
 import { beverageDataForRender } from "../types/Beverage";
 import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
-import { GrayWineBottleIcon } from "./GrayWineBottleIcon";
+import { GrayWineBottleIcon } from "../icons/GrayWineBottleIcon";
 import { ImagePlaceholder } from "./ImagePlaceholder";
 
 export const BeverageCarouselCard = ({ result }: CardProps) => {

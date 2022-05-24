@@ -8,7 +8,8 @@ import { useAnswersActions } from "@yext/answers-headless-react";
 import { CartContext } from "../providers/CartProvider";
 import { BeverageSearchBar } from "./BeverageSearchBar";
 import { OverlayActionTypes, OverlayContext } from "../providers/OverlayProvider";
-import { MagnifyingGlassIcon } from "./MagnifyingGlassIcon";
+import { MagnifyingGlassIcon } from "../icons/MagnifyingGlassIcon";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 
 export const ToastHeader = (): JSX.Element => {
   const [totalCartItems, setTotalCartItems] = useState(0);
@@ -18,6 +19,18 @@ export const ToastHeader = (): JSX.Element => {
   const { overlayState, dispatch } = useContext(OverlayContext);
   const cartContext = useContext(CartContext);
   const { cart } = cartContext;
+
+  const { width } = useWindowDimensions();
+
+  useEffect(() => {
+    if (width > 768) {
+      searchBarChangeHandler(false);
+      dispatch({
+        type: OverlayActionTypes.ToggleFilterOverlay,
+        payload: { open: false },
+      });
+    }
+  }, [width]);
 
   useEffect(() => {
     setTotalCartItems(cart.cartItems.map((item) => item.quantity).reduce((a, b) => a + b, 0));

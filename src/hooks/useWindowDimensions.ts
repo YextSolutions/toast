@@ -1,4 +1,3 @@
-// use window dimensions
 import { useState, useEffect } from "react";
 
 function getWindowDimensions() {
@@ -10,9 +9,7 @@ function getWindowDimensions() {
 }
 
 export default function useWindowDimensions() {
-  const [windowDimensions, setWindowDimensions] = useState(
-    getWindowDimensions()
-  );
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
   useEffect(() => {
     function handleResize() {

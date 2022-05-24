@@ -5,7 +5,7 @@ import { beverageDataForRender } from "../types/Beverage";
 import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 import { ImagePlaceholder } from "./ImagePlaceholder";
 import { StarRating } from "./StarRating";
-import { GrayWineBottleIcon } from "./GrayWineBottleIcon";
+import { GrayWineBottleIcon } from "../icons/GrayWineBottleIcon";
 
 interface BeverageCardProps {
   result?: Result;
