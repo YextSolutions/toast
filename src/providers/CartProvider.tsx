@@ -1,18 +1,6 @@
 import { Context, createContext, useEffect, useReducer } from "react";
 import { Beverage } from "../types/Beverage";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ActionMap<M extends { [index: string]: any }> = {
-  [Key in keyof M]: M[Key] extends undefined
-    ? {
-        type: Key;
-      }
-    : {
-        type: Key;
-        payload: M[Key];
-      };
-};
-
 export interface Cart {
   cartItems: {
     beverage: Partial<Beverage>;
@@ -22,23 +10,21 @@ export interface Cart {
 }
 
 export enum CartActionTypes {
-  ADD_ITEM = "ADD_ITEM",
-  REMOVE_ITEM = "REMOVE_ITEM",
-  CLEAR_CART = "CLEAR_CART",
+  AddItem,
+  RemoveItem,
 }
 
-type CartPayload = {
-  [CartActionTypes.ADD_ITEM]: {
-    beverage: Partial<Beverage>;
-    quantity: number;
-  };
-  [CartActionTypes.REMOVE_ITEM]: {
-    beverage: Partial<Beverage>;
-  };
-  [CartActionTypes.CLEAR_CART]: {};
-};
+export interface AddItem {
+  type: CartActionTypes.AddItem;
+  payload: { beverage: Partial<Beverage>; quantity: number };
+}
 
-export type CartActions = ActionMap<CartPayload>[keyof ActionMap<CartPayload>];
+export interface RemoveItem {
+  type: CartActionTypes.RemoveItem;
+  payload: { beverage: Partial<Beverage> };
+}
+
+export type CartActions = AddItem | RemoveItem;
 
 interface CartContext {
   cart: Cart;
@@ -51,7 +37,7 @@ const initialState = JSON.parse(
 
 export const cartReducer = (state = initialState as Cart, action: CartActions) => {
   switch (action.type) {
-    case CartActionTypes.ADD_ITEM:
+    case CartActionTypes.AddItem:
       const itemToAdd = state.cartItems.find(
         (item) => item.beverage.id === action.payload.beverage.id
       );
@@ -65,7 +51,7 @@ export const cartReducer = (state = initialState as Cart, action: CartActions) =
       }
       return { ...state, totalPrice: calculateTotalPrice(state.cartItems) };
 
-    case CartActionTypes.REMOVE_ITEM:
+    case CartActionTypes.RemoveItem:
       const itemToRemove = state.cartItems.find(
         (item) => item.beverage.id === action.payload.beverage.id
       );
@@ -78,9 +64,6 @@ export const cartReducer = (state = initialState as Cart, action: CartActions) =
         }
         return { ...state, totalPrice: calculateTotalPrice(state.cartItems) };
       }
-    case CartActionTypes.CLEAR_CART:
-      state.cartItems = [];
-      return { ...state, totalPrice: 0 };
     default:
       return state;
   }

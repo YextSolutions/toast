@@ -16,12 +16,12 @@ export const CartPage = () => {
 
     if (changer.action === "add") {
       cartContext.dispatch({
-        type: CartActionTypes.ADD_ITEM,
+        type: CartActionTypes.AddItem,
         payload: { beverage: { id: changer.productId }, quantity: 1 },
       });
     } else if (changer.action === "subtract") {
       cartContext.dispatch({
-        type: CartActionTypes.REMOVE_ITEM,
+        type: CartActionTypes.RemoveItem,
         payload: { beverage: { id: changer.productId } },
       });
     }

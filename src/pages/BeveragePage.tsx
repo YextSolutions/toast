@@ -91,7 +91,7 @@ export const BeveragePage = (): JSX.Element => {
               className="ml-6 h-10 w-52 rounded bg-toast-blue"
               onClick={() =>
                 cartContext.dispatch({
-                  type: CartActionTypes.ADD_ITEM,
+                  type: CartActionTypes.AddItem,
                   payload: { beverage: beverageData, quantity: count },
                 })
               }

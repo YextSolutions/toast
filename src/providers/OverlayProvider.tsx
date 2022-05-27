@@ -1,5 +1,4 @@
 import { createContext, Dispatch, useReducer } from "react";
-import ImageAssets from "../assets/imageAssets";
 
 interface OverlayState {
   searchOverlay: { open: boolean };
