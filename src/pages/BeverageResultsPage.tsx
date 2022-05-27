@@ -6,7 +6,7 @@ import {
   useAnswersState,
 } from "@yext/answers-headless-react";
 import { VerticalResults } from "@yext/answers-react-components";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageCard } from "../components/BeverageCard";
@@ -17,8 +17,8 @@ import { SortingDrawer } from "../components/SortingDrawer";
 import { ShakerLoader } from "../components/ShakerLoader";
 import { formatSearchResultsTitle } from "../utils/formatSearchResultsTitle";
 import { BeverageFilters } from "../components/BeverageFilters";
-import { OverlayContext } from "../providers/OverlayProvider";
 import { PageLayout } from "./PageLayout";
+import { getSearchPageImage } from "../utils/getSearchPageImage";
 
 export const BeverageResultsPage = (): JSX.Element => {
   const [page, setPage] = useState("");
@@ -33,8 +33,6 @@ export const BeverageResultsPage = (): JSX.Element => {
   const answersActions = useAnswersActions();
   const resultsCount = useAnswersState((state) => state.vertical.resultsCount);
   const isLoading = useAnswersState((state) => state.searchStatus.isLoading);
-
-  const { overlayState } = useContext(OverlayContext);
 
   useEffect(() => {
     handleUrlFacets();
@@ -175,16 +173,16 @@ export const BeverageResultsPage = (): JSX.Element => {
     <PageLayout>
       <div className="flex h-full justify-center">
         <div className="absolute top-28 bottom-16 w-full max-w-7xl overflow-auto px-4 md:bottom-0">
-          {overlayState.beverageResultImages[page] && (
+          {
             <div className="flex justify-center">
               <div className="py-8">
                 <img
                   className="h-44 w-96 sm:h-[21.75rem] sm:w-[42.75rem]"
-                  src={overlayState.beverageResultImages[page]}
+                  src={getSearchPageImage(page)}
                 ></img>
               </div>
             </div>
-          )}
+          }
           <div className="my-4 px-4 text-sm">
             <BeverageBreadcrumbs />
           </div>
@@ -210,7 +208,10 @@ export const BeverageResultsPage = (): JSX.Element => {
               </div>
               <div>
                 <VerticalResults
-                  customCssClasses={{ results: "grid grid-cols-2 md:grid-cols-3 gap-4" }}
+                  customCssClasses={{
+                    results: "grid grid-cols-2 md:grid-cols-3 gap-4",
+                    paginationContainer: "pb-8",
+                  }}
                   CardComponent={BeverageCard}
                 />
               </div>

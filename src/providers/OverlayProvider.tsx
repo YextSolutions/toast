@@ -4,9 +4,6 @@ import ImageAssets from "../assets/imageAssets";
 interface OverlayState {
   searchOverlay: { open: boolean };
   filterOverlay: { open: boolean };
-
-  //TODO: Refactor to remove from context
-  beverageResultImages: Record<string, string>;
 }
 
 export enum OverlayActionTypes {
@@ -29,12 +26,6 @@ export type OverlayActions = ToggleSearchOverlay | ToggleFilterOverlay;
 const initialState: OverlayState = {
   searchOverlay: { open: false },
   filterOverlay: { open: false },
-  beverageResultImages: {
-    beer: ImageAssets.beerToast,
-    wine: ImageAssets.wineToast,
-    liquor: ImageAssets.cocktailToast,
-    search: ImageAssets.cocktails,
-  },
 };
 
 export const OverlayReducer = (state = initialState, action: OverlayActions) => {
