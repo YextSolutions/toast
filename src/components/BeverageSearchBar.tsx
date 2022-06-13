@@ -2,7 +2,6 @@ import {
   FocusedItemData,
   isStringOrHighlightedValue,
   SearchBar,
-  renderHighlightedValue,
   DropdownItem,
 } from "@yext/answers-react-components";
 import {
@@ -13,16 +12,13 @@ import {
   VerticalResults as VerticalResultsData,
 } from "@yext/answers-headless-react";
 import { useContext } from "react";
-import { Divider } from "./Divider";
 import {
   answersApiKey,
   answersExperienceKey,
   answersSandboxEndpoints,
 } from "../config/answersConfig";
 import { useNavigate } from "react-router-dom";
-import { alcholicBeverageTypeDataForRender } from "../types/BeverageType";
 import { Beverage, beverageDataForRender } from "../types/Beverage";
-import { extractPathFromBeverageType } from "../utils/extractPathFromBeverageType";
 import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 import { BeverageCard } from "./BeverageCard";
 import { OverlayActionTypes, OverlayContext } from "../providers/OverlayProvider";
@@ -46,54 +42,18 @@ export const BeverageSearchBar = () => {
     verticalResultsArray: VerticalResultsData[],
     onSubmit: (value: string, _index: number, itemData?: FocusedItemData) => void
   ) => {
-    const alcoholicBeverageTypeResults = verticalResultsArray.find(
-      (verticalResult) => verticalResult.verticalKey === "autocomplete"
-    )?.results;
-
     const beverageResults = verticalResultsArray.find(
       (verticalResult) => verticalResult.verticalKey === "beverages"
     )?.results;
 
     return (
       <div className="max-h-max overflow-y-scroll sm:max-h-96 sm:shadow-2xl">
-        {renderFilterAutocomplete(alcoholicBeverageTypeResults)}
         {renderBeveragesAutocomplete(beverageResults)}
       </div>
     );
   };
 
   const query = useAnswersState((state) => state.query);
-
-  const renderFilterAutocomplete = (results: Result[] | undefined) => {
-    if (!results || results.length === 0) return <></>;
-
-    return (
-      <div>
-        {results.slice(0, 3).map((result) => {
-          const beverageTypeData = alcholicBeverageTypeDataForRender(result);
-          const path = extractPathFromBeverageType(beverageTypeData);
-
-          const title = isStringOrHighlightedValue(result.highlightedFields?.name)
-            ? result.highlightedFields?.name
-            : result.name;
-
-          return title && result.name ? (
-            <DropdownItem value={result.name} onClick={() => searchHandler(path)}>
-              <div className="py-1.5 px-3.5 hover:bg-toast-gray">
-                {renderHighlightedValue(title, {
-                  nonHighlighted: "text-primary text-black text-base ",
-                  highlighted: "text-toast-dark-orange text-base",
-                })}
-                <Divider />
-              </div>
-            </DropdownItem>
-          ) : (
-            <></>
-          );
-        })}
-      </div>
-    );
-  };
 
   const renderBeveragesAutocomplete = (results: Result[] | undefined) => {
     if (!results || results.length === 0) return <></>;
