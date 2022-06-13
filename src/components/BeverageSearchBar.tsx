@@ -137,13 +137,12 @@ export const BeverageSearchBar = () => {
   return (
     <SearchBar
       customCssClasses={{
-        container: `md:h-12 mt-6 px-4 sm:my-6`,
+        container: `md:h-12 mt-6 sm:my-6 px-4`,
         inputContainer:
           "inline-flex items-center justify-between w-full rounded-3xl border border-black",
         logoContainer: "w-7 mx-2.5 my-2 ",
         dropdownContainer: "z-10",
         inputDropdownContainer: "relative bg-white  rounded-3xl w-full  ",
-        inputDropdownContainer___active: "",
         optionContainer: "hidden",
       }}
       cssCompositionMethod="assign"

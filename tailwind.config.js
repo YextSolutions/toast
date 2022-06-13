@@ -2,7 +2,7 @@ module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     "./public/index.html", //optional if you want to add tailwind to your index.html page
-    "node_modules/@yext/answers-react-components/lib/components/**/*.{js,ts,jsx,tsx}",
+    "node_modules/@yext/answers-react-components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {

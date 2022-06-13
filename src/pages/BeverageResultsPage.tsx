@@ -5,7 +5,7 @@ import {
   useAnswersActions,
   useAnswersState,
 } from "@yext/answers-headless-react";
-import { VerticalResults } from "@yext/answers-react-components";
+import { VerticalResults, CardProps } from "@yext/answers-react-components";
 import { useEffect, useState } from "react";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
