@@ -89,7 +89,7 @@ export const ToastHeader = (): JSX.Element => {
                 <div className="px-4">OTHER</div>
               </div>
               <div
-                className={classNames("md:block", {
+                className={classNames("md:block md:w-96", {
                   "fixed top-16 h-full w-full overflow-y-scroll bg-white":
                     overlayState.searchOverlay.open,
                   hidden: !overlayState.searchOverlay.open,
