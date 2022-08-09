@@ -2,10 +2,10 @@ import {
   DisplayableFacet,
   Matcher,
   SelectableFilter,
-  useAnswersActions,
-  useAnswersState,
-} from "@yext/answers-headless-react";
-import { VerticalResults, CardProps } from "@yext/answers-react-components";
+  useSearchActions,
+  useSearchState,
+} from "@yext/search-headless-react";
+import { Pagination, VerticalResults } from "@yext/search-ui-react";
 import { useEffect, useState } from "react";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
@@ -19,6 +19,7 @@ import { formatSearchResultsTitle } from "../utils/formatSearchResultsTitle";
 import { BeverageFilters } from "../components/BeverageFilters";
 import { PageLayout } from "./PageLayout";
 import { getSearchPageImage } from "../utils/getSearchPageImage";
+import Beverage from "../types/beverages";
 
 export const BeverageResultsPage = (): JSX.Element => {
   const [page, setPage] = useState("");
@@ -30,9 +31,9 @@ export const BeverageResultsPage = (): JSX.Element => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  const answersActions = useAnswersActions();
-  const resultsCount = useAnswersState((state) => state.vertical.resultsCount);
-  const isLoading = useAnswersState((state) => state.searchStatus.isLoading);
+  const searchActions = useSearchActions();
+  const resultsCount = useSearchState((state) => state.vertical.resultsCount);
+  const isLoading = useSearchState((state) => state.searchStatus.isLoading);
 
   useEffect(() => {
     handleUrlFacets();
@@ -48,10 +49,10 @@ export const BeverageResultsPage = (): JSX.Element => {
 
     handleSearchParams();
 
-    answersActions.setStaticFilters(selectedFilters);
+    searchActions.setStaticFilters(selectedFilters);
 
-    answersActions.setVerticalLimit(21);
-    answersActions.executeVerticalQuery();
+    searchActions.setVerticalLimit(21);
+    searchActions.executeVerticalQuery();
   }, [searchParams]);
 
   const extractBeverageStaticFiltersFromUrlParams = (): SelectableFilter[] => {
@@ -133,13 +134,13 @@ export const BeverageResultsPage = (): JSX.Element => {
     const sortBy = searchParams.get("sortBy");
 
     if (query) {
-      answersActions.setQuery(query);
+      searchActions.setQuery(query);
       setSearchResultsTitle({ query: true, title: `Results for ${query}` });
     } else {
-      answersActions.setQuery("");
+      searchActions.setQuery("");
     }
 
-    sortBy && answersActions.setSortBys([JSON.parse(sortBy)]);
+    sortBy && searchActions.setSortBys([JSON.parse(sortBy)]);
   };
 
   const handleUrlFacets = () => {
@@ -163,9 +164,9 @@ export const BeverageResultsPage = (): JSX.Element => {
           })),
         });
       });
-      answersActions.setFacets(facets);
+      searchActions.setFacets(facets);
     } else {
-      answersActions.setFacets([]);
+      searchActions.setFacets([]);
     }
   };
 
@@ -203,17 +204,17 @@ export const BeverageResultsPage = (): JSX.Element => {
             <ShakerLoader />
           ) : (
             <div className="flex">
-              <div className="hidden w-1/3 md:block">
+              <div className="hidden w-1/3 pr-8 pb-0 md:block md:pb-4">
                 <BeverageFilters />
               </div>
               <div>
-                <VerticalResults
+                <VerticalResults<Beverage>
                   customCssClasses={{
-                    results: "grid grid-cols-2 md:grid-cols-3 gap-4",
-                    paginationContainer: "pb-8",
+                    verticalResultsContainer: "grid grid-cols-2 md:grid-cols-3 gap-4",
                   }}
                   CardComponent={BeverageCard}
                 />
+                <Pagination />
               </div>
             </div>
           )}

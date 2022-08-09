@@ -1,9 +1,9 @@
 import { Context, createContext, useEffect, useReducer } from "react";
-import { Beverage } from "../types/Beverage";
+import Beverage from "../types/beverages";
 
 export interface Cart {
   cartItems: {
-    beverage: Partial<Beverage>;
+    beverage: Beverage;
     quantity: number;
   }[];
   totalPrice: number;
@@ -16,12 +16,12 @@ export enum CartActionTypes {
 
 export interface AddItem {
   type: CartActionTypes.AddItem;
-  payload: { beverage: Partial<Beverage>; quantity: number };
+  payload: { beverage: Beverage; quantity: number };
 }
 
 export interface RemoveItem {
   type: CartActionTypes.RemoveItem;
-  payload: { beverage: Partial<Beverage> };
+  payload: { beverage: Beverage };
 }
 
 export type CartActions = AddItem | RemoveItem;
@@ -69,9 +69,7 @@ export const cartReducer = (state = initialState as Cart, action: CartActions) =
   }
 };
 
-const calculateTotalPrice = (
-  cartItems: { beverage: Partial<Beverage>; quantity: number }[]
-): number => {
+const calculateTotalPrice = (cartItems: { beverage: Beverage; quantity: number }[]): number => {
   return (
     Math.round(
       cartItems

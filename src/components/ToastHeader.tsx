@@ -4,7 +4,7 @@ import { FaShoppingBasket } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { ToastBanner } from "./ToastBanner";
 import classNames from "classnames";
-import { useAnswersActions } from "@yext/answers-headless-react";
+import { useSearchActions } from "@yext/search-headless-react";
 import { CartContext } from "../providers/CartProvider";
 import { BeverageSearchBar } from "./BeverageSearchBar";
 import { OverlayActionTypes, OverlayContext } from "../providers/OverlayProvider";
@@ -14,7 +14,7 @@ import useWindowDimensions from "../hooks/useWindowDimensions";
 export const ToastHeader = (): JSX.Element => {
   const [totalCartItems, setTotalCartItems] = useState(0);
 
-  const answersActions = useAnswersActions();
+  const searchActions = useSearchActions();
 
   const { overlayState, dispatch } = useContext(OverlayContext);
   const cartContext = useContext(CartContext);
@@ -42,9 +42,9 @@ export const ToastHeader = (): JSX.Element => {
 
   const clearSearchState = () => {
     searchBarChangeHandler(false);
-    answersActions.setQuery("");
-    answersActions.setSortBys([]);
-    answersActions.resetFacets();
+    searchActions.setQuery("");
+    searchActions.setSortBys([]);
+    searchActions.resetFacets();
   };
 
   return (

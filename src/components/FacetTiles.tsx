@@ -1,8 +1,12 @@
-import { DisplayableFacet, Matcher, NumberRangeValue } from "@yext/answers-headless-react";
+import {
+  DisplayableFacet,
+  Matcher,
+  NumberRangeValue,
+  useSearchActions,
+} from "@yext/search-headless-react";
 import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { useSearchParams } from "react-router-dom";
-import { Filters } from "@yext/answers-react-components";
 
 interface FacetTilesProps {
   facet: DisplayableFacet;
@@ -18,7 +22,7 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const filterContext = Filters.useFiltersContext();
+  const searchActions = useSearchActions();
 
   useEffect(() => {
     if (outerContainerRef.current) {
@@ -52,12 +56,11 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
         existingUrlFacets[facet.fieldId] = [optionValue.toString()];
       }
 
-      filterContext.selectFilter({
-        selected: true,
-        fieldId: facet.fieldId,
-        value: optionValue,
-        matcher: Matcher.Equals,
-      });
+      searchActions.setFacetOption(
+        facet.fieldId,
+        { matcher: Matcher.Equals, value: optionValue },
+        true
+      );
     } else {
       existingUrlFacets[facet.fieldId] = existingUrlFacets[facet.fieldId].filter(
         (o) => o !== optionValue.toString()
@@ -65,13 +68,11 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
       if (existingUrlFacets[facet.fieldId].length === 0) {
         delete existingUrlFacets[facet.fieldId];
       }
-
-      filterContext.selectFilter({
-        selected: false,
-        fieldId: facet.fieldId,
-        value: optionValue,
-        matcher: Matcher.Equals,
-      });
+      searchActions.setFacetOption(
+        facet.fieldId,
+        { matcher: Matcher.Equals, value: optionValue },
+        false
+      );
     }
 
     Object.keys(existingUrlFacets).length > 0

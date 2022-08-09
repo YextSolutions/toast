@@ -3,6 +3,7 @@ import { BeverageCard } from "../components/BeverageCard";
 import { CounterAction, ProductCounter } from "../components/ProductCounter";
 import { CartActionTypes, CartContext } from "../providers/CartProvider";
 import { PageLayout } from "./PageLayout";
+import { Source } from "@yext/search-headless-react";
 
 export const CartPage = () => {
   const cartContext = useContext(CartContext);
@@ -10,19 +11,19 @@ export const CartPage = () => {
 
   const handleQuantityChange = (
     quantity: number,
-    changer?: { action: CounterAction; productId: string }
+    changer?: { action: CounterAction; id: string; name: string }
   ) => {
     if (!changer) return;
 
     if (changer.action === "add") {
       cartContext.dispatch({
         type: CartActionTypes.AddItem,
-        payload: { beverage: { id: changer.productId }, quantity: 1 },
+        payload: { beverage: { id: changer.id, name: changer.name }, quantity: 1 },
       });
     } else if (changer.action === "subtract") {
       cartContext.dispatch({
         type: CartActionTypes.RemoveItem,
-        payload: { beverage: { id: changer.productId } },
+        payload: { beverage: { id: changer.id, name: changer.name } },
       });
     }
   };
@@ -48,12 +49,10 @@ export const CartPage = () => {
             <div className="flex items-end justify-between py-2">
               <BeverageCard
                 autocomplete
-                name={item.beverage.name}
-                price={item.beverage.c_price}
-                imageUrl={item.beverage.primaryPhoto?.image.url}
+                result={{ rawData: item.beverage, source: Source.KnowledgeManager }}
               />
               {item.beverage.id && (
-                <ProductCounter productId={item.beverage.id} onChange={handleQuantityChange} />
+                <ProductCounter id={item.beverage.id} onChange={handleQuantityChange} />
               )}
             </div>
           ))}

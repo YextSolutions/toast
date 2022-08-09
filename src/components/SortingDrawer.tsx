@@ -1,4 +1,4 @@
-import { Direction, SortBy, SortType, useAnswersState } from "@yext/answers-headless-react";
+import { Direction, SortBy, SortType, useSearchState } from "@yext/search-headless-react";
 import { useContext, useState } from "react";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import classNames from "classnames";
@@ -31,7 +31,7 @@ interface SortingDrawerProps {
 export const SortingDrawer = ({ containerCss = "" }: SortingDrawerProps) => {
   const [open, setOpen] = useState(false);
 
-  const sortBys = useAnswersState((state) => state.vertical.sortBys);
+  const sortBys = useSearchState((state) => state.vertical.sortBys);
   const selectedSort = sortByOptions.find(
     (s) => s.sortBy.field === sortBys?.[0]?.field && s.sortBy.direction === sortBys?.[0]?.direction
   );

@@ -1,18 +1,17 @@
-import { Result } from "@yext/answers-headless-react";
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
-import { beverageDataForRender } from "../types/Beverage";
 import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 import { ImagePlaceholder } from "./ImagePlaceholder";
 import { StarRating } from "./StarRating";
 import { GrayWineBottleIcon } from "../icons/GrayWineBottleIcon";
+import { CardProps } from "@yext/search-ui-react";
+import Beverage from "../types/beverages";
 
-interface BeverageCardProps {
-  result?: Result;
+interface BeverageCardProps<T> extends CardProps<T> {
   autocomplete?: boolean;
   name?: string;
   imageUrl?: string;
-  price?: string;
+  price?: number;
 }
 
 export const BeverageCard = ({
@@ -21,8 +20,8 @@ export const BeverageCard = ({
   name,
   imageUrl,
   price,
-}: BeverageCardProps): JSX.Element => {
-  const beverage = beverageDataForRender(result);
+}: BeverageCardProps<Beverage>): JSX.Element => {
+  const beverage = result.rawData;
 
   const navigate = useNavigate();
 

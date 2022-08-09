@@ -1,4 +1,4 @@
-import { useAnswersActions } from "@yext/answers-headless-react";
+import { useSearchActions } from "@yext/search-headless-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BeverageInfo, extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
@@ -11,7 +11,7 @@ const BeverageBreadcrumbs = ({ beverageCategories }: BeverageBreadcrumbsProps): 
   const urlParams = useParams();
   const [beverageInfo, setBeverageInfo] = useState<BeverageInfo>();
 
-  const answersActions = useAnswersActions();
+  const searchActions = useSearchActions();
 
   useEffect(() => {
     const { alcoholType, category, subCategory, beverageId } = beverageCategories
@@ -38,8 +38,8 @@ const BeverageBreadcrumbs = ({ beverageCategories }: BeverageBreadcrumbsProps): 
             className="text-toast-dark-orange hover:underline"
             to={to}
             onClick={() => {
-              answersActions.resetFacets();
-              answersActions.setSortBys([]);
+              searchActions.resetFacets();
+              searchActions.setSortBys([]);
             }}
           >
             {label}
