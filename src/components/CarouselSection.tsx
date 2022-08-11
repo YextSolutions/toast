@@ -6,7 +6,7 @@ import {
 import { useEffect } from "react";
 import { VerticalResults } from "@yext/search-ui-react";
 import { BeverageCarouselCard } from "./BeverageCarouselCard";
-import MoonLoader from "react-spinners/MoonLoader";
+// import MoonLoader from "react-spinners/MoonLoader";
 import searchConfig from "../config/searchConfig";
 
 export interface CarouselSectionProps {
@@ -44,11 +44,11 @@ const Carousel = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => 
           </button>
         )}
       </div>
-      {resultsLoading ? (
+      {/* {resultsLoading ? (
         <div className="flex h-60 items-center justify-center">
           <MoonLoader color="#FFB563" />
         </div>
-      ) : (
+      ) : ( */}
         <>
           <VerticalResults
             customCssClasses={{ verticalResultsContainer: "overflow-x-auto flex" }}
@@ -58,7 +58,7 @@ const Carousel = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => 
             <div className="text-xs font-bold text-white">VIEW ALL</div>
           </button>
         </>
-      )}
+      {/* )} */}
     </div>
   );
 };

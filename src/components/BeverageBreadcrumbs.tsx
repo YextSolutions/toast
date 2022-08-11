@@ -1,35 +1,51 @@
 import { useSearchActions } from "@yext/search-headless-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { BeverageInfo, extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
+import { BeverageCategory } from "../types/beverages";
+import formatFilterName from "../utils/formatFilterName";
 
 interface BeverageBreadcrumbsProps {
-  beverageCategories?: BeverageInfo;
+  beverageCategories?: BeverageCategory[];
 }
 
 const BeverageBreadcrumbs = ({ beverageCategories }: BeverageBreadcrumbsProps): JSX.Element => {
   const urlParams = useParams();
-  const [beverageInfo, setBeverageInfo] = useState<BeverageInfo>();
+  const [categories, setCategories] = useState<{ label: string; path?: string }[]>([]);
 
   const searchActions = useSearchActions();
 
   useEffect(() => {
-    const { alcoholType, category, subCategory, beverageId } = beverageCategories
-      ? beverageCategories
-      : extractBeverageInfoFromUrl(urlParams);
+    const pathCategories: { label: string; path?: string }[] = [{ label: "Toast", path: "/" }];
+    const { categoryA, categoryB, categoryC, categoryD } = urlParams;
+    if (categoryA) {
+      categoryB
+        ? pathCategories.push({ label: formatFilterName(categoryA), path: `/${categoryA}/all` })
+        : pathCategories.push({ label: formatFilterName(categoryA) });
+    }
+    if (categoryB) {
+      categoryC
+        ? pathCategories.push({
+            label: formatFilterName(categoryB),
+            path: `/${categoryA}/${categoryB}`,
+          })
+        : pathCategories.push({ label: formatFilterName(categoryB) });
+    }
+    if (categoryC) {
+      categoryD
+        ? pathCategories.push({
+            label: formatFilterName(categoryC),
+            path: `/${categoryA}/${categoryB}/${categoryC}`,
+          })
+        : pathCategories.push({ label: formatFilterName(categoryC) });
+    }
+    if (categoryD) {
+      pathCategories.push({ label: formatFilterName(categoryD) });
+    }
 
-    setBeverageInfo({ alcoholType, category, subCategory, beverageId });
+    setCategories(pathCategories);
   }, [urlParams, beverageCategories]);
 
-  const renderPageLink = (label?: string, to?: string, first?: boolean): JSX.Element => {
-    if (!label) return <></>;
-    label = label
-      .toLowerCase()
-      .replaceAll("-", " ")
-      .split(" ")
-      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-      .join(" ");
-
+  const renderPageLink = (label: string, to?: string, first?: boolean): JSX.Element => {
     if (to) {
       return (
         <span>
@@ -37,6 +53,7 @@ const BeverageBreadcrumbs = ({ beverageCategories }: BeverageBreadcrumbsProps): 
           <Link
             className="text-toast-dark-orange hover:underline"
             to={to}
+            // TODO: move logic to hook cleanup function
             onClick={() => {
               searchActions.resetFacets();
               searchActions.setSortBys([]);
@@ -56,37 +73,8 @@ const BeverageBreadcrumbs = ({ beverageCategories }: BeverageBreadcrumbsProps): 
     }
   };
 
-  if (!beverageInfo?.alcoholType) {
-    return <></>;
-  }
-
   return (
-    <div>
-      {renderPageLink("Toast", "/", true)}
-      {renderPageLink(
-        beverageInfo.alcoholType,
-        beverageInfo.category && beverageInfo.category !== "all"
-          ? `/${beverageInfo.alcoholType}/all`
-          : undefined
-      )}
-      {beverageInfo.category &&
-        beverageInfo.category !== "all" &&
-        renderPageLink(
-          beverageInfo.category,
-          beverageInfo.subCategory || beverageInfo.beverageId
-            ? `/${beverageInfo.alcoholType}/${beverageInfo.category?.replaceAll(" ", "-")}`
-            : undefined
-        )}
-      {renderPageLink(
-        beverageInfo.subCategory,
-        beverageInfo.beverageId
-          ? `/${beverageInfo.alcoholType}/${beverageInfo.category?.replaceAll(
-              " ",
-              "-"
-            )}/${beverageInfo.subCategory?.replaceAll(" ", "-")}`
-          : undefined
-      )}
-    </div>
+    <>{categories.map((category, i) => renderPageLink(category.label, category.path, i === 0))}</>
   );
 };
 

@@ -13,7 +13,6 @@ const liveApiKey = import.meta.env.VITE_LIVE_API_KEY;
 
 interface LocationState {
   state: {
-    // TODO: change to Beverage
     beverage: Beverage;
   };
 }
@@ -37,7 +36,6 @@ export const BeveragePage = (): JSX.Element => {
     };
 
     if (location.state?.beverage) {
-      // TODO: fix this
       setBeverage(location.state?.beverage as Beverage);
     } else {
       const { beverageId } = urlParams;

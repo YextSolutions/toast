@@ -111,7 +111,7 @@ export const routeConfig: RouteData[] = [
             {
               name: "STOUT",
               img: ImageAssets.stout,
-              linkPath: "/beer/ale/stout",
+              linkPath: "/beer/ale/stout-ale",
             },
             {
               name: "ALL BEERS",
@@ -161,16 +161,31 @@ export const routeConfig: RouteData[] = [
       />
     ),
   },
-  { path: "/:alcoholType/all", page: <BeverageResultsPage /> },
-  { path: "/:alcoholType/:category", page: <BeverageResultsPage /> },
+  { path: "/:categoryA/all", page: <BeverageResultsPage /> },
+  { path: "/:categoryA", page: <BeverageResultsPage /> },
   {
-    path: "/:alcoholType/:category/:subCategory",
+    path: "/:categoryA/:categoryB",
     page: <BeverageResultsPage />,
   },
-  { path: "/:alcoholType/:category/:beverageName/:beverageId", page: <BeveragePage /> },
   {
-    path: "/:alcoholType/:category/:subCategory/:beverageName/:beverageId",
-    page: <BeveragePage />,
+    path: "/:categoryA/:categoryB/:beverageName/:beverageId",
+    page: <BeverageResultsPage />,
+  },
+  {
+    path: "/:categoryA/:categoryB/:categoryC",
+    page: <BeverageResultsPage />,
+  },
+  {
+    path: "/:categoryA/:categoryB/:categoryC/:beverageName/:beverageId",
+    page: <BeverageResultsPage />,
+  },
+  {
+    path: "/:categoryA/:categoryB/:categoryC/:categoryD",
+    page: <BeverageResultsPage />,
+  },
+  {
+    path: "/categoryA/:categoryB/:categoryC/:categoryD/:beverageName/:beverageId",
+    page: <BeverageResultsPage />,
   },
   { path: "/cart", page: <CartPage /> },
 ];

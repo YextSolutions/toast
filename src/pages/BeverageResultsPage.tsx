@@ -20,40 +20,58 @@ import { BeverageFilters } from "../components/BeverageFilters";
 import { PageLayout } from "./PageLayout";
 import { getSearchPageImage } from "../utils/getSearchPageImage";
 import Beverage from "../types/beverages";
+import useSearchPageSetupEffect from "../hooks/useSearchPageSetupEffect";
 
 export const BeverageResultsPage = (): JSX.Element => {
   const [page, setPage] = useState("");
-  const [searchResultsTitle, setSearchResultsTitle] = useState<{ query?: boolean; title: string }>({
-    title: "",
-  });
+  const [searchResultsTitle, setSearchResultsTitle] = useState("");
 
   const urlParams = useParams();
-  const location = useLocation();
   const [searchParams] = useSearchParams();
 
   const searchActions = useSearchActions();
   const resultsCount = useSearchState((state) => state.vertical.resultsCount);
   const isLoading = useSearchState((state) => state.searchStatus.isLoading);
 
-  useEffect(() => {
-    handleUrlFacets();
-  }, []);
+  const mostRecentSearch = useSearchState((state) => state.query.mostRecentSearch);
+  const activeFilters = useSearchState((state) => state.filters.static);
+
+  useSearchPageSetupEffect();
 
   useEffect(() => {
-    setPage(location.pathname.split("/")[1]);
+    if (activeFilters && activeFilters[0]) {
+      setSearchResultsTitle(activeFilters[0].displayName ?? (activeFilters[0].value as string));
+    } else if (mostRecentSearch) {
+      setSearchResultsTitle(mostRecentSearch);
+    }
+  }, [mostRecentSearch, activeFilters]);
 
-    const selectedFilters: SelectableFilter[] = [];
-    selectedFilters.push(...extractBeverageStaticFiltersFromUrlParams());
-    const priceFilter = extractPriceRangeFilterFromSearchParams();
-    priceFilter && selectedFilters.push(priceFilter);
+  const renderSearchResultsTitle = (): JSX.Element => {
+    return (
+      <div className={classNames("mr-1.5  py-2 text-3xl font-bold")}>
+        <span className="border-b-2 border-toast-dark-orange">{`Results for ${searchResultsTitle}`}</span>
+      </div>
+    );
+  };
+  // useEffect(() => {
+  //   handleUrlFacets();
+  // }, []);
 
-    handleSearchParams();
+  // useEffect(() => {
+  //   setPage(location.pathname.split("/")[1]);
 
-    searchActions.setStaticFilters(selectedFilters);
+  //   const selectedFilters: SelectableFilter[] = [];
+  //   selectedFilters.push(...extractBeverageStaticFiltersFromUrlParams());
+  //   const priceFilter = extractPriceRangeFilterFromSearchParams();
+  //   priceFilter && selectedFilters.push(priceFilter);
 
-    searchActions.setVerticalLimit(21);
-    searchActions.executeVerticalQuery();
-  }, [searchParams]);
+  //   handleSearchParams();
+
+  //   searchActions.setStaticFilters(selectedFilters);
+
+  //   searchActions.setVerticalLimit(21);
+  //   searchActions.executeVerticalQuery();
+  // }, [searchParams]);
 
   const extractBeverageStaticFiltersFromUrlParams = (): SelectableFilter[] => {
     const { alcoholType, category, subCategory } = extractBeverageInfoFromUrl(urlParams);
@@ -184,39 +202,38 @@ export const BeverageResultsPage = (): JSX.Element => {
               </div>
             </div>
           }
-          <div className="my-4 px-4 text-sm">
-            <BeverageBreadcrumbs />
-          </div>
-          <div className="flex items-center justify-between px-4">
-            <div className="my-2 ">
-              <div
-                className={classNames("mr-1.5 text-3xl font-bold", {
-                  "text-toast-dark-orange": !searchResultsTitle.query,
-                })}
-              >
-                {searchResultsTitle.title}
-              </div>
-              {!isLoading && <div className="mt-1 text-sm">{`(${resultsCount} results)`}</div>}
-            </div>
-            <SortingDrawer />
-          </div>
           {isLoading ? (
             <ShakerLoader />
           ) : (
-            <div className="flex">
-              <div className="hidden w-1/3 pr-8 pb-0 md:block md:pb-4">
-                <BeverageFilters />
+            <>
+              {!mostRecentSearch && (
+                <div className="my-4 px-4 text-sm">
+                  <BeverageBreadcrumbs />
+                </div>
+              )}
+              <div className="flex items-center justify-between px-4">
+                <div className="my-2 ">
+                  {renderSearchResultsTitle()}
+                  {!isLoading && <div className="mt-1 text-sm">{`(${resultsCount} results)`}</div>}
+                </div>
+                <SortingDrawer containerCss="hidden md:flex" />
               </div>
-              <div>
-                <VerticalResults<Beverage>
-                  customCssClasses={{
-                    verticalResultsContainer: "grid grid-cols-2 md:grid-cols-3 gap-4",
-                  }}
-                  CardComponent={BeverageCard}
-                />
-                <Pagination />
+
+              <div className="flex">
+                <div className="hidden w-1/3 pr-8 pb-0 md:block md:pb-4">
+                  <BeverageFilters />
+                </div>
+                <div>
+                  <VerticalResults<Beverage>
+                    customCssClasses={{
+                      verticalResultsContainer: "grid grid-cols-2 md:grid-cols-3 gap-4",
+                    }}
+                    CardComponent={BeverageCard}
+                  />
+                  <Pagination />
+                </div>
               </div>
-            </div>
+            </>
           )}
         </div>
         <FilterOverlay />
