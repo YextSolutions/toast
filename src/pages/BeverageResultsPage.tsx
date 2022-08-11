@@ -1,7 +1,6 @@
-import { Matcher, SelectableFilter, useSearchState } from "@yext/search-headless-react";
+import { useSearchState } from "@yext/search-headless-react";
 import { Pagination, VerticalResults } from "@yext/search-ui-react";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageCard } from "../components/BeverageCard";
 import classNames from "classnames";
@@ -17,8 +16,6 @@ import useSearchPageSetupEffect from "../hooks/useSearchPageSetupEffect";
 export const BeverageResultsPage = (): JSX.Element => {
   const [page, setPage] = useState("");
   const [searchResultsTitle, setSearchResultsTitle] = useState("");
-
-  const [searchParams] = useSearchParams();
 
   const resultsCount = useSearchState((state) => state.vertical.resultsCount);
   const isLoading = useSearchState((state) => state.searchStatus.isLoading);
@@ -44,34 +41,6 @@ export const BeverageResultsPage = (): JSX.Element => {
     );
   };
 
-  const extractPriceRangeFilterFromSearchParams = (): SelectableFilter | undefined => {
-    if (!searchParams.has("priceRange")) return;
-
-    const priceRange = JSON.parse(searchParams.get("priceRange") as string) as {
-      min: number;
-      max?: number;
-    };
-
-    if (priceRange.max) {
-      return {
-        selected: true,
-        fieldId: "c_price",
-        value: {
-          start: { matcher: Matcher.GreaterThanOrEqualTo, value: priceRange.min },
-          end: { matcher: Matcher.LessThanOrEqualTo, value: priceRange.max },
-        },
-        matcher: Matcher.Between,
-      };
-    } else {
-      return {
-        selected: true,
-        fieldId: "c_price",
-        value: priceRange.min,
-        matcher: Matcher.GreaterThanOrEqualTo,
-      };
-    }
-  };
-
   return (
     <PageLayout>
       <div className="flex h-full justify-center">
@@ -93,11 +62,10 @@ export const BeverageResultsPage = (): JSX.Element => {
               <div className="my-4 px-4 text-sm">
                 <BeverageBreadcrumbs />
               </div>
-
               <div className="flex items-center justify-between px-4">
                 <div className="my-2 ">
                   {renderSearchResultsTitle()}
-                  {!isLoading && <div className="mt-1 text-sm">{`(${resultsCount} results)`}</div>}
+                  <div className="mt-1 text-sm">{`(${resultsCount} results)`}</div>
                 </div>
                 <SortingDrawer containerCss="hidden md:flex" />
               </div>

@@ -76,9 +76,9 @@ const BeverageBreadcrumbs = ({ beverageCategories }: BeverageBreadcrumbsProps): 
 
   return (
     <>
-      {categories.map((category, i) => {
-        renderPageLink(category.label, category.path, i === 0);
-      })}
+      {categories.map((category, index) =>
+        renderPageLink(category.label, category.path, index === 0)
+      )}
     </>
   );
 };

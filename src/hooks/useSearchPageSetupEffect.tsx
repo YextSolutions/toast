@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import {
   useSearchActions,
   Matcher,
   useSearchState,
   DisplayableFacet,
+  SelectableFilter,
 } from "@yext/search-headless-react";
 import formatFilterName from "../utils/formatFilterName";
 import sortConfig from "../config/sortConfig";
@@ -22,17 +23,45 @@ const pageSearchPageSetupEffect = () => {
       searchActions.setQuery(query);
     }
 
+    const selectedFilters: SelectableFilter[] = [];
+
     // handles static filters from the url path
     const { categoryA, categoryB, categoryC, categoryD } = urlParams;
     if (categoryD) {
-      searchActions.setStaticFilters([getStaticFilterForValue(categoryD)]);
+      selectedFilters.push(getStaticFilterForValue(categoryD));
     } else if (categoryC) {
-      searchActions.setStaticFilters([getStaticFilterForValue(categoryC)]);
+      selectedFilters.push(getStaticFilterForValue(categoryC));
     } else if (categoryB) {
-      searchActions.setStaticFilters([getStaticFilterForValue(categoryB)]);
+      selectedFilters.push(getStaticFilterForValue(categoryB));
     } else if (categoryA) {
-      searchActions.setStaticFilters([getStaticFilterForValue(categoryA)]);
+      selectedFilters.push(getStaticFilterForValue(categoryA));
     }
+
+    // handles price range filter from the url path
+    const priceParam = searchParams.get("price");
+    if (priceParam) {
+      const priceRange = priceParam.split("-");
+      if (priceRange.length === 1) {
+        selectedFilters.push({
+          selected: true,
+          fieldId: "c_price",
+          value: Number.parseInt(priceRange[0]),
+          matcher: Matcher.GreaterThanOrEqualTo,
+        });
+      } else if (priceRange.length == 2) {
+        selectedFilters.push({
+          selected: true,
+          fieldId: "c_price",
+          value: {
+            start: { matcher: Matcher.GreaterThanOrEqualTo, value: Number.parseInt(priceRange[0]) },
+            end: { matcher: Matcher.LessThanOrEqualTo, value: Number.parseInt(priceRange[1]) },
+          },
+          matcher: Matcher.Between,
+        });
+      }
+    }
+
+    searchActions.setStaticFilters(selectedFilters);
 
     // handles the facets from the url query params
     const fieldIds = facets?.map((facet) => facet.fieldId);
