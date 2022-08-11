@@ -1,4 +1,4 @@
-import { Matcher, useSearchState } from "@yext/search-headless-react";
+import { useSearchState } from "@yext/search-headless-react";
 import { FacetTiles } from "./FacetTiles";
 import { PriceSlider } from "./PriceSlider";
 import { NumericalFacets } from "@yext/search-ui-react";

@@ -1,9 +1,4 @@
-import {
-  DisplayableFacet,
-  Matcher,
-  NumberRangeValue,
-  useSearchActions,
-} from "@yext/search-headless-react";
+import { DisplayableFacet, NumberRangeValue } from "@yext/search-headless-react";
 import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { useSearchParams } from "react-router-dom";
@@ -14,7 +9,6 @@ interface FacetTilesProps {
   label?: string;
 }
 
-// TODO: remove show more if not enough options
 export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
   const [expanded, setExpanded] = useState(false);
   const [canExpand, setCanExpand] = useState(false);
@@ -22,8 +16,6 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
   const outerContainerRef = useRef<HTMLDivElement>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const searchActions = useSearchActions();
 
   useEffect(() => {
     if (outerContainerRef.current) {
@@ -47,39 +39,26 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
     optionValue: string | number | boolean | NumberRangeValue,
     checked: boolean
   ) => {
-    const facetParams = searchParams.get("facets");
-    let existingUrlFacets: Record<string, string[]> = facetParams ? JSON.parse(facetParams) : {};
-
     if (checked) {
-      if (existingUrlFacets[facet.fieldId]) {
-        existingUrlFacets[facet.fieldId].push(optionValue.toString());
+      if (searchParams.has(facet.fieldId)) {
+        const values = searchParams.getAll(facet.fieldId);
+        values.push(optionValue.toString());
+        searchParams.set(facet.fieldId, values.toString());
       } else {
-        existingUrlFacets[facet.fieldId] = [optionValue.toString()];
+        searchParams.set(facet.fieldId, [optionValue.toString()].toString());
       }
-
-      searchActions.setFacetOption(
-        facet.fieldId,
-        { matcher: Matcher.Equals, value: optionValue },
-        true
-      );
     } else {
-      existingUrlFacets[facet.fieldId] = existingUrlFacets[facet.fieldId].filter(
-        (o) => o !== optionValue.toString()
-      );
-      if (existingUrlFacets[facet.fieldId].length === 0) {
-        delete existingUrlFacets[facet.fieldId];
+      if (
+        searchParams.has(facet.fieldId) &&
+        searchParams.get(facet.fieldId)?.split(",").length === 1
+      ) {
+        searchParams.delete(facet.fieldId);
+      } else {
+        const values = searchParams.get(facet.fieldId)?.split(",") ?? [];
+        const newValues = values.filter((v) => v !== optionValue.toString());
+        searchParams.set(facet.fieldId, newValues.toString());
       }
-      searchActions.setFacetOption(
-        facet.fieldId,
-        { matcher: Matcher.Equals, value: optionValue },
-        false
-      );
     }
-
-    Object.keys(existingUrlFacets).length > 0
-      ? searchParams.set("facets", JSON.stringify(existingUrlFacets))
-      : searchParams.delete("facets");
-
     setSearchParams(searchParams);
   };
 

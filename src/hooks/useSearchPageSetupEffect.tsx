@@ -1,22 +1,27 @@
 import { useEffect } from "react";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { useSearchActions, Matcher } from "@yext/search-headless-react";
+import {
+  useSearchActions,
+  Matcher,
+  useSearchState,
+  DisplayableFacet,
+} from "@yext/search-headless-react";
 import formatFilterName from "../utils/formatFilterName";
 
 const pageSearchPageSetupEffect = () => {
   const urlParams = useParams();
-  const location = useLocation();
   const [searchParams] = useSearchParams();
   const searchActions = useSearchActions();
+  const facets = useSearchState((state) => state.filters.facets);
 
   useEffect(() => {
-    // set query if it's in the url
+    // handles the search query
     const query = searchParams.get("query");
     if (query) {
       searchActions.setQuery(query);
     }
 
-    // set static filters if they're in the url
+    // handles static filters from the url path
     const { categoryA, categoryB, categoryC, categoryD } = urlParams;
     if (categoryD) {
       searchActions.setStaticFilters([getStaticFilterForValue(categoryD)]);
@@ -27,6 +32,26 @@ const pageSearchPageSetupEffect = () => {
     } else if (categoryA) {
       searchActions.setStaticFilters([getStaticFilterForValue(categoryA)]);
     }
+
+    // handles the facets from the url query params
+    const fieldIds = facets?.map((facet) => facet.fieldId);
+    const selectedFacets: DisplayableFacet[] = [];
+    fieldIds?.forEach((fieldId) => {
+      if (searchParams.has(fieldId)) {
+        const options = searchParams
+          .get(fieldId)
+          ?.split(",")
+          .map((value) => ({
+            value,
+            displayName: "bluh",
+            count: 0,
+            selected: true,
+            matcher: Matcher.Equals,
+          }));
+        selectedFacets.push({ fieldId, displayName: "bluh", options: options ?? [] });
+      }
+    });
+    searchActions.setFacets(selectedFacets);
 
     searchActions.setVerticalLimit(21);
     searchActions.executeVerticalQuery();

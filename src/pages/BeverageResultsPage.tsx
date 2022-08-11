@@ -1,5 +1,4 @@
 import {
-  DisplayableFacet,
   Matcher,
   SelectableFilter,
   useSearchActions,
@@ -7,15 +6,13 @@ import {
 } from "@yext/search-headless-react";
 import { Pagination, VerticalResults } from "@yext/search-ui-react";
 import { useEffect, useState } from "react";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageCard } from "../components/BeverageCard";
-import { extractBeverageInfoFromUrl } from "../utils/extractBeverageInfoFromUrl";
 import classNames from "classnames";
 import { FilterOverlay } from "../components/FilterOverlay";
 import { SortingDrawer } from "../components/SortingDrawer";
 import { ShakerLoader } from "../components/ShakerLoader";
-import { formatSearchResultsTitle } from "../utils/formatSearchResultsTitle";
 import { BeverageFilters } from "../components/BeverageFilters";
 import { PageLayout } from "./PageLayout";
 import { getSearchPageImage } from "../utils/getSearchPageImage";
@@ -52,71 +49,6 @@ export const BeverageResultsPage = (): JSX.Element => {
         <span className="border-b-2 border-toast-dark-orange">{`Results for ${searchResultsTitle}`}</span>
       </div>
     );
-  };
-  // useEffect(() => {
-  //   handleUrlFacets();
-  // }, []);
-
-  // useEffect(() => {
-  //   setPage(location.pathname.split("/")[1]);
-
-  //   const selectedFilters: SelectableFilter[] = [];
-  //   selectedFilters.push(...extractBeverageStaticFiltersFromUrlParams());
-  //   const priceFilter = extractPriceRangeFilterFromSearchParams();
-  //   priceFilter && selectedFilters.push(priceFilter);
-
-  //   handleSearchParams();
-
-  //   searchActions.setStaticFilters(selectedFilters);
-
-  //   searchActions.setVerticalLimit(21);
-  //   searchActions.executeVerticalQuery();
-  // }, [searchParams]);
-
-  const extractBeverageStaticFiltersFromUrlParams = (): SelectableFilter[] => {
-    const { alcoholType, category, subCategory } = extractBeverageInfoFromUrl(urlParams);
-    const query = searchParams.get("query");
-    const selectedFilters: SelectableFilter[] = [];
-
-    if (alcoholType) {
-      selectedFilters.push({
-        selected: true,
-        fieldId: "c_alcoholType",
-        value: alcoholType,
-        matcher: Matcher.Equals,
-      });
-      !query &&
-        setSearchResultsTitle({
-          title: formatSearchResultsTitle(alcoholType),
-        });
-    }
-
-    if (category && category !== "all") {
-      selectedFilters.push({
-        selected: true,
-        fieldId: "c_category",
-        value: category.replaceAll("-", " "),
-        matcher: Matcher.Equals,
-      });
-      if (!query) {
-        !query && setSearchResultsTitle({ title: formatSearchResultsTitle(category) });
-      }
-    }
-
-    if (subCategory) {
-      selectedFilters.push({
-        selected: true,
-        fieldId: "c_subCategory",
-        value: subCategory.replaceAll("-", " "),
-        matcher: Matcher.Equals,
-      });
-      !query &&
-        setSearchResultsTitle({
-          title: formatSearchResultsTitle(subCategory),
-        });
-    }
-
-    return selectedFilters;
   };
 
   const extractPriceRangeFilterFromSearchParams = (): SelectableFilter | undefined => {
@@ -159,33 +91,6 @@ export const BeverageResultsPage = (): JSX.Element => {
     }
 
     sortBy && searchActions.setSortBys([JSON.parse(sortBy)]);
-  };
-
-  const handleUrlFacets = () => {
-    if (searchParams.has("facets")) {
-      const urlFacets = JSON.parse(searchParams.get("facets") as string) as Record<
-        string,
-        string[]
-      >;
-
-      const facets: DisplayableFacet[] = [];
-      Object.entries(urlFacets).forEach(([key, values]) => {
-        facets.push({
-          fieldId: key,
-          displayName: "bluh",
-          options: values.map((o) => ({
-            value: o,
-            matcher: Matcher.Equals,
-            displayName: "bluh",
-            count: 0,
-            selected: true,
-          })),
-        });
-      });
-      searchActions.setFacets(facets);
-    } else {
-      searchActions.setFacets([]);
-    }
   };
 
   return (
