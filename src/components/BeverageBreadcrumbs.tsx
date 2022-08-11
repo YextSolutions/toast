@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BeverageCategory } from "../types/beverages";
 import formatFilterName from "../utils/formatFilterName";
+import { v4 as uuidv4 } from "uuid";
 
 interface BeverageBreadcrumbsProps {
   beverageCategories?: BeverageCategory[];
@@ -48,7 +49,7 @@ const BeverageBreadcrumbs = ({ beverageCategories }: BeverageBreadcrumbsProps): 
   const renderPageLink = (label: string, to?: string, first?: boolean): JSX.Element => {
     if (to) {
       return (
-        <span>
+        <span key={uuidv4()}>
           {!first && <span className="mx-2">/</span>}
           <Link
             className="text-toast-dark-orange hover:underline"
@@ -65,7 +66,7 @@ const BeverageBreadcrumbs = ({ beverageCategories }: BeverageBreadcrumbsProps): 
       );
     } else {
       return (
-        <span>
+        <span key={uuidv4()}>
           <span className="mx-2">/</span>
           <span>{label}</span>
         </span>
@@ -74,7 +75,11 @@ const BeverageBreadcrumbs = ({ beverageCategories }: BeverageBreadcrumbsProps): 
   };
 
   return (
-    <>{categories.map((category, i) => renderPageLink(category.label, category.path, i === 0))}</>
+    <>
+      {categories.map((category, i) => {
+        renderPageLink(category.label, category.path, i === 0);
+      })}
+    </>
   );
 };
 

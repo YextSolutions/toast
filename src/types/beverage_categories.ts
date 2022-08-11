@@ -1,3 +1,9 @@
-export interface Ce_beverageCategory {
-	name: string,
+interface ParentCategory {
+  name: string;
+  c_parentCategory: ParentCategory[];
+}
+
+export default interface BeverageCategory {
+  name: string;
+  c_parentCategory: ParentCategory[];
 }

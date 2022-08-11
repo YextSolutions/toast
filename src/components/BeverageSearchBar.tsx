@@ -15,11 +15,12 @@ import { useContext } from "react";
 import { Divider } from "./Divider";
 import { useNavigate } from "react-router-dom";
 import Beverage from "../types/beverages";
-import { extractPathFromBeverageType } from "../utils/extractPathFromBeverageType";
-import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 import { BeverageCard } from "./BeverageCard";
 import { OverlayActionTypes, OverlayContext } from "../providers/OverlayProvider";
 import searchConfig from "../config/searchConfig";
+import BeverageCategory from "../types/beverage_categories";
+import getCategoryOrderFromBeverage from "../utils/getCategoryOrderFromBeverage";
+import getCategoryOrderFromBeverageCategory from "../utils/getCategoryOrderFromBeverageCategory";
 
 export const BeverageSearchBar = () => {
   const entityPreviewSearcher = provideHeadless({
@@ -35,92 +36,93 @@ export const BeverageSearchBar = () => {
 
   const searchActions = useSearchActions();
 
-  // const renderEntityPreviews = (
-  //   autocompleteLoading: boolean,
-  //   verticalResultsArray: VerticalResultsData[],
-  //   onSubmit: (value: string, _index: number, itemData?: FocusedItemData) => void
-  // ) => {
-  //   const alcoholicBeverageTypeResults = verticalResultsArray.find(
-  //     (verticalResult) => verticalResult.verticalKey === "autocomplete"
-  //   )?.results;
+  const renderEntityPreviews = (
+    autocompleteLoading: boolean,
+    verticalKeyToResults: Record<string, VerticalResultsData>,
+    dropdownItemProps: {
+      onClick: (value: string, _index: number, itemData?: FocusedItemData) => void;
+      ariaLabel: (value: string) => string;
+    }
+  ): JSX.Element | null => {
+    const beverageCategories = verticalKeyToResults["beverage_categories"]?.results.map(
+      (result) => result
+    ) as unknown as Result<BeverageCategory>[];
 
-  //   const beverageResults = verticalResultsArray.find(
-  //     (verticalResult) => verticalResult.verticalKey === "beverages"
-  //   )?.results;
+    const beverageResults = verticalKeyToResults["beverages"]?.results.map(
+      (result) => result
+    ) as unknown as Result<Beverage>[];
 
-  //   return (
-  //     <div className="max-h-max overflow-y-scroll sm:max-h-96 sm:shadow-2xl">
-  //       {renderFilterAutocomplete(alcoholicBeverageTypeResults)}
-  //       {renderBeveragesAutocomplete(beverageResults)}
-  //     </div>
-  //   );
-  // };
+    return (
+      <div className="max-h-max overflow-y-scroll sm:max-h-96 sm:shadow-2xl">
+        {renderBeverageFilterDropdown(beverageCategories)}
+        {renderBeveragesDropdown(beverageResults)}
+      </div>
+    );
+  };
 
-  // const renderFilterAutocomplete = (results: Result[] | undefined) => {
-  //   if (!results || results.length === 0) return <></>;
+  const renderBeverageFilterDropdown = (results: Result<BeverageCategory>[]): JSX.Element => {
+    if (!results || results.length === 0) return <></>;
 
-  //   return (
-  //     <div>
-  //       {results.slice(0, 3).map((result) => {
-  //         const beverageTypeData = alcholicBeverageTypeDataForRender(result);
-  //         const path = extractPathFromBeverageType(beverageTypeData);
+    return (
+      <div>
+        {results.slice(0, 3).map((result) => {
+          const title = result.highlightedFields?.name ?? result.name;
+          const categoryUrl = getCategoryOrderFromBeverageCategory(result.rawData)
+            .map((category) => category.toLowerCase().replaceAll(" ", "-"))
+            .join("/");
 
-  //         const title = isStringOrHighlightedValue(result.highlightedFields?.name)
-  //           ? result.highlightedFields?.name
-  //           : result.name;
+          return title && result.name ? (
+            <DropdownItem value={result.name} onClick={() => searchHandler(categoryUrl)}>
+              <div className="py-1.5 px-3.5 hover:bg-toast-gray">
+                {renderHighlightedValue(title, {
+                  nonHighlighted: "text-primary text-black text-base ",
+                  highlighted: "text-toast-dark-orange text-base",
+                })}
+                <Divider />
+              </div>
+            </DropdownItem>
+          ) : (
+            <></>
+          );
+        })}
+      </div>
+    );
+  };
 
-  //         return title && result.name ? (
-  //           <DropdownItem value={result.name} onClick={() => searchHandler(path)}>
-  //             <div className="py-1.5 px-3.5 hover:bg-toast-gray">
-  //               {renderHighlightedValue(title, {
-  //                 nonHighlighted: "text-primary text-black text-base ",
-  //                 highlighted: "text-toast-dark-orange text-base",
-  //               })}
-  //               <Divider />
-  //             </div>
-  //           </DropdownItem>
-  //         ) : (
-  //           <></>
-  //         );
-  //       })}
-  //     </div>
-  //   );
-  // };
+  const renderBeveragesDropdown = (results: Result<Beverage>[]) => {
+    if (!results || results.length === 0) return <></>;
 
-  // const renderBeveragesAutocomplete = (results: Result[] | undefined) => {
-  //   if (!results || results.length === 0) return <></>;
+    return results.map((result) => {
+      const title = result.highlightedFields?.name ?? result.name;
+      const productUrl = getCategoryOrderFromBeverage(result.rawData)
+        .map((category) => category.toLowerCase().replaceAll(" ", "-"))
+        .join("/")
+        .concat(`/${result.name?.toLowerCase().replaceAll(" ", "-")}/${result.id}`);
 
-  //   return results.map((result) => {
-  //     const beverageData = beverageDataForRender(result);
+      return title && result.name ? (
+        <DropdownItem value={result.name} onClick={() => searchHandler(productUrl, result.rawData)}>
+          <BeverageCard result={result} autocomplete />
+        </DropdownItem>
+      ) : (
+        <></>
+      );
+    });
+  };
 
-  //     // TODO: Highlighted name in the Beverage card
-  //     const title = isStringOrHighlightedValue(result.highlightedFields?.name)
-  //       ? result.highlightedFields?.name
-  //       : result.name;
-
-  //     const path = extractPathFromBeverage(beverageData);
-
-  //     return title && result.name ? (
-  //       <DropdownItem value={result.name} onClick={() => searchHandler(path, beverageData)}>
-  //         <BeverageCard result={result} autocomplete />
-  //       </DropdownItem>
-  //     ) : (
-  //       <></>
-  //     );
-  //   });
-  // };
-
-  const searchHandler = (path?: string, beverage?: Partial<Beverage>) => {
+  const searchHandler = (path?: string, beverage?: Beverage) => {
+    // TODO: move logic to hook
     searchActions.setSortBys([]);
     searchActions.resetFacets();
     dispatch({ type: OverlayActionTypes.ToggleSearchOverlay, payload: { open: false } });
 
     path &&
-      navigate(path, {
+      navigate("../" + path, {
+        replace: true,
         state: { beverage },
       });
   };
 
+  // change to handle search
   const onSearch = (searchEventData: { verticalKey?: string; query?: string }) => {
     const { query } = searchEventData;
     searchHandler(`/search?query=${query}`);
@@ -130,20 +132,18 @@ export const BeverageSearchBar = () => {
     <SearchBar
       customCssClasses={{
         searchBarContainer: `md:h-12 mt-6 sm:my-6 px-4`,
-        inputElement:
-          "inline-flex items-center justify-between w-full rounded-3xl border border-black",
-        // logoContainer: "w-7 mx-2.5 my-2 ",
-        // dropdownContainer: "z-10",
-        // inputDropdownContainer: "relative bg-white  rounded-3xl w-full  ",
-        // optionContainer: "hidden",
+        // inputElement:
+        //   "inline-flex items-center justify-between w-full rounded-3xl border border-black",
       }}
+      hideRecentSearches
       onSearch={onSearch}
       placeholder="Search beer, wine, liqour "
-      // visualAutocompleteConfig={{
-      //   entityPreviewSearcher,
-      //   renderEntityPreviews,
-      //   // includedVerticals: ["autocomplete", "beverages"],
-      // }}
+      visualAutocompleteConfig={{
+        entityPreviewSearcher,
+        renderEntityPreviews,
+        entityPreviewsDebouncingTime: 200,
+        includedVerticals: ["beverage_categories", "beverages"],
+      }}
     />
   );
 };

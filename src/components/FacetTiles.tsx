@@ -7,6 +7,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { useSearchParams } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 interface FacetTilesProps {
   facet: DisplayableFacet;
@@ -96,8 +97,9 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
           }
         )}
       >
-        {reorderFacetOptions().map((o) => (
+        {reorderFacetOptions().map((o, i) => (
           <div
+            key={uuidv4()}
             className={classNames(
               "mr-3 mb-3 flex w-fit items-center border border-toast-orange md:hover:bg-toast-orange",
               { "bg-toast-orange": o.selected, "bg-toast-light-orange": !o.selected }
