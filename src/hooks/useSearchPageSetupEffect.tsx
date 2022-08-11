@@ -7,6 +7,7 @@ import {
   DisplayableFacet,
 } from "@yext/search-headless-react";
 import formatFilterName from "../utils/formatFilterName";
+import sortConfig from "../config/sortConfig";
 
 const pageSearchPageSetupEffect = () => {
   const urlParams = useParams();
@@ -53,12 +54,18 @@ const pageSearchPageSetupEffect = () => {
     });
     searchActions.setFacets(selectedFacets);
 
+    //handles the sortBy from the url query params
+    const sortByKey = searchParams.get("sortBy");
+    if (sortByKey && sortConfig[sortByKey]) {
+      searchActions.setSortBys([sortConfig[sortByKey].sortBy]);
+    }
+
     searchActions.setVerticalLimit(21);
     searchActions.executeVerticalQuery();
 
     return function cleanup() {
-      searchActions.setStaticFilters([]);
       searchActions.resetFacets();
+      searchActions.setSortBys([]);
       searchActions.setQuery("");
     };
   }, [urlParams, searchParams, searchActions]);

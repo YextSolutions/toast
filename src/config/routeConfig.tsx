@@ -70,9 +70,9 @@ export const routeConfig: RouteData[] = [
             },
             { name: "ROSÉ WINE", img: ImageAssets.rose, linkPath: "/wine/rose-wine" },
             {
-              name: "SPARKLING WINE",
+              name: "CHAMPAGNE",
               img: ImageAssets.sparklingWine,
-              linkPath: "/wine/sparkling-wine",
+              linkPath: "/wine/champagne",
             },
             {
               name: "DESSERT WINE",

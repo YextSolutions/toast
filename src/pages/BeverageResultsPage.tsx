@@ -1,12 +1,7 @@
-import {
-  Matcher,
-  SelectableFilter,
-  useSearchActions,
-  useSearchState,
-} from "@yext/search-headless-react";
+import { Matcher, SelectableFilter, useSearchState } from "@yext/search-headless-react";
 import { Pagination, VerticalResults } from "@yext/search-ui-react";
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import BeverageBreadcrumbs from "../components/BeverageBreadcrumbs";
 import { BeverageCard } from "../components/BeverageCard";
 import classNames from "classnames";
@@ -23,10 +18,8 @@ export const BeverageResultsPage = (): JSX.Element => {
   const [page, setPage] = useState("");
   const [searchResultsTitle, setSearchResultsTitle] = useState("");
 
-  const urlParams = useParams();
   const [searchParams] = useSearchParams();
 
-  const searchActions = useSearchActions();
   const resultsCount = useSearchState((state) => state.vertical.resultsCount);
   const isLoading = useSearchState((state) => state.searchStatus.isLoading);
 
@@ -79,20 +72,6 @@ export const BeverageResultsPage = (): JSX.Element => {
     }
   };
 
-  const handleSearchParams = () => {
-    const query = searchParams.get("query");
-    const sortBy = searchParams.get("sortBy");
-
-    if (query) {
-      searchActions.setQuery(query);
-      setSearchResultsTitle({ query: true, title: `Results for ${query}` });
-    } else {
-      searchActions.setQuery("");
-    }
-
-    sortBy && searchActions.setSortBys([JSON.parse(sortBy)]);
-  };
-
   return (
     <PageLayout>
       <div className="flex h-full justify-center">
@@ -111,11 +90,10 @@ export const BeverageResultsPage = (): JSX.Element => {
             <ShakerLoader />
           ) : (
             <>
-              {!mostRecentSearch && (
-                <div className="my-4 px-4 text-sm">
-                  <BeverageBreadcrumbs />
-                </div>
-              )}
+              <div className="my-4 px-4 text-sm">
+                <BeverageBreadcrumbs />
+              </div>
+
               <div className="flex items-center justify-between px-4">
                 <div className="my-2 ">
                   {renderSearchResultsTitle()}

@@ -28,6 +28,7 @@ export const BeverageFilters = (): JSX.Element => {
           input:
             "text-toast-orange border border-gray-300 rounded-sm focus:ring-toast-orange focus:ring-toast-orange focus:border-toast-orange ",
         }}
+        includedFieldIds={["c_abv"]}
       />
       <PriceSlider />
     </>
