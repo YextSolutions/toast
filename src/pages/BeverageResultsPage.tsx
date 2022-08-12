@@ -35,7 +35,7 @@ export const BeverageResultsPage = (): JSX.Element => {
 
   const renderSearchResultsTitle = (): JSX.Element => {
     return (
-      <div className={classNames("mr-1.5  py-2 text-3xl font-bold")}>
+      <div className={classNames("py-2 text-3xl font-bold")}>
         <span className="border-b-2 border-toast-dark-orange">{`Results for ${searchResultsTitle}`}</span>
       </div>
     );
@@ -59,10 +59,10 @@ export const BeverageResultsPage = (): JSX.Element => {
             <ShakerLoader />
           ) : (
             <>
-              <div className="my-4 px-4 text-sm">
+              <div className="my-4 text-sm">
                 <BeverageBreadcrumbs />
               </div>
-              <div className="flex items-center justify-between px-4">
+              <div className="flex items-center justify-between ">
                 <div className="my-2 ">
                   {renderSearchResultsTitle()}
                   <div className="mt-1 text-sm">{`(${resultsCount} results)`}</div>

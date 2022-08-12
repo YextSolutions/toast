@@ -26,13 +26,9 @@ export const BeverageCard = ({
   const navigate = useNavigate();
 
   const handleClick = () => {
-    const path = extractPathFromBeverage(beverage);
-
-    if (path) {
-      navigate(`${extractPathFromBeverage(beverage)}`, {
-        state: { beverage },
-      });
-    }
+    navigate(`${beverage.name.toLowerCase().replaceAll(" ", "-")}/${beverage.id}`, {
+      state: { beverage },
+    });
   };
 
   return (

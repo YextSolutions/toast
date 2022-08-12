@@ -63,7 +63,7 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
   };
 
   return (
-    <div className="mb-8 ml-4 md:pt-4">
+    <div className="mb-8">
       <span className="font-bold ">{label ?? facet.displayName.toUpperCase()}</span>
       <div
         ref={outerContainerRef}

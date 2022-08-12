@@ -27,6 +27,7 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
   );
 
   useEffect(() => {
+    // TODO: resolve TS issues
     if (priceFilter) {
       if (priceFilter.matcher === Matcher.Between) {
         setPriceValues([priceFilter.value.start.value, priceFilter.value.end.value]);
@@ -62,7 +63,7 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
   };
 
   return (
-    <div className="px-8 md:px-6">
+    <div className="mb-8">
       <div className="mb-8 font-bold">PRICE RANGE</div>
       <div className="px-2">
         <Range

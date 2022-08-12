@@ -12,7 +12,7 @@ export const BeverageFilters = (): JSX.Element => {
   );
 
   return (
-    <>
+    <div className="px-6 md:px-0 md:pt-4">
       {stateFacet && stateFacet.options.length > 0 && (
         <FacetTiles facet={stateFacet} label="STATE OF ORIGIN" />
       )}
@@ -21,7 +21,7 @@ export const BeverageFilters = (): JSX.Element => {
       )}
       <NumericalFacets
         customCssClasses={{
-          numericalFacetsContainer: "mb-8 ml-4",
+          numericalFacetsContainer: "mb-8",
           optionsContainer: "mt-6",
           optionLabel: "",
           inputContainer: "mt-3",
@@ -31,6 +31,6 @@ export const BeverageFilters = (): JSX.Element => {
         includedFieldIds={["c_abv"]}
       />
       <PriceSlider />
-    </>
+    </div>
   );
 };

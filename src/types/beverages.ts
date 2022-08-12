@@ -26,14 +26,13 @@ export interface BeverageCategory {
   }[];
 }
 export default interface Beverage {
+  id: string;
   primaryPhoto?: ComplexImage;
   name: string;
   c_abv?: number;
-  c_alcoholType?: string;
-  c_category?: string;
+  c_rating?: string;
   c_originCountry?: string;
   c_price?: number;
-  c_subCategory?: string;
   c_usState?: string;
   c_beverageCategories?: BeverageCategory[];
 }

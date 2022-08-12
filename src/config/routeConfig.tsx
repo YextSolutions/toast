@@ -177,7 +177,7 @@ export const routeConfig: RouteData[] = [
   },
   {
     path: "/:categoryA/:categoryB/:categoryC/:beverageName/:beverageId",
-    page: <BeverageResultsPage />,
+    page: <BeveragePage />,
   },
   {
     path: "/:categoryA/:categoryB/:categoryC/:categoryD",
@@ -185,7 +185,7 @@ export const routeConfig: RouteData[] = [
   },
   {
     path: "/categoryA/:categoryB/:categoryC/:categoryD/:beverageName/:beverageId",
-    page: <BeverageResultsPage />,
+    page: <BeveragePage />,
   },
   { path: "/cart", page: <CartPage /> },
 ];
