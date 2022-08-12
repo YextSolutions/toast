@@ -50,14 +50,7 @@ export const BeveragePage = (): JSX.Element => {
       <>
         <div className="absolute top-28 bottom-16 w-full overflow-auto px-4">
           <div className="my-8 text-sm">
-            <BeverageBreadcrumbs
-              beverageCategories={{
-                alcoholType: beverage?.c_alcoholType,
-                category: beverage?.c_category,
-                subCategory: beverage?.c_subCategory,
-                beverageId: beverage?.id,
-              }}
-            />
+            <BeverageBreadcrumbs beverageCategories={beverage?.c_beverageCategories} />
           </div>
           {beverage?.primaryPhoto && (
             <div className="flex justify-center">

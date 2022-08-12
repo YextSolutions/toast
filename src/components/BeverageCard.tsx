@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
-import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 import { ImagePlaceholder } from "./ImagePlaceholder";
 import { StarRating } from "./StarRating";
 import { GrayWineBottleIcon } from "../icons/GrayWineBottleIcon";

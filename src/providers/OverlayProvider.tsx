@@ -1,4 +1,5 @@
 import { createContext, Dispatch, useReducer } from "react";
+import { ProviderProps } from "./AppContextProvider";
 
 interface OverlayState {
   searchOverlay: { open: boolean };
@@ -43,7 +44,7 @@ const OverlayContext = createContext<{
   dispatch: Dispatch<OverlayActions>;
 }>({ overlayState: initialState, dispatch: () => {} });
 
-const OverlayProvider: React.FC = ({ children }) => {
+const OverlayProvider = ({ children }: ProviderProps) => {
   const [overlayState, dispatch] = useReducer(OverlayReducer, initialState);
 
   return (

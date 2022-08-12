@@ -7,7 +7,7 @@ import { Source } from "@yext/search-headless-react";
 
 export const CartPage = () => {
   const cartContext = useContext(CartContext);
-  const { cart } = cartContext;
+  const { cartState } = cartContext;
 
   const handleQuantityChange = (
     quantity: number,
@@ -45,7 +45,7 @@ export const CartPage = () => {
           <div className="font-bold text-toast-dark-orange">Your Cart</div>
         </div>
         <div>
-          {cart.cartItems.map((item) => (
+          {cartState.cartItems.map((item) => (
             <div className="flex items-end justify-between py-2">
               <BeverageCard
                 autocomplete
@@ -62,7 +62,7 @@ export const CartPage = () => {
         </div>
         <div className="flex w-full justify-between pt-1">
           <div className="font-bold">TOTAL:</div>
-          <div className="font-bold">{`$${formatTotalPrice(cart.totalPrice)}`}</div>
+          <div className="font-bold">{`$${formatTotalPrice(cartState.totalPrice)}`}</div>
         </div>
       </div>
     </PageLayout>

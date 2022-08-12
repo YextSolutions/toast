@@ -1,7 +1,6 @@
 import { CardProps } from "@yext/search-ui-react";
 import { useNavigate } from "react-router-dom";
 import Beverage from "../types/beverages";
-import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 import { GrayWineBottleIcon } from "../icons/GrayWineBottleIcon";
 import { ImagePlaceholder } from "./ImagePlaceholder";
 
@@ -11,13 +10,9 @@ export const BeverageCarouselCard = ({ result }: CardProps<Beverage>) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    const path = extractPathFromBeverage(beverage);
-
-    if (path) {
-      navigate(`${extractPathFromBeverage(beverage)}`, {
-        state: { beverage },
-      });
-    }
+    navigate(`${beverage.name.toLowerCase().replaceAll(" ", "-")}/${beverage.id}`, {
+      state: { beverage },
+    });
   };
 
   return (

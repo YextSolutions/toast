@@ -1,4 +1,8 @@
-import { ComponentProps, FC } from "react";
+import { FC } from "react";
+
+interface ComponentProps {
+  children: React.ReactNode;
+}
 
 // From: https://medium.com/front-end-weekly/how-to-combine-context-providers-for-cleaner-react-code-9ed24f20225e
 export const combineComponents = (...components: FC[]): FC => {

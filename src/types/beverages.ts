@@ -29,6 +29,7 @@ export default interface Beverage {
   id: string;
   primaryPhoto?: ComplexImage;
   name: string;
+  description?: string;
   c_abv?: number;
   c_rating?: string;
   c_originCountry?: string;

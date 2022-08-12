@@ -18,7 +18,7 @@ export const ToastHeader = (): JSX.Element => {
 
   const { overlayState, dispatch } = useContext(OverlayContext);
   const cartContext = useContext(CartContext);
-  const { cart } = cartContext;
+  const { cartState } = cartContext;
 
   const { width } = useWindowDimensions();
 
@@ -33,8 +33,8 @@ export const ToastHeader = (): JSX.Element => {
   }, [width]);
 
   useEffect(() => {
-    setTotalCartItems(cart.cartItems.map((item) => item.quantity).reduce((a, b) => a + b, 0));
-  }, [cart]);
+    setTotalCartItems(cartState.cartItems.map((item) => item.quantity).reduce((a, b) => a + b, 0));
+  }, [cartState]);
 
   const searchBarChangeHandler = (open: boolean) => {
     dispatch({ type: OverlayActionTypes.ToggleSearchOverlay, payload: { open } });

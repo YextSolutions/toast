@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { useSearchState, Matcher } from "@yext/search-headless-react";
+import { useSearchState, Matcher, NumberRangeValue } from "@yext/search-headless-react";
 import { Range, getTrackBackground } from "react-range";
 import { useSearchParams } from "react-router-dom";
 import { debounce } from "lodash";
@@ -30,9 +30,10 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
     // TODO: resolve TS issues
     if (priceFilter) {
       if (priceFilter.matcher === Matcher.Between) {
-        setPriceValues([priceFilter.value.start.value, priceFilter.value.end.value]);
+        const filterValue = priceFilter.value as NumberRangeValue;
+        setPriceValues([filterValue.start?.value ?? MIN, filterValue.end?.value ?? MAX]);
       } else if (priceFilter.matcher === Matcher.GreaterThanOrEqualTo) {
-        setPriceValues([priceFilter.value, max ?? MAX]);
+        setPriceValues([priceFilter.value as number, max ?? MAX]);
       }
     } else {
       setPriceValues([MIN, MAX]);
