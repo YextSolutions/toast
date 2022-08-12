@@ -1,4 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
+import { useSearchState, Matcher } from "@yext/search-headless-react";
 import { Range, getTrackBackground } from "react-range";
 import { useSearchParams } from "react-router-dom";
 import { debounce } from "lodash";
@@ -21,18 +22,25 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
 
   const { dispatch } = useContext(OverlayContext);
 
+  const priceFilter = useSearchState((state) =>
+    state.filters.static?.find((f) => f.fieldId === "c_price")
+  );
+
   useEffect(() => {
-    if (searchParams.has("priceRange")) {
-      const priceRange = JSON.parse(searchParams.get("priceRange") as string) as {
-        min: number;
-        max?: number;
-      };
-      setPriceValues([priceRange.min, priceRange.max ?? max ?? MAX]);
+    // TODO: resolve TS issues
+    if (priceFilter) {
+      if (priceFilter.matcher === Matcher.Between) {
+        setPriceValues([priceFilter.value.start.value, priceFilter.value.end.value]);
+      } else if (priceFilter.matcher === Matcher.GreaterThanOrEqualTo) {
+        setPriceValues([priceFilter.value, max ?? MAX]);
+      }
+    } else {
+      setPriceValues([MIN, MAX]);
     }
   }, []);
 
   const updateUrl = (priceMin: number, priceMax?: number): void => {
-    searchParams.set("priceRange", JSON.stringify({ min: priceMin, max: priceMax }));
+    searchParams.set("price", priceMax ? `${priceMin}-${priceMax}` : `${priceMin}`);
     setSearchParams(searchParams);
     dispatch({ type: OverlayActionTypes.ToggleFilterOverlay, payload: { open: false } });
   };
@@ -55,7 +63,7 @@ export const PriceSlider = ({ min, max, step }: PriceSliderProps): JSX.Element =
   };
 
   return (
-    <div className="px-8 md:px-6">
+    <div className="mb-8">
       <div className="mb-8 font-bold">PRICE RANGE</div>
       <div className="px-2">
         <Range

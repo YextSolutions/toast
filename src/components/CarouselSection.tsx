@@ -1,17 +1,13 @@
 import {
-  AnswersHeadlessProvider,
-  useAnswersActions,
-  useAnswersState,
-} from "@yext/answers-headless-react";
+  SearchHeadlessProvider,
+  useSearchActions,
+  useSearchState,
+} from "@yext/search-headless-react";
 import { useEffect } from "react";
-import {
-  answersApiKey,
-  answersExperienceKey,
-  answersSandboxEndpoints,
-} from "../config/answersConfig";
-import { VerticalResults } from "@yext/answers-react-components";
+import { VerticalResults } from "@yext/search-ui-react";
 import { BeverageCarouselCard } from "./BeverageCarouselCard";
-import MoonLoader from "react-spinners/MoonLoader";
+// import MoonLoader from "react-spinners/MoonLoader";
+import searchConfig from "../config/searchConfig";
 
 export interface CarouselSectionProps {
   id?: string;
@@ -27,13 +23,13 @@ export enum BeverageTag {
 }
 
 const Carousel = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => {
-  const answersActions = useAnswersActions();
-  const resultsLoading = useAnswersState((state) => state.searchStatus.isLoading);
+  const searchActions = useSearchActions();
+  const resultsLoading = useSearchState((state) => state.searchStatus.isLoading);
 
   useEffect(() => {
-    answersActions.setContext({ staticResults: beverageTag });
-    answersActions.setVerticalLimit(limit || 8);
-    answersActions.executeVerticalQuery();
+    searchActions.setContext({ staticResults: beverageTag });
+    searchActions.setVerticalLimit(limit || 8);
+    searchActions.executeVerticalQuery();
   }, [beverageTag, limit]);
 
   return (
@@ -48,37 +44,33 @@ const Carousel = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => 
           </button>
         )}
       </div>
-      {resultsLoading ? (
+      {/* {resultsLoading ? (
         <div className="flex h-60 items-center justify-center">
           <MoonLoader color="#FFB563" />
         </div>
-      ) : (
+      ) : ( */}
         <>
           <VerticalResults
-            customCssClasses={{ results: "overflow-x-auto flex" }}
+            customCssClasses={{ verticalResultsContainer: "overflow-x-auto flex" }}
             CardComponent={BeverageCarouselCard}
-            allowPagination={false}
           />
           <button className="flex h-10 w-full items-center justify-center bg-toast-blue md:hidden">
             <div className="text-xs font-bold text-white">VIEW ALL</div>
           </button>
         </>
-      )}
+      {/* )} */}
     </div>
   );
 };
 
 export const CarouselSection = ({ sectionName, beverageTag, limit }: CarouselSectionProps) => {
   return (
-    <AnswersHeadlessProvider
+    <SearchHeadlessProvider
       headlessId={`${sectionName.replaceAll(" ", "-").toLowerCase()}-carousel`}
-      apiKey={answersApiKey}
-      experienceKey={answersExperienceKey}
-      locale="en"
-      endpoints={answersSandboxEndpoints}
+      {...searchConfig}
       verticalKey="beverages"
     >
       {<Carousel sectionName={sectionName} beverageTag={beverageTag} limit={limit} />}
-    </AnswersHeadlessProvider>
+    </SearchHeadlessProvider>
   );
 };

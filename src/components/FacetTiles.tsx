@@ -1,15 +1,14 @@
-import { DisplayableFacet, Matcher, NumberRangeValue } from "@yext/answers-headless-react";
+import { DisplayableFacet, NumberRangeValue } from "@yext/search-headless-react";
 import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { useSearchParams } from "react-router-dom";
-import { Filters } from "@yext/answers-react-components";
+import { v4 as uuidv4 } from "uuid";
 
 interface FacetTilesProps {
   facet: DisplayableFacet;
   label?: string;
 }
 
-// TODO: remove show more if not enough options
 export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
   const [expanded, setExpanded] = useState(false);
   const [canExpand, setCanExpand] = useState(false);
@@ -17,8 +16,6 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
   const outerContainerRef = useRef<HTMLDivElement>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const filterContext = Filters.useFiltersContext();
 
   useEffect(() => {
     if (outerContainerRef.current) {
@@ -42,47 +39,31 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
     optionValue: string | number | boolean | NumberRangeValue,
     checked: boolean
   ) => {
-    const facetParams = searchParams.get("facets");
-    let existingUrlFacets: Record<string, string[]> = facetParams ? JSON.parse(facetParams) : {};
-
     if (checked) {
-      if (existingUrlFacets[facet.fieldId]) {
-        existingUrlFacets[facet.fieldId].push(optionValue.toString());
+      if (searchParams.has(facet.fieldId)) {
+        const values = searchParams.getAll(facet.fieldId);
+        values.push(optionValue.toString());
+        searchParams.set(facet.fieldId, values.toString());
       } else {
-        existingUrlFacets[facet.fieldId] = [optionValue.toString()];
+        searchParams.set(facet.fieldId, [optionValue.toString()].toString());
       }
-
-      filterContext.selectFilter({
-        selected: true,
-        fieldId: facet.fieldId,
-        value: optionValue,
-        matcher: Matcher.Equals,
-      });
     } else {
-      existingUrlFacets[facet.fieldId] = existingUrlFacets[facet.fieldId].filter(
-        (o) => o !== optionValue.toString()
-      );
-      if (existingUrlFacets[facet.fieldId].length === 0) {
-        delete existingUrlFacets[facet.fieldId];
+      if (
+        searchParams.has(facet.fieldId) &&
+        searchParams.get(facet.fieldId)?.split(",").length === 1
+      ) {
+        searchParams.delete(facet.fieldId);
+      } else {
+        const values = searchParams.get(facet.fieldId)?.split(",") ?? [];
+        const newValues = values.filter((v) => v !== optionValue.toString());
+        searchParams.set(facet.fieldId, newValues.toString());
       }
-
-      filterContext.selectFilter({
-        selected: false,
-        fieldId: facet.fieldId,
-        value: optionValue,
-        matcher: Matcher.Equals,
-      });
     }
-
-    Object.keys(existingUrlFacets).length > 0
-      ? searchParams.set("facets", JSON.stringify(existingUrlFacets))
-      : searchParams.delete("facets");
-
     setSearchParams(searchParams);
   };
 
   return (
-    <div className="mb-8 ml-4 md:pt-4">
+    <div className="mb-8">
       <span className="font-bold ">{label ?? facet.displayName.toUpperCase()}</span>
       <div
         ref={outerContainerRef}
@@ -95,8 +76,9 @@ export const FacetTiles = ({ facet, label }: FacetTilesProps) => {
           }
         )}
       >
-        {reorderFacetOptions().map((o) => (
+        {reorderFacetOptions().map((o, i) => (
           <div
+            key={uuidv4()}
             className={classNames(
               "mr-3 mb-3 flex w-fit items-center border border-toast-orange md:hover:bg-toast-orange",
               { "bg-toast-orange": o.selected, "bg-toast-light-orange": !o.selected }

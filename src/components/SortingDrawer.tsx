@@ -1,28 +1,10 @@
-import { Direction, SortBy, SortType, useAnswersState } from "@yext/answers-headless-react";
+import { useSearchState } from "@yext/search-headless-react";
 import { useContext, useState } from "react";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import classNames from "classnames";
 import { useSearchParams } from "react-router-dom";
 import { OverlayActionTypes, OverlayContext } from "../providers/OverlayProvider";
-
-const sortByOptions: { label: string; sortBy: SortBy }[] = [
-  {
-    label: "Price: High to Low",
-    sortBy: { field: "c_price", direction: Direction.Descending, type: SortType.Field },
-  },
-  {
-    label: "Price: Low to High",
-    sortBy: { field: "c_price", direction: Direction.Ascending, type: SortType.Field },
-  },
-  {
-    label: "Name: A-Z",
-    sortBy: { field: "name", direction: Direction.Ascending, type: SortType.Field },
-  },
-  {
-    label: "Name: Z-A",
-    sortBy: { field: "name", direction: Direction.Descending, type: SortType.Field },
-  },
-];
+import sortConfig from "../config/sortConfig";
 
 interface SortingDrawerProps {
   containerCss?: string;
@@ -31,8 +13,8 @@ interface SortingDrawerProps {
 export const SortingDrawer = ({ containerCss = "" }: SortingDrawerProps) => {
   const [open, setOpen] = useState(false);
 
-  const sortBys = useAnswersState((state) => state.vertical.sortBys);
-  const selectedSort = sortByOptions.find(
+  const sortBys = useSearchState((state) => state.vertical.sortBys);
+  const selectedSort = Object.values(sortConfig).find(
     (s) => s.sortBy.field === sortBys?.[0]?.field && s.sortBy.direction === sortBys?.[0]?.direction
   );
 
@@ -40,12 +22,11 @@ export const SortingDrawer = ({ containerCss = "" }: SortingDrawerProps) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleTileClick = (sortBy: SortBy) => {
+  const handleTileClick = (urlValue: string) => {
     setOpen(false);
     dispatch({ type: OverlayActionTypes.ToggleFilterOverlay, payload: { open: false } });
 
-    searchParams.delete("sortBy");
-    searchParams.append("sortBy", JSON.stringify(sortBy));
+    searchParams.set("sortBy", urlValue);
 
     setSearchParams(searchParams);
   };
@@ -68,12 +49,12 @@ export const SortingDrawer = ({ containerCss = "" }: SortingDrawerProps) => {
           })}
         >
           {open &&
-            sortByOptions
-              .filter((s) => s.sortBy !== selectedSort?.sortBy)
-              .map((s) => (
-                <li onClick={() => handleTileClick(s.sortBy)}>
+            Object.entries(sortConfig)
+              .filter(([k, v]) => v.sortBy !== selectedSort?.sortBy)
+              .map(([k, v]) => (
+                <li onClick={() => handleTileClick(k)}>
                   <div className="flex h-10 w-48 items-center bg-toast-light-orange px-2 text-sm hover:bg-toast-orange">
-                    {s.label}
+                    {v.label}
                   </div>
                 </li>
               ))}

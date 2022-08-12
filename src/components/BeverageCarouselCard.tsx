@@ -1,12 +1,12 @@
-import { CardProps } from "@yext/answers-react-components";
+import { CardProps } from "@yext/search-ui-react";
 import { useNavigate } from "react-router-dom";
-import { beverageDataForRender } from "../types/Beverage";
+import Beverage from "../types/beverages";
 import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
 import { GrayWineBottleIcon } from "../icons/GrayWineBottleIcon";
 import { ImagePlaceholder } from "./ImagePlaceholder";
 
-export const BeverageCarouselCard = ({ result }: CardProps) => {
-  const beverage = beverageDataForRender(result);
+export const BeverageCarouselCard = ({ result }: CardProps<Beverage>) => {
+  const beverage = result.rawData;
 
   const navigate = useNavigate();
 

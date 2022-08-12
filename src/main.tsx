@@ -1,28 +1,17 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
+import { SearchHeadlessProvider } from "@yext/search-headless-react";
+import searchConfig from "./config/searchConfig";
+import { AppContextProvider } from "./providers/AppContextProvider";
 import "./index.css";
 import App from "./App";
-import { AnswersHeadlessProvider } from "@yext/answers-headless-react";
-import {
-  answersApiKey,
-  answersExperienceKey,
-  answersSandboxEndpoints,
-} from "./config/answersConfig";
-import { AppContextProvider } from "./providers/AppContextProvider";
 
-ReactDOM.render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AnswersHeadlessProvider
-      apiKey={answersApiKey}
-      experienceKey={answersExperienceKey}
-      locale="en"
-      verticalKey="beverages"
-      endpoints={answersSandboxEndpoints}
-    >
+    <SearchHeadlessProvider {...searchConfig}>
       <AppContextProvider>
         <App />
       </AppContextProvider>
-    </AnswersHeadlessProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+    </SearchHeadlessProvider>
+  </React.StrictMode>
 );

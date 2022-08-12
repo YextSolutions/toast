@@ -1,4 +1,4 @@
-import { Beverage } from "../types/Beverage";
+import Beverage from "../types/beverages";
 
 export const extractPathFromBeverage = (beverage: Partial<Beverage>): string | undefined => {
   let path = "";

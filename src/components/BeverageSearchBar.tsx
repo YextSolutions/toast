@@ -1,84 +1,78 @@
 import {
   FocusedItemData,
-  isStringOrHighlightedValue,
   SearchBar,
   renderHighlightedValue,
   DropdownItem,
-} from "@yext/answers-react-components";
+} from "@yext/search-ui-react";
 import {
-  provideAnswersHeadless,
   Result,
-  useAnswersActions,
-  useAnswersState,
+  useSearchActions,
+  SandboxEndpoints,
+  provideHeadless,
   VerticalResults as VerticalResultsData,
-} from "@yext/answers-headless-react";
+} from "@yext/search-headless-react";
 import { useContext } from "react";
 import { Divider } from "./Divider";
-import {
-  answersApiKey,
-  answersExperienceKey,
-  answersSandboxEndpoints,
-} from "../config/answersConfig";
 import { useNavigate } from "react-router-dom";
-import { alcholicBeverageTypeDataForRender } from "../types/BeverageType";
-import { Beverage, beverageDataForRender } from "../types/Beverage";
-import { extractPathFromBeverageType } from "../utils/extractPathFromBeverageType";
-import { extractPathFromBeverage } from "../utils/extractPathFromBeverage";
+import Beverage from "../types/beverages";
 import { BeverageCard } from "./BeverageCard";
 import { OverlayActionTypes, OverlayContext } from "../providers/OverlayProvider";
+import searchConfig from "../config/searchConfig";
+import BeverageCategory from "../types/beverage_categories";
+import getCategoryOrderFromBeverage from "../utils/getCategoryOrderFromBeverage";
+import getCategoryOrderFromBeverageCategory from "../utils/getCategoryOrderFromBeverageCategory";
 
 export const BeverageSearchBar = () => {
-  const entityPreviewSearcher = provideAnswersHeadless({
+  const entityPreviewSearcher = provideHeadless({
     headlessId: "entity-preview-searcher",
-    apiKey: answersApiKey,
-    experienceKey: answersExperienceKey,
-    locale: "en",
-    endpoints: answersSandboxEndpoints,
+    apiKey: searchConfig.apiKey,
+    experienceKey: searchConfig.experienceKey,
+    locale: searchConfig.locale,
+    endpoints: SandboxEndpoints,
   });
   const { dispatch } = useContext(OverlayContext);
 
   const navigate = useNavigate();
 
-  const answersActions = useAnswersActions();
+  const searchActions = useSearchActions();
 
   const renderEntityPreviews = (
     autocompleteLoading: boolean,
-    verticalResultsArray: VerticalResultsData[],
-    onSubmit: (value: string, _index: number, itemData?: FocusedItemData) => void
-  ) => {
-    const alcoholicBeverageTypeResults = verticalResultsArray.find(
-      (verticalResult) => verticalResult.verticalKey === "autocomplete"
-    )?.results;
+    verticalKeyToResults: Record<string, VerticalResultsData>,
+    dropdownItemProps: {
+      onClick: (value: string, _index: number, itemData?: FocusedItemData) => void;
+      ariaLabel: (value: string) => string;
+    }
+  ): JSX.Element | null => {
+    const beverageCategories = verticalKeyToResults["beverage_categories"]?.results.map(
+      (result) => result
+    ) as unknown as Result<BeverageCategory>[];
 
-    const beverageResults = verticalResultsArray.find(
-      (verticalResult) => verticalResult.verticalKey === "beverages"
-    )?.results;
+    const beverageResults = verticalKeyToResults["beverages"]?.results.map(
+      (result) => result
+    ) as unknown as Result<Beverage>[];
 
     return (
       <div className="max-h-max overflow-y-scroll sm:max-h-96 sm:shadow-2xl">
-        {renderFilterAutocomplete(alcoholicBeverageTypeResults)}
-        {renderBeveragesAutocomplete(beverageResults)}
+        {renderBeverageFilterDropdown(beverageCategories)}
+        {renderBeveragesDropdown(beverageResults)}
       </div>
     );
   };
 
-  const query = useAnswersState((state) => state.query);
-
-  const renderFilterAutocomplete = (results: Result[] | undefined) => {
+  const renderBeverageFilterDropdown = (results: Result<BeverageCategory>[]): JSX.Element => {
     if (!results || results.length === 0) return <></>;
 
     return (
       <div>
         {results.slice(0, 3).map((result) => {
-          const beverageTypeData = alcholicBeverageTypeDataForRender(result);
-          const path = extractPathFromBeverageType(beverageTypeData);
-
-          const title = isStringOrHighlightedValue(result.highlightedFields?.name)
-            ? result.highlightedFields?.name
-            : result.name;
+          const title = result.highlightedFields?.name ?? result.name;
+          const categoryUrl = getCategoryOrderFromBeverageCategory(result.rawData)
+            .map((category) => category.toLowerCase().replaceAll(" ", "-"))
+            .join("/");
 
           return title && result.name ? (
-            <DropdownItem value={result.name} onClick={() => searchHandler(path)}>
+            <DropdownItem value={result.name} onClick={() => searchHandler(categoryUrl)}>
               <div className="py-1.5 px-3.5 hover:bg-toast-gray">
                 {renderHighlightedValue(title, {
                   nonHighlighted: "text-primary text-black text-base ",
@@ -95,21 +89,18 @@ export const BeverageSearchBar = () => {
     );
   };
 
-  const renderBeveragesAutocomplete = (results: Result[] | undefined) => {
+  const renderBeveragesDropdown = (results: Result<Beverage>[]) => {
     if (!results || results.length === 0) return <></>;
 
     return results.map((result) => {
-      const beverageData = beverageDataForRender(result);
-
-      // TODO: Highlighted name in the Beverage card
-      const title = isStringOrHighlightedValue(result.highlightedFields?.name)
-        ? result.highlightedFields?.name
-        : result.name;
-
-      const path = extractPathFromBeverage(beverageData);
+      const title = result.highlightedFields?.name ?? result.name;
+      const productUrl = getCategoryOrderFromBeverage(result.rawData)
+        .map((category) => category.toLowerCase().replaceAll(" ", "-"))
+        .join("/")
+        .concat(`/${result.name?.toLowerCase().replaceAll(" ", "-")}/${result.id}`);
 
       return title && result.name ? (
-        <DropdownItem value={result.name} onClick={() => searchHandler(path, beverageData)}>
+        <DropdownItem value={result.name} onClick={() => searchHandler(productUrl, result.rawData)}>
           <BeverageCard result={result} autocomplete />
         </DropdownItem>
       ) : (
@@ -118,17 +109,20 @@ export const BeverageSearchBar = () => {
     });
   };
 
-  const searchHandler = (path?: string, beverage?: Partial<Beverage>) => {
-    answersActions.setSortBys([]);
-    answersActions.resetFacets();
+  const searchHandler = (path?: string, beverage?: Beverage) => {
+    // TODO: move logic to hook
+    searchActions.setSortBys([]);
+    searchActions.resetFacets();
     dispatch({ type: OverlayActionTypes.ToggleSearchOverlay, payload: { open: false } });
 
     path &&
-      navigate(path, {
+      navigate("../" + path, {
+        replace: true,
         state: { beverage },
       });
   };
 
+  // change to handle search
   const onSearch = (searchEventData: { verticalKey?: string; query?: string }) => {
     const { query } = searchEventData;
     searchHandler(`/search?query=${query}`);
@@ -137,21 +131,18 @@ export const BeverageSearchBar = () => {
   return (
     <SearchBar
       customCssClasses={{
-        container: `md:h-12 mt-6 sm:my-6 px-4`,
-        inputContainer:
-          "inline-flex items-center justify-between w-full rounded-3xl border border-black",
-        logoContainer: "w-7 mx-2.5 my-2 ",
-        dropdownContainer: "z-10",
-        inputDropdownContainer: "relative bg-white  rounded-3xl w-full  ",
-        optionContainer: "hidden",
+        searchBarContainer: `md:h-12 mt-6 sm:my-6 px-4`,
+        // inputElement:
+        //   "inline-flex items-center justify-between w-full rounded-3xl border border-black",
       }}
-      cssCompositionMethod="assign"
+      hideRecentSearches
       onSearch={onSearch}
       placeholder="Search beer, wine, liqour "
       visualAutocompleteConfig={{
         entityPreviewSearcher,
         renderEntityPreviews,
-        // includedVerticals: ["autocomplete", "beverages"],
+        entityPreviewsDebouncingTime: 200,
+        includedVerticals: ["beverage_categories", "beverages"],
       }}
     />
   );
