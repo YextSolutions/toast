@@ -14,9 +14,9 @@ interface ProductCounterProps {
 export type CounterAction = "add" | "subtract";
 
 export const ProductCounter = ({ id, onChange, quantity }: ProductCounterProps) => {
-  const { cart } = useContext(CartContext);
+  const { cartState } = useContext(CartContext);
   const displayQuantity =
-    quantity ?? cart.cartItems.find((item) => item.beverage.id === id)?.quantity ?? 1;
+    quantity ?? cartState.cartItems.find((item) => item.beverage.id === id)?.quantity ?? 1;
 
   return (
     <div className="flex h-10 w-28 border">

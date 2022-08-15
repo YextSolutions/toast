@@ -10,6 +10,7 @@ import {
   SandboxEndpoints,
   provideHeadless,
   VerticalResults as VerticalResultsData,
+  HighlightedValue,
 } from "@yext/search-headless-react";
 import { useContext } from "react";
 import { Divider } from "./Divider";
@@ -66,7 +67,9 @@ export const BeverageSearchBar = () => {
     return (
       <div>
         {results.slice(0, 3).map((result) => {
-          const title = result.highlightedFields?.name ?? result.name;
+          const title: string | Partial<HighlightedValue> =
+            (result.highlightedFields?.name as unknown as string) ??
+            (result.name as Partial<HighlightedValue>);
           const categoryUrl = getCategoryOrderFromBeverageCategory(result.rawData)
             .map((category) => category.toLowerCase().replaceAll(" ", "-"))
             .join("/");
